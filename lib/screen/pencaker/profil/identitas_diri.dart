@@ -1,4 +1,8 @@
 import 'package:bcc/contants.dart';
+import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
+import 'package:bcc/screen/pencaker/profil/pengalaman_bekerja.dart';
+import 'package:bcc/screen/pencaker/profil/tambah_pendidikan.dart';
+import 'package:bcc/screen/pencaker/profil/tambah_sertifikat.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -122,6 +126,47 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                   color: Colors.white,
                 ),
               ])),
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const BccSubheaderLabel(label: 'BIODATA DIRI'),
+                const BccSubheaderLabel(
+                  label: 'Tentang Saya',
+                ),
+                BccSubheaderLabel(
+                  label: 'Riwayat Pendidikan',
+                  showButton: true,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const TambahPendidikan(),
+                    ));
+                  },
+                ),
+                BccSubheaderLabel(
+                  label: 'Pengalaman Bekerja',
+                  showButton: true,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const PengalamanBekerja(),
+                    ));
+                  },
+                ),
+                BccSubheaderLabel(
+                  label: 'Lisensi & Sertifikat',
+                  showButton: true,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const TambahSertifikat(),
+                    ));
+                  },
+                ),
+                const BccSubheaderLabel(label: 'Keterampilan'),
+              ],
+            ),
+          )
         ]));
   }
 }
