@@ -1,37 +1,26 @@
+import 'dart:developer';
+
 import 'package:bcc/contants.dart';
-import 'package:bcc/screen/pencaker/landing_grid_pencaker.dart';
+import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
+import 'package:bcc/screen/pencaker/profil/pengalaman_bekerja.dart';
+import 'package:bcc/screen/pencaker/profil/tambah_keterampilan.dart';
+import 'package:bcc/screen/pencaker/profil/tambah_pendidikan.dart';
+import 'package:bcc/screen/pencaker/profil/tambah_sertifikat.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
-class BerandaPencaker extends StatefulWidget {
-  const BerandaPencaker({super.key});
+class IdentitasDiri extends StatefulWidget {
+  const IdentitasDiri({super.key});
 
   @override
-  State<BerandaPencaker> createState() => _BerandaPencakerState();
+  State<IdentitasDiri> createState() => _IdentitasDiriState();
 }
 
-class _BerandaPencakerState extends State<BerandaPencaker> {
-  // final ApiCall _apiCall = ApiCall();
-  // final ApiHelper _apiHelper = ApiHelper();
-  // bool _isLoadingLowongan = false;
-  // bool _isLoadingPerusahaan = false;
-
-  // List<dynamic> dataLowonganPopuler = [];
-  // List<dynamic> dataPerusahaanTerbaru = [];
-
-  bool isErrorImageProfile = false;
-
-  getProfileImage() {
-    return ((userInfo['photo'] == null ||
-            userInfo['photo'] == '' ||
-            isErrorImageProfile)
-        ? const AssetImage('assets/images/male.png')
-        : NetworkImage(userInfo['photo']));
-  }
-
+class _IdentitasDiriState extends State<IdentitasDiri> {
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
 
   dynamic userInfo;
+  bool isErrorImageProfile = false;
 
   @override
   void initState() {
@@ -39,11 +28,20 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
     userInfo = loginInfo['data'];
   }
 
+  getProfileImage() {
+    return ((userInfo['photo'] == null ||
+            userInfo['photo'] == '' ||
+            isErrorImageProfile)
+        ? const AssetImage('assets/images/male.png')
+        : NetworkImage(userInfo['photo']));
+    //NetworkImage(userInfo['photo'])
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard Pencari Kerja'),
+        title: const Text('Identitas Diri'),
       ),
       body: ListView(children: [
         Stack(
@@ -141,7 +139,55 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                 color: Colors.white,
               ),
             ])),
-        const LandingGridPencaker(),
+        Padding(
+          padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const BccSubheaderLabel(label: 'BIODATA DIRI'),
+              const BccSubheaderLabel(
+                label: 'Tentang Saya',
+              ),
+              BccSubheaderLabel(
+                label: 'Riwayat Pendidikan',
+                showButton: true,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const TambahPendidikan(),
+                  ));
+                },
+              ),
+              BccSubheaderLabel(
+                label: 'Pengalaman Bekerja',
+                showButton: true,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const PengalamanBekerja(),
+                  ));
+                },
+              ),
+              BccSubheaderLabel(
+                label: 'Lisensi & Sertifikat',
+                showButton: true,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const TambahSertifikat(),
+                  ));
+                },
+              ),
+              BccSubheaderLabel(
+                label: 'Keterampilan',
+                showButton: true,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const TambahKeterampilan(),
+                  ));
+                },
+              ),
+            ],
+          ),
+        )
       ]),
     );
   }

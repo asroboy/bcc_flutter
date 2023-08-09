@@ -15,6 +15,7 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
 
   dynamic userInfo;
+  bool isErrorImageProfile = false;
 
   @override
   void initState() {
@@ -23,7 +24,9 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
   }
 
   getProfileImage() {
-    return ((userInfo['photo'] == null && userInfo['photo'] == '')
+    return ((userInfo['photo'] == null ||
+            userInfo['photo'] == '' ||
+            isErrorImageProfile)
         ? const AssetImage('assets/images/male.png')
         : NetworkImage(userInfo['photo']));
   }
@@ -71,7 +74,13 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                             color: Colors.white,
                             border: Border.all(width: 0.25),
                             image: DecorationImage(
-                                fit: BoxFit.cover, image: getProfileImage()))),
+                                onError: (e, s) {
+                                  setState(() {
+                                    isErrorImageProfile = true;
+                                  });
+                                },
+                                fit: BoxFit.cover,
+                                image: getProfileImage()))),
                   ))
             ],
           ),
