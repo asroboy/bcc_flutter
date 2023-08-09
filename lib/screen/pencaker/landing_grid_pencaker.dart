@@ -1,4 +1,5 @@
 import 'package:bcc/bccwidgets/bcc_big_menu_button.dart';
+import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
 import 'package:flutter/material.dart';
 
 class LandingGridPencaker extends StatelessWidget {
@@ -17,28 +18,33 @@ class LandingGridPencaker extends StatelessWidget {
       childAspectRatio: (MediaQuery.of(context).size.height /
           MediaQuery.of(context).size.height *
           1.5),
-      children: const <Widget>[
+      children: <Widget>[
         BccBigMenuButton(
-          iconData: Icons.description_outlined,
+          iconData: Icons.person_outline,
           label: "Identitas Diri",
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const IdentitasDiri(),
+            ));
+          },
         ),
-        BccBigMenuButton(
+        const BccBigMenuButton(
           iconData: Icons.work_outline_sharp,
           label: "Antrian Online",
         ),
-        BccBigMenuButton(
+        const BccBigMenuButton(
           iconData: Icons.filter_center_focus_rounded,
           label: "Info Lowongan ",
         ),
-        BccBigMenuButton(
+        const BccBigMenuButton(
           iconData: Icons.info,
           label: "Riwayat Lamaran",
         ),
-        BccBigMenuButton(
+        const BccBigMenuButton(
           iconData: Icons.maps_home_work_outlined,
           label: "Balai Latihan Kerja",
         ),
-        BccBigMenuButton(
+        const BccBigMenuButton(
           iconData: Icons.light_mode_outlined,
           label: "BCC Preneur",
         ),
