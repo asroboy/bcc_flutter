@@ -6,20 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-class PengalamanBekerja extends StatefulWidget {
-  const PengalamanBekerja({super.key});
+class TambahKeterampilan extends StatefulWidget {
+  const TambahKeterampilan({super.key});
 
   @override
-  State<PengalamanBekerja> createState() => _PengalamanBekerjaState();
+  State<TambahKeterampilan> createState() => _TambahKeterampilanState();
 }
 
-class _PengalamanBekerjaState extends State<PengalamanBekerja> {
+class _TambahKeterampilanState extends State<TambahKeterampilan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pengalaman Bekerja'),
-      ),
+      appBar: AppBar(title: const Text('Keterampilan')),
       body: ListView(children: [
         Center(
           child: Container(
@@ -31,7 +29,7 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
             child: Column(
               children: [
                 const BccSubheaderLabel(
-                  label: 'Tambah Pengalaman Bekerja',
+                  label: 'Tambah Keterampilan',
                 ),
                 const BccTextFormFieldInput(
                   hint: '-- Deskripsi --',

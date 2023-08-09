@@ -24,25 +24,26 @@ class BccTextFormFieldInput extends StatelessWidget {
     return Padding(
       padding: padding ?? const EdgeInsets.only(left: 15, right: 15),
       child: SizedBox(
-          height: 50,
           child: TextFormField(
-            readOnly: readOnly,
-            keyboardType: textInputType ?? TextInputType.emailAddress,
-            autofocus: false,
-            obscureText:
-                textInputType == TextInputType.visiblePassword ? true : false,
-            textAlign: textAlign ?? TextAlign.center,
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: hint,
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.all(10.0),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(radius ?? 10.0),
-                  borderSide: const BorderSide(width: 0.05)),
-            ),
-          )),
+        readOnly: readOnly,
+        keyboardType: textInputType ?? TextInputType.emailAddress,
+        minLines: textInputType == TextInputType.multiline ? 5 : null,
+        maxLines: textInputType == TextInputType.multiline ? 5 : null,
+        autofocus: false,
+        obscureText:
+            textInputType == TextInputType.visiblePassword ? true : false,
+        textAlign: textAlign ?? TextAlign.center,
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hint,
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.all(10.0),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius ?? 10.0),
+              borderSide: const BorderSide(width: 0.05)),
+        ),
+      )),
     );
   }
 }

@@ -19,8 +19,12 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
   // List<dynamic> dataLowonganPopuler = [];
   // List<dynamic> dataPerusahaanTerbaru = [];
 
+  bool isErrorImageProfile = false;
+
   getProfileImage() {
-    return ((userInfo['photo'] == null && userInfo['photo'] == '')
+    return ((userInfo['photo'] == null ||
+            userInfo['photo'] == '' ||
+            isErrorImageProfile)
         ? const AssetImage('assets/images/male.png')
         : NetworkImage(userInfo['photo']));
   }
@@ -80,7 +84,13 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                         color: Colors.white,
                         border: Border.all(width: 0.25),
                         image: DecorationImage(
-                            fit: BoxFit.cover, image: getProfileImage()))),
+                            onError: (e, s) {
+                              setState(() {
+                                isErrorImageProfile = true;
+                              });
+                            },
+                            fit: BoxFit.cover,
+                            image: getProfileImage()))),
               ),
             ),
             Positioned(
