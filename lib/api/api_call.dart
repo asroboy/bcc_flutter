@@ -55,10 +55,33 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
   }
 
+  Future<dynamic> getAuthenticatedData(
+      String path, dynamic body, String token) {
+    String apiPath = Constants.host + path;
+
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
   Future<dynamic> daftar(dynamic body) {
     String apiPath = Constants.host + Constants.pathDaftarPencaker;
     log('path $apiPath');
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
+  }
+
+  Future<dynamic> simpanPendidikan(dynamic body, String token) {
+    String apiPath = Constants.host + Constants.pathPendidiksnPencaker;
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> simpanPengalamanBekerja(dynamic body, String token) {
+    String apiPath = Constants.host + Constants.pathPengalamanBekerja;
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
   }
 
   Future<dynamic> getDataPendukung(String path) {

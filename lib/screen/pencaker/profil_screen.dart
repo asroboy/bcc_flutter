@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:bcc/api/api.dart';
+import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
@@ -14,6 +18,8 @@ class ProfilPencakerScreen extends StatefulWidget {
 class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
 
+  final ApiCall _apiCall = ApiCall();
+  final ApiHelper _apiHelper = ApiHelper();
   dynamic userInfo;
   bool isErrorImageProfile = false;
 
@@ -94,9 +100,6 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                         fontWeight: FontWeight.bold,
                         fontSize: 19,
                         color: Theme.of(context).colorScheme.primary),
-                  ),
-                  Text(
-                    '${userInfo['headline']}',
                   ),
                   Text(
                     '${userInfo['address']}',
