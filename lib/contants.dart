@@ -15,8 +15,10 @@ class Constants {
   static String pathDaftarPencaker = 'jobseeker/auth/registration';
   static String pathPendidiksnPencaker = 'admin/jobseeker_education';
   static String pathPengalamanBekerja = 'admin/jobseeker_experience';
+  static String pathSertifikatPencker = 'admin/jobseeker_certificate';
   static String pathTipePegawai = 'admin/master_employment_type';
   static String pathCompany = 'admin/company';
+  static String pathDataPencaker = 'admin/jobseeker';
 
   static Color boxColorBlueTrans = const Color(0x236fb6f7);
   static Color colorBiruGelap = const Color(0xFF003673);

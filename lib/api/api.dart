@@ -200,6 +200,55 @@ class ApiHelper {
     return data;
   }
 
+  requestAuthenticatedDataDelete(String token) async {
+    log('body $body');
+
+    if (apiUrl!.contains('http://')) {
+      apiUrl = apiUrl!.replaceAll('http://', 'https://');
+    }
+    log('url $apiUrl');
+    // try {
+    //   final result = await InternetAddress.lookup(apiUrl);
+    //   if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+    log('connected');
+    // final encoding = Encoding.getByName('utf-8');
+    // try {
+    Response response = await delete(
+      Uri.parse(apiUrl ?? apiUrlGlobalLogin),
+      body: json.encode(body),
+      headers: {
+        'Authorization': token,
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+    ).timeout(
+      const Duration(minutes: 2),
+      onTimeout: () {
+        const info = {'code': 408, 'message': 'Request timeout'};
+        Response response = Response(json.encode(info), 408);
+        return response; // Request Timeout response status code
+      },
+    );
+    dynamic data = {
+      'message': 'Tidak ada informasi yang bisa ditampilkan',
+      'status': 'Failed',
+      'code': 500
+    };
+
+    if (response.body != '') {
+      try {
+        data = json.decode(response.body);
+      } catch (ex) {
+        data = {
+          'message': 'Terjadi kendala. \nError: $ex',
+          'status': 'Failed',
+          'code': 500
+        };
+      }
+    }
+    return data;
+  }
+
   MultipartRequest initMultipartReqest() {
     if (apiUrl!.contains('http://')) {
       apiUrl = apiUrl!.replaceAll('http://', 'https://');
@@ -231,7 +280,7 @@ class ApiHelper {
 
   apiCallResponseHandler(
       dynamic response, BuildContext context, Function onSuccess) {
-    log('response $response');
+    // log('response $response');
     if (response['code'] == 200 && response['success'] == true) {
       onSuccess(response);
     } else {

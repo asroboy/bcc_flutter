@@ -76,10 +76,11 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
   _fetchDataPerusahaanByName(String filter) {
     String token = loginData['data']['token'];
     var completer = Completer<List<dynamic>>();
-    Future<dynamic> req = _apiCall.getAuthenticatedData(
-        Constants.pathCompany + ('?name=') + filter + ('&limit=20'),
-        {'limit': '20', 'name': filter},
-        token);
+    Future<dynamic> req = _apiCall.getDataPendukung(Constants.pathCompany +
+        ('?name=') +
+        filter +
+        ('&limit=20') +
+        ('&token=$token'));
     req.then((value) {
       _apiHelper.apiCallResponseHandler(value, context, (response) {
         completer.complete(response['data']);
@@ -124,17 +125,17 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                   controller: _titleController,
                   padding: const EdgeInsets.only(bottom: 10),
                 ),
-                // BccDropdownSearch(
-                //     hint: "Cari Perusahaan *",
-                //     itemAsString: (dynamic u) => u['name'],
-                //     asyncItems: (String filter) =>
-                //         _fetchDataPerusahaanByName(filter),
-                //     onChange: (dynamic data) {
-                //       setState(() {
-                //         _namaPerusahaan.text = data['name'];
-                //         selectedPerusahaan = data;
-                //       });
-                //     }),
+                BccDropdownSearch(
+                    hint: "Cari Perusahaan *",
+                    itemAsString: (dynamic u) => u['name'],
+                    asyncItems: (String filter) =>
+                        _fetchDataPerusahaanByName(filter),
+                    onChange: (dynamic data) {
+                      setState(() {
+                        _namaPerusahaan.text = data['name'];
+                        selectedPerusahaan = data;
+                      });
+                    }),
                 BccTextFormFieldInput(
                   hint: 'Nama Perusahaan',
                   padding: const EdgeInsets.only(bottom: 5),
@@ -165,7 +166,7 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                     }),
                 const Center(
                   child: BccLabel(
-                    label: 'Mulai Bulan',
+                    label: 'Bulan Mulai',
                     margin: EdgeInsets.only(top: 10, bottom: 5),
                   ),
                 ),
@@ -190,7 +191,7 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                 ),
                 const Center(
                   child: BccLabel(
-                    label: 'Mulai Sampai',
+                    label: 'Bulan Sampai',
                     margin: EdgeInsets.only(top: 10, bottom: 5),
                   ),
                 ),

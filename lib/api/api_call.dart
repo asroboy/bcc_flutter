@@ -84,10 +84,29 @@ class ApiCall {
         .requestAuthenticatedDataPost(token);
   }
 
+  Future<dynamic> simpanSertifikatPencaker(dynamic body, String token) {
+    String apiPath = Constants.host + Constants.pathSertifikatPencker;
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
   Future<dynamic> getDataPendukung(String path) {
     String apiPath = Constants.host + path;
     var body = {};
     log('path $apiPath');
     return ApiHelper(body: body, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getDataRinci(String path, String id, String token) {
+    return getDataPendukung(path + ('/') + (id) + ('/') + token);
+  }
+
+  Future<dynamic> hapusData(String path, String id, String token) {
+    String apiPath = Constants.host + path + ('/') + id;
+    var body = {};
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataDelete(token);
   }
 }
