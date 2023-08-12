@@ -94,19 +94,19 @@ class _RegisterPerusahaanScreenState extends State<RegisterPerusahaanScreen> {
                   ),
                   const BccTextFormFieldInput(
                     hint: 'Username*',
-                    padding: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.only(top: 15),
                   ),
                   const BccTextFormFieldInput(
                     hint: 'Password*',
-                    padding: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.only(top: 15),
                   ),
                   const BccTextFormFieldInput(
                     hint: 'Konfirmasi Password',
-                    padding: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.only(top: 15),
                   ),
                   const BccTextFormFieldInput(
                     hint: 'Email',
-                    padding: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.only(top: 15),
                   ),
                   BccButton(
                     onPressed: () {

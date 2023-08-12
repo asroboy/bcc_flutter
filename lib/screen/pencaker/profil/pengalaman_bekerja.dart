@@ -7,6 +7,7 @@ import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_search.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
 import 'package:bcc/bccwidgets/bcc_label.dart';
+import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
@@ -114,19 +115,14 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                 const BccSubheaderLabel(
                   label: 'Tambah Pengalaman Bekerja',
                 ),
-                const Center(
-                  child: BccLabel(
-                    label: 'Judul Pekerjaan',
-                    margin: EdgeInsets.only(top: 5, bottom: 5),
-                  ),
-                ),
                 BccTextFormFieldInput(
-                  hint: 'Judul Pekerjaan',
+                  hint: 'Judul Pekerjaan *',
                   controller: _titleController,
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
                 ),
+                const BccRowLabel(label: 'Perusahaan *'),
                 BccDropdownSearch(
-                    hint: "Cari Perusahaan *",
+                    hint: "Cari Perusahaan",
                     itemAsString: (dynamic u) => u['name'],
                     asyncItems: (String filter) =>
                         _fetchDataPerusahaanByName(filter),
@@ -137,10 +133,11 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                       });
                     }),
                 BccTextFormFieldInput(
-                  hint: 'Nama Perusahaan',
-                  padding: const EdgeInsets.only(bottom: 5),
+                  hint: 'Nama Perusahaan *',
+                  padding: const EdgeInsets.only(bottom: 5, top: 10),
                   controller: _namaPerusahaan,
                 ),
+                const BccRowLabel(label: 'Jenis Pekerjaan'),
                 BccDropDownString(
                     value: selectedTipePekerjaan,
                     data: tipePekerjaan,
@@ -150,12 +147,7 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                         selectedTipePekerjaan = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Masih bekerja sampai sekarang?',
-                    margin: EdgeInsets.only(top: 5, bottom: 5),
-                  ),
-                ),
+                const BccRowLabel(label: 'Masih bekerja sampai sekarang?'),
                 BccDropDownString(
                     value: masihBekerjaSampaiSekarang,
                     data: const ['Ya', 'Tidak'],
@@ -164,12 +156,7 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                         masihBekerjaSampaiSekarang = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Bulan Mulai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
+                const BccRowLabel(label: 'Bulan mulai'),
                 BccDropDownString(
                     value: bulanMulai,
                     data: bulans,
@@ -178,23 +165,12 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                         bulanMulai = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Tahun Mulai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
                 BccTextFormFieldInput(
-                  hint: '-- Tahun --',
-                  padding: EdgeInsets.zero,
+                  hint: 'Tahun mulai',
+                  padding: const EdgeInsets.only(top: 10),
                   controller: _tahunMulaiController,
                 ),
-                const Center(
-                  child: BccLabel(
-                    label: 'Bulan Sampai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
+                const BccRowLabel(label: 'Bulan sampai'),
                 BccDropDownString(
                     value: bulanSampai,
                     data: bulans,
@@ -203,19 +179,13 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                         bulanSampai = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Tahun Sampai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
                 BccTextFormFieldInput(
-                  hint: '-- Tahun --',
-                  padding: const EdgeInsets.only(bottom: 10),
+                  hint: 'Tahun sampai',
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
                   controller: _tahunSampaiController,
                 ),
                 BccTextFormFieldInput(
-                  hint: '-- Deskripsi --',
+                  hint: 'Deskripsi',
                   padding: EdgeInsets.zero,
                   controller: _descriptionController,
                   textInputType: TextInputType.multiline,

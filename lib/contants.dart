@@ -19,6 +19,8 @@ class Constants {
   static String pathTipePegawai = 'admin/master_employment_type';
   static String pathCompany = 'admin/company';
   static String pathDataPencaker = 'admin/jobseeker';
+  static String pathDataMasterSkill = 'admin/master_skill';
+  static String pathDataJobseekerSkill = 'admin/jobseeker_skill';
 
   static Color boxColorBlueTrans = const Color(0x236fb6f7);
   static Color colorBiruGelap = const Color(0xFF003673);

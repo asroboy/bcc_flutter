@@ -49,6 +49,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
             _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
             _dataPendidikanPencaker.addAll(biodataPencaker['education']);
             _dataSertifikat.addAll(biodataPencaker['certificate']);
+            _dataSkill.addAll(biodataPencaker['skill']);
           });
         }
       });
@@ -58,6 +59,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
   final List<dynamic> _dataPendidikanPencaker = [];
   final List<dynamic> _dataPengalamanBekerja = [];
   final List<dynamic> _dataSertifikat = [];
+  final List<dynamic> _dataSkill = [];
   @override
   void initState() {
     super.initState();
@@ -537,9 +539,68 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                       label: 'Keterampilan',
                       showButton: true,
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Future<dynamic> tambahKetrampilan =
+                            Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const TambahKeterampilan(),
                         ));
+
+                        tambahKetrampilan.then((value) {
+                          _reloadData();
+                        });
+                      },
+                    ),
+                    ListView.builder(
+                      itemCount: _dataSkill.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        dynamic skill = _dataSkill[index];
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: const BorderSide(width: 0.3)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    '${skill['master_skill_name']} (${skill['percentage']} %)'),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    BccNormalButton(
+                                      onPressed: () {
+                                        _hapus(
+                                            Constants.pathSertifikatPencker,
+                                            skill['id'],
+                                            '${skill['master_skill_name']}');
+                                      },
+                                      size: const Size(50, 40),
+                                      backgroundColor: Colors.red,
+                                      child: const Icon(
+                                        Icons.delete,
+                                        size: 16,
+                                      ),
+                                    ),
+                                    const Padding(
+                                        padding: EdgeInsets.only(right: 5)),
+                                    BccNormalButton(
+                                      onPressed: () {},
+                                      size: const Size(50, 40),
+                                      child: const Icon(
+                                        Icons.edit,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -568,6 +629,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
       _dataPendidikanPencaker.clear();
       _dataPengalamanBekerja.clear();
       _dataSertifikat.clear();
+      _dataSkill.clear();
       isLoading = true;
     });
     _fetchBiodataRinciPencaker();

@@ -8,6 +8,7 @@ import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_search.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
 import 'package:bcc/bccwidgets/bcc_label.dart';
+import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
@@ -136,6 +137,7 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                 const BccSubheaderLabel(
                   label: 'Tambah Riwayat Pendidikan',
                 ),
+                const BccRowLabel(label: 'Sekolah/Perguruan Tinggi *'),
                 BccDropdownSearch(
                     hint: "Sekolah/Perguruan Tinggi *",
                     itemAsString: (dynamic u) => u['name'],
@@ -147,6 +149,7 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                         selectedSekolahObj = data;
                       });
                     }),
+                const BccRowLabel(label: 'Tingkat Pendidikan *'),
                 BccDropDownString(
                   value: selectedPendidikanTerakhirString,
                   hint: const Text('Tingkat Pendidikan *'),
@@ -159,6 +162,7 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                     });
                   },
                 ),
+                const BccRowLabel(label: 'Jurusan *'),
                 BccDropdownSearch(
                     hint: "Jurusan *",
                     itemAsString: (dynamic u) => u['name'],
@@ -170,65 +174,39 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                         selectedJurusanObj = data;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Mulai Bulan',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
+                const BccRowLabel(label: 'Bulan mulai *'),
                 BccDropDownString(
                     value: bulanMulai,
                     data: bulans,
+                    hint: const Text('Bulan mulai *'),
                     onChanged: (value) {
                       setState(() {
                         bulanMulai = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Tahun Mulai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
                 BccTextFormFieldInput(
-                  hint: '-- Tahun --',
-                  padding: EdgeInsets.zero,
+                  hint: 'Tahun Mulai *',
+                  padding: const EdgeInsets.only(top: 10),
                   controller: _tahunMulaiController,
                 ),
-                const Center(
-                  child: BccLabel(
-                    label: 'Mulai Sampai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
+                const BccRowLabel(label: 'Bulan sampai *'),
                 BccDropDownString(
                     value: bulanSampai,
                     data: bulans,
+                    hint: const Text('Bulan sampai *'),
                     onChanged: (value) {
                       setState(() {
                         bulanSampai = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Tahun Sampai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
                 BccTextFormFieldInput(
-                  hint: '-- Tahun --',
-                  padding: EdgeInsets.zero,
+                  hint: 'Tahun Sampai',
+                  padding: const EdgeInsets.only(top: 10),
                   controller: _tahunSampaiController,
                 ),
-                const Center(
-                  child: BccLabel(
-                    label: 'Deskripsi',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
                 BccTextFormFieldInput(
-                  hint: '-- Deskripsi --',
-                  padding: EdgeInsets.zero,
+                  hint: 'Deskripsi',
+                  padding: const EdgeInsets.only(top: 15),
                   controller: _descriptionController,
                   textInputType: TextInputType.multiline,
                 ),

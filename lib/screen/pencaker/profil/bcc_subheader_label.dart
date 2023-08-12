@@ -15,10 +15,11 @@ class BccSubheaderLabel extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 10),
+          padding: const EdgeInsets.only(top: 5, bottom: 5, left: 7),
           child: Text(
             label,
             style: TextStyle(
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary),
           ),

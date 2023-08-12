@@ -28,7 +28,17 @@ class _UbahBiodataState extends State<UbahBiodata> {
               child: Column(
                 children: [
                   const BccSubheaderLabel(
-                    label: 'Tambah Lisensi dan Sertifikat',
+                    label: 'INFORMASI BIODATA DIRI',
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                        alignLabelWithHint: true,
+                        labelText: "Your_Hint_and_Label"),
+                  ),
+                  const BccTextFormFieldInput(
+                    hint: 'username',
+                    padding: EdgeInsets.zero,
+                    textInputType: TextInputType.multiline,
                   ),
                   const BccTextFormFieldInput(
                     hint: '-- Deskripsi --',

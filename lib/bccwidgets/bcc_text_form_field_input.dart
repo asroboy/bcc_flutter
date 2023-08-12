@@ -27,16 +27,20 @@ class BccTextFormFieldInput extends StatelessWidget {
           child: TextFormField(
         readOnly: readOnly,
         keyboardType: textInputType ?? TextInputType.emailAddress,
-        minLines: textInputType == TextInputType.multiline ? 5 : null,
-        maxLines: textInputType == TextInputType.multiline ? 5 : null,
+        minLines: textInputType == TextInputType.multiline ? 5 : 1,
+        maxLines: textInputType == TextInputType.multiline ? 5 : 1,
         autofocus: false,
         obscureText:
             textInputType == TextInputType.visiblePassword ? true : false,
-        textAlign: textAlign ?? TextAlign.center,
+        textAlign: textAlign ?? TextAlign.start,
         controller: controller,
         decoration: InputDecoration(
           hintText: hint,
           filled: true,
+          labelText: hint,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          alignLabelWithHint: true,
+          floatingLabelAlignment: FloatingLabelAlignment.start,
           fillColor: Colors.white,
           contentPadding: const EdgeInsets.all(10.0),
           border: OutlineInputBorder(

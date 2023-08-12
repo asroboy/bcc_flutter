@@ -4,6 +4,7 @@ import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
 import 'package:bcc/bccwidgets/bcc_label.dart';
+import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
@@ -69,20 +70,16 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
                 ),
                 BccTextFormFieldInput(
                   hint: 'Nama Sertifikat *',
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
                   controller: _namaSertifikat,
                 ),
                 BccTextFormFieldInput(
                   hint: 'Nama Penerbit *',
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 5, top: 10),
                   controller: _namaPenerbit,
                 ),
-                const Center(
-                  child: BccLabel(
-                    label: 'Apakah sertifikat masih berlaku/aktif?',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
+                const BccRowLabel(
+                    label: 'Apakah sertifikat masih berlaku/aktif?'),
                 BccDropDownString(
                     value: kredensialMasihAktif,
                     data: const ['Ya', 'Tidak'],
@@ -91,12 +88,7 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
                         kredensialMasihAktif = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Bulan Mulai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
+                const BccRowLabel(label: 'Bulan mulai'),
                 BccDropDownString(
                     value: bulanMulai,
                     data: bulans,
@@ -105,23 +97,12 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
                         bulanMulai = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Tahun Mulai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
                 BccTextFormFieldInput(
-                  hint: '-- Tahun --',
-                  padding: EdgeInsets.zero,
+                  hint: 'Tahun mulai',
+                  padding: const EdgeInsets.only(top: 10),
                   controller: _tahunMulaiController,
                 ),
-                const Center(
-                  child: BccLabel(
-                    label: 'Bulan Sampai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
+                const BccRowLabel(label: 'Bulan sampai'),
                 BccDropDownString(
                     value: bulanSampai,
                     data: bulans,
@@ -130,25 +111,19 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
                         bulanSampai = value;
                       });
                     }),
-                const Center(
-                  child: BccLabel(
-                    label: 'Tahun Sampai',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
-                ),
                 BccTextFormFieldInput(
-                  hint: '-- Tahun --',
-                  padding: const EdgeInsets.only(bottom: 10),
+                  hint: 'Tahun sampai',
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
                   controller: _tahunSampaiController,
                 ),
                 BccTextFormFieldInput(
                   hint: 'ID Kredensial',
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
                   controller: _idCredentialController,
                 ),
                 BccTextFormFieldInput(
                   hint: 'URL Kredensial',
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
                   controller: _urlCredentialController,
                 ),
                 BccButton(
@@ -250,18 +225,6 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
                   padding: const EdgeInsets.only(top: 20),
                   child: const Text('Simpan'),
                 )
-
-                //     "id": "1",
-                // "jobseeker_id": "1",
-                // "name": "Database Fundamental Expert",
-                // "issuing_organization": "Microsoft, Inc",
-                // "is_not_expire": "1",
-                // "start_month": "Agustus",
-                // "start_year": "2020",
-                // "end_month": null,
-                // "end_year": null,
-                // "credential_id": "1236512318901293",
-                // "credential_url": "http://asdkalskjdk.com/1236512318901293"
               ],
             ),
           ),
