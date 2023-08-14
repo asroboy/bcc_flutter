@@ -41,8 +41,8 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
     _apiCall
         .getDataRinci(Constants.pathDataPencaker, idPencaker, token)
         .then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
+      if (mounted) {
+        _apiHelper.apiCallResponseHandler(value, context, (response) {
           setState(() {
             isLoading = false;
             biodataPencaker = response['data'];
@@ -51,8 +51,8 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
             _dataSertifikat.addAll(biodataPencaker['certificate']);
             _dataSkill.addAll(biodataPencaker['skill']);
           });
-        }
-      });
+        });
+      }
     });
   }
 
@@ -186,7 +186,8 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                       color: Constants.colorBiruGelap,
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const UbahBiodata(),
+                          builder: (context) =>
+                              UbahBiodata(biodataPencaker: biodataPencaker),
                         ));
                       },
                       icon: const Icon(Icons.edit),
@@ -364,7 +365,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
 
                                         tambahPendidikan.then((value) {
                                           if (value != null) {
-                                            _fetchRiwayatPendidikan();
+                                            _reloadData();
                                           }
                                         });
                                       },
@@ -574,7 +575,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                                     BccNormalButton(
                                       onPressed: () {
                                         _hapus(
-                                            Constants.pathSertifikatPencker,
+                                            Constants.pathDataJobseekerSkill,
                                             skill['id'],
                                             '${skill['master_skill_name']}');
                                       },
@@ -603,6 +604,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                         );
                       },
                     ),
+                    const Padding(padding: EdgeInsets.only(bottom: 50)),
                   ],
                 ),
               )

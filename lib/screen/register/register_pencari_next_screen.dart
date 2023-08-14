@@ -384,7 +384,7 @@ class _RegisterPencariKerjaNextScreenState
                   BccDropDownString(
                     value: jenisKelamin,
                     hint: const Text('Jenis Kelamin'),
-                    data: const ['LAKI-LAKI', 'PEREMPUAN'],
+                    data: const ['LAKI LAKI', 'PEREMPUAN'],
                     onChanged: (value) {
                       setState(() {
                         jenisKelamin = value;

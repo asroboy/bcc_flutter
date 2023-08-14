@@ -94,7 +94,7 @@ class ApiCall {
   Future<dynamic> simpanSkillPencaker(dynamic body, String token) {
     String apiPath = Constants.host + Constants.pathDataJobseekerSkill;
     log('path $apiPath');
-    return ApiHelper(body: body, apiUrl: apiPath)
+    return ApiHelper(body: [body], apiUrl: apiPath)
         .requestAuthenticatedDataPost(token);
   }
 
