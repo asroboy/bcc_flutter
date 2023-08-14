@@ -11,7 +11,10 @@ class BccLabel extends StatelessWidget {
     return Container(
       margin: margin,
       padding: padding,
-      child: Text(label),
+      child: Text(
+        label,
+        textAlign: TextAlign.start,
+      ),
     );
   }
 }

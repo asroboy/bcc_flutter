@@ -1,5 +1,6 @@
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/landing_grid_pencaker.dart';
+import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -109,7 +110,11 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                   child: Center(
                     child: IconButton(
                       color: Constants.colorBiruGelap,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const UbahBiodata(),
+                        ));
+                      },
                       icon: const Icon(Icons.edit),
                     ),
                   ),

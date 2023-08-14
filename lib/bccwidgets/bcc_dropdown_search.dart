@@ -7,17 +7,19 @@ class BccDropdownSearch extends StatelessWidget {
       this.asyncItems,
       this.onChange,
       this.itemAsString,
+      this.selectedItem,
       this.hint});
 
   final Future<List<dynamic>> Function(String)? asyncItems;
   final Function(dynamic)? onChange;
   final String Function(dynamic)? itemAsString;
   final String? hint;
+  final dynamic selectedItem;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 5, right: 5, top: 2, bottom: 2),
+      padding: const EdgeInsets.only(left: 15, right: 5, top: 2, bottom: 2),
       margin: const EdgeInsets.only(top: 10, bottom: 5),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -38,9 +40,10 @@ class BccDropdownSearch extends StatelessWidget {
             ))),
         asyncItems: asyncItems,
         itemAsString: itemAsString,
+        selectedItem: selectedItem,
         onChanged: onChange,
         dropdownDecoratorProps: DropDownDecoratorProps(
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           dropdownSearchDecoration: InputDecoration(
               focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white)),

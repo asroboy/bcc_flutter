@@ -8,6 +8,7 @@ import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_search.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
 import 'package:bcc/bccwidgets/bcc_label.dart';
+import 'package:bcc/bccwidgets/bcc_row_label.dart';
 
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
@@ -371,32 +372,29 @@ class _RegisterPencariKerjaNextScreenState
                     hint: 'No. KTP*',
                     textInputType: TextInputType.number,
                     controller: _noKTPController,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 15),
                   ),
                   BccTextFormFieldInput(
                     hint: 'No Telpon (+62)',
                     textInputType: TextInputType.phone,
                     controller: _noTelpController,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 15),
                   ),
+                  const BccRowLabel(label: 'Jenis Kelamin'),
                   BccDropDownString(
                     value: jenisKelamin,
                     hint: const Text('Jenis Kelamin'),
-                    data: const ['LAKI-LAKI', 'PEREMPUAN'],
+                    data: const ['LAKI LAKI', 'PEREMPUAN'],
                     onChanged: (value) {
                       setState(() {
                         jenisKelamin = value;
                       });
                     },
                   ),
-                  const BccLabel(
-                    label: 'Tempat & Tanggal Lahir',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
                   BccTextFormFieldInput(
                     hint: 'Tempat Lahir*',
                     controller: _tempatLahirController,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 10),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -407,13 +405,13 @@ class _RegisterPencariKerjaNextScreenState
                           hint: 'Tanggal Lahir*',
                           readOnly: true,
                           controller: _textEditingControllerTanggalLahir,
-                          padding: const EdgeInsets.only(top: 5),
+                          padding: const EdgeInsets.only(top: 15),
                         ),
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.15,
                         child: BccButton(
-                            padding: EdgeInsets.zero,
+                            padding: const EdgeInsets.only(top: 15),
                             size: const Size(40, 45),
                             onPressed: () {
                               showDatePicker(
@@ -435,6 +433,7 @@ class _RegisterPencariKerjaNextScreenState
                       ),
                     ],
                   ),
+                  const BccRowLabel(label: 'Agama'),
                   BccDropDownString(
                     value: agama,
                     hint: const Text('Agama*'),
@@ -454,9 +453,10 @@ class _RegisterPencariKerjaNextScreenState
                       });
                     },
                   ),
+                  const BccRowLabel(label: 'Penyandang disabilitas?'),
                   BccDropDownString(
                     value: disabilitas,
-                    hint: const Text('Penyandang Disabilitas?'),
+                    hint: const Text('Penyandang disabilitas?'),
                     data: disabilitasListString,
                     onChanged: (value) {
                       setState(() {
@@ -470,18 +470,15 @@ class _RegisterPencariKerjaNextScreenState
                     hint: 'Tinggi Badan (cm)*',
                     controller: _tinggiBadanController,
                     textInputType: TextInputType.number,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 10),
                   ),
                   BccTextFormFieldInput(
                     hint: 'Berat Badan (kg)*',
                     controller: _beratBadanController,
                     textInputType: TextInputType.number,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 10),
                   ),
-                  const BccLabel(
-                    label: 'Kewarganegaraan',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
+                  const BccRowLabel(label: 'Kewarganegaraan*'),
                   BccDropDownString(
                     value: wargaNegara,
                     hint: const Text('Kewarganegaraan*'),
@@ -492,6 +489,7 @@ class _RegisterPencariKerjaNextScreenState
                       });
                     },
                   ),
+                  const BccRowLabel(label: 'Status Pernikahan*'),
                   BccDropDownString(
                     value: statusPernikahan,
                     hint: const Text('Status Pernikahan*'),
@@ -507,6 +505,7 @@ class _RegisterPencariKerjaNextScreenState
                       });
                     },
                   ),
+                  const BccRowLabel(label: 'Status Bekerja*'),
                   BccDropDownString(
                     value: statusBekerja,
                     hint: const Text('Status Bekerja*'),
@@ -534,6 +533,7 @@ class _RegisterPencariKerjaNextScreenState
                       ),
                     ),
                   ),
+                  const BccRowLabel(label: 'Pendidikan Terakhir*'),
                   BccDropDownString(
                     value: selectedPendidikanTerakhirString,
                     hint: const Text('Pendidikan Terakhir*'),
@@ -550,8 +550,9 @@ class _RegisterPencariKerjaNextScreenState
                     hint: 'Tahun Lulus*',
                     textInputType: TextInputType.number,
                     controller: _tahunLulusController,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
                   ),
+                  const BccRowLabel(label: 'Sekolah/Perguruan Tinggi*'),
                   BccDropdownSearch(
                       hint: "Sekolah/Perguruan Tinggi*",
                       itemAsString: (dynamic u) => u['name'],
@@ -563,7 +564,7 @@ class _RegisterPencariKerjaNextScreenState
                           selectedSekolahObj = data;
                         });
                       }),
-
+                  const BccRowLabel(label: 'Proram Kejurusan*'),
                   BccDropdownSearch(
                       hint: "Program Kejuruan*",
                       itemAsString: (dynamic u) => u['name'],
@@ -575,37 +576,11 @@ class _RegisterPencariKerjaNextScreenState
                           selectedJurusanObj = data;
                         });
                       }),
-                  // BccDropDownString(
-                  //   value: selectedSekolahString,
-                  //   hint: const Text('Sekolah/Perguruan Tinggi*'),
-                  //   data: sekolahListString,
-                  //   onChanged: (value) {
-                  //     setState(() {
-                  //       selectedSekolahString = value;
-                  //       selectedSekolahObj = sekolahObj
-                  //           .singleWhere((element) => element['name'] == value);
-                  //     });
-                  //   },
-                  // ),
-                  // BccDropDownString(
-                  //   value: selectedJurusan,
-                  //   hint: const Text('Program Kejuruan*'),
-                  //   data: jurusanListString,
-                  //   onChanged: (value) {
-                  //     setState(() {
-                  //       selectedJurusan = value;
-                  //       selectedJurusanObj = jurusanObj
-                  //           .singleWhere((element) => element['name'] == value);
-                  //     });
-                  //   },
-                  // ),
-                  const BccLabel(
-                    label: 'Mulai pendidikan dari',
-                    margin: EdgeInsets.only(top: 5, bottom: 5),
-                  ),
+                  const BccRowLabel(label: 'Mulai pendidikan dari'),
+                  const BccRowLabel(label: 'Bulan mulai*'),
                   BccDropDownString(
                     value: bulanMulaiPendidikan,
-                    hint: const Text('Bulan*'),
+                    hint: const Text('Bulan mulai*'),
                     data: bulanString,
                     onChanged: (value) {
                       setState(() {
@@ -614,18 +589,15 @@ class _RegisterPencariKerjaNextScreenState
                     },
                   ),
                   BccTextFormFieldInput(
-                    hint: 'Tahun*',
+                    hint: 'Tahun mulai*',
                     textInputType: TextInputType.number,
                     controller: _tahunMulaiPendidikan,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 10),
                   ),
-                  const BccLabel(
-                    label: 'Sampai',
-                    margin: EdgeInsets.only(top: 5, bottom: 5),
-                  ),
+                  const BccRowLabel(label: 'Bulan sampai*'),
                   BccDropDownString(
                     value: bulanSampaiPendidikan,
-                    hint: const Text('Bulan*'),
+                    hint: const Text('Bulan sampai*'),
                     data: bulanString,
                     onChanged: (value) {
                       setState(() {
@@ -634,10 +606,10 @@ class _RegisterPencariKerjaNextScreenState
                     },
                   ),
                   BccTextFormFieldInput(
-                    hint: 'Tahun*',
+                    hint: 'Tahun sampai*',
                     textInputType: TextInputType.number,
                     controller: _tahunSelesaiPendidikan,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 10),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
@@ -652,10 +624,7 @@ class _RegisterPencariKerjaNextScreenState
                       ),
                     ),
                   ),
-                  const BccLabel(
-                    label: 'Provinsi',
-                    margin: EdgeInsets.only(top: 5, bottom: 5),
-                  ),
+                  const BccRowLabel(label: 'Procinsi*'),
                   BccDropDownString(
                     value: selectedProvinsiString,
                     hint: const Text('Provinsi'),
@@ -672,10 +641,7 @@ class _RegisterPencariKerjaNextScreenState
                       });
                     },
                   ),
-                  const BccLabel(
-                    label: 'Kota/Kabupaten',
-                    margin: EdgeInsets.only(top: 5, bottom: 5),
-                  ),
+                  const BccRowLabel(label: 'Kota/Kabupaten*'),
                   BccDropDownString(
                     value: selectedKotaString,
                     hint: const Text('Kota/Kabupaten'),
@@ -693,10 +659,7 @@ class _RegisterPencariKerjaNextScreenState
                       });
                     },
                   ),
-                  const BccLabel(
-                    label: 'Kecamatan',
-                    margin: EdgeInsets.only(top: 5, bottom: 5),
-                  ),
+                  const BccRowLabel(label: 'Kecamatan*'),
                   BccDropDownString(
                     value: selectedKecamatanString,
                     hint: const Text('Kecamatan'),
@@ -714,10 +677,7 @@ class _RegisterPencariKerjaNextScreenState
                       });
                     },
                   ),
-                  const BccLabel(
-                    label: 'Desa',
-                    margin: EdgeInsets.only(top: 10, bottom: 5),
-                  ),
+                  const BccRowLabel(label: 'Desa*'),
                   BccDropDownString(
                     value: selectedDesaString,
                     hint: const Text('Desa'),
@@ -732,7 +692,7 @@ class _RegisterPencariKerjaNextScreenState
                   ),
                   BccTextFormFieldInput(
                     hint: 'Alamat lengkap',
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 10),
                     controller: _alamatLengkapController,
                   ),
                   BccButton(

@@ -25,7 +25,7 @@ class BccDropDownString extends StatelessWidget {
             borderRadius: BorderRadius.circular(10)),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DropdownButton<String>(
                 hint: hint,
@@ -33,15 +33,13 @@ class BccDropDownString extends StatelessWidget {
                 isDense: true,
                 value: value,
                 underline: const SizedBox(),
-                alignment: Alignment.center,
+                alignment: Alignment.topLeft,
                 items: data.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Center(
-                      child: Text(
-                        value,
-                        textAlign: TextAlign.center,
-                      ),
+                    child: Text(
+                      value,
+                      textAlign: TextAlign.start,
                     ),
                   );
                 }).toList(),

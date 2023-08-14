@@ -55,10 +55,47 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
   }
 
+  Future<dynamic> getAuthenticatedData(
+      String path, dynamic body, String token) {
+    String apiPath = Constants.host + path;
+
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
   Future<dynamic> daftar(dynamic body) {
     String apiPath = Constants.host + Constants.pathDaftarPencaker;
     log('path $apiPath');
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
+  }
+
+  Future<dynamic> simpanPendidikan(dynamic body, String token) {
+    String apiPath = Constants.host + Constants.pathPendidiksnPencaker;
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> simpanPengalamanBekerja(dynamic body, String token) {
+    String apiPath = Constants.host + Constants.pathPengalamanBekerja;
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> simpanSertifikatPencaker(dynamic body, String token) {
+    String apiPath = Constants.host + Constants.pathSertifikatPencker;
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> simpanSkillPencaker(dynamic body, String token) {
+    String apiPath = Constants.host + Constants.pathDataJobseekerSkill;
+    log('path $apiPath');
+    return ApiHelper(body: [body], apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
   }
 
   Future<dynamic> getDataPendukung(String path) {
@@ -66,5 +103,17 @@ class ApiCall {
     var body = {};
     log('path $apiPath');
     return ApiHelper(body: body, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getDataRinci(String path, String id, String token) {
+    return getDataPendukung(path + ('/') + (id) + ('/') + token);
+  }
+
+  Future<dynamic> hapusData(String path, String id, String token) {
+    String apiPath = Constants.host + path + ('/') + id;
+    var body = {};
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataDelete(token);
   }
 }

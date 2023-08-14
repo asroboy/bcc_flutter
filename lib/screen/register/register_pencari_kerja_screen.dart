@@ -2,7 +2,6 @@ import 'dart:ffi';
 
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_button.dart';
-import 'package:bcc/bccwidgets/bcc_row_info1.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/login_screen.dart';
@@ -83,24 +82,24 @@ class _RegisterPencariKerjaScreenState
                   BccTextFormFieldInput(
                     hint: 'Username*',
                     controller: _usernameController,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 10),
                   ),
                   BccTextFormFieldInput(
                     hint: 'Email*',
                     controller: _emailController,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 15),
                   ),
                   BccTextFormFieldInput(
                     hint: 'Password*',
                     controller: _passwordController,
                     textInputType: TextInputType.visiblePassword,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 15),
                   ),
                   BccTextFormFieldInput(
                     hint: 'Konfirmasi Password*',
                     textInputType: TextInputType.visiblePassword,
                     controller: _ulangiPasswordController,
-                    padding: const EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 15),
                   ),
                   BccButton(
                     onPressed: () {

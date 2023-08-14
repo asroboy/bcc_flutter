@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/contants.dart';
+import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart';
 
@@ -149,6 +151,104 @@ class ApiHelper {
     return data;
   }
 
+  requestAuthenticatedDataPost(String token) async {
+    log('body $body');
+
+    if (apiUrl!.contains('http://')) {
+      apiUrl = apiUrl!.replaceAll('http://', 'https://');
+    }
+    log('url $apiUrl');
+    // try {
+    //   final result = await InternetAddress.lookup(apiUrl);
+    //   if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+    log('connected');
+    // final encoding = Encoding.getByName('utf-8');
+    // try {
+    Response response = await post(
+      Uri.parse(apiUrl ?? apiUrlGlobalLogin),
+      body: json.encode(body),
+      headers: {
+        'Authorization': token,
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+    ).timeout(
+      const Duration(minutes: 2),
+      onTimeout: () {
+        const info = {'code': 408, 'message': 'Request timeout'};
+        Response response = Response(json.encode(info), 408);
+        return response; // Request Timeout response status code
+      },
+    );
+    dynamic data = {
+      'message': 'Tidak ada informasi yang bisa ditampilkan',
+      'status': 'Failed',
+      'code': 500
+    };
+
+    if (response.body != '') {
+      try {
+        data = json.decode(response.body);
+      } catch (ex) {
+        data = {
+          'message': 'Terjadi kendala. \nError: $ex',
+          'status': 'Failed',
+          'code': 500
+        };
+      }
+    }
+    return data;
+  }
+
+  requestAuthenticatedDataDelete(String token) async {
+    log('body $body');
+
+    if (apiUrl!.contains('http://')) {
+      apiUrl = apiUrl!.replaceAll('http://', 'https://');
+    }
+    log('url $apiUrl');
+    // try {
+    //   final result = await InternetAddress.lookup(apiUrl);
+    //   if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+    log('connected');
+    // final encoding = Encoding.getByName('utf-8');
+    // try {
+    Response response = await delete(
+      Uri.parse(apiUrl ?? apiUrlGlobalLogin),
+      body: json.encode(body),
+      headers: {
+        'Authorization': token,
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+    ).timeout(
+      const Duration(minutes: 2),
+      onTimeout: () {
+        const info = {'code': 408, 'message': 'Request timeout'};
+        Response response = Response(json.encode(info), 408);
+        return response; // Request Timeout response status code
+      },
+    );
+    dynamic data = {
+      'message': 'Tidak ada informasi yang bisa ditampilkan',
+      'status': 'Failed',
+      'code': 500
+    };
+
+    if (response.body != '') {
+      try {
+        data = json.decode(response.body);
+      } catch (ex) {
+        data = {
+          'message': 'Terjadi kendala. \nError: $ex',
+          'status': 'Failed',
+          'code': 500
+        };
+      }
+    }
+    return data;
+  }
+
   MultipartRequest initMultipartReqest() {
     if (apiUrl!.contains('http://')) {
       apiUrl = apiUrl!.replaceAll('http://', 'https://');
@@ -180,13 +280,31 @@ class ApiHelper {
 
   apiCallResponseHandler(
       dynamic response, BuildContext context, Function onSuccess) {
+    // log('response $response');
     if (response['code'] == 200 && response['success'] == true) {
       onSuccess(response);
     } else {
-      showAlertDialog(
-          response['message'] ??
-              'Terjadi kendala silahkan coba lagi setelah beberapa saat',
-          context);
+      if (response['message'] ==
+          'Token Akses Sudah Kedaluarsa, Silahkan Login Kembali.') {
+        showAlertDialogWithAction(response['message'], context, () {
+          _logout(context);
+        }, 'Ok');
+      } else {
+        showAlertDialog(
+            response['message'] ??
+                'Terjadi kendala silahkan coba lagi setelah beberapa saat',
+            context);
+      }
     }
+  }
+
+  _logout(BuildContext context) {
+    GetStorage().remove(Constants.loginInfo);
+    GetStorage().remove(Constants.userType);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LandingTab()),
+      (Route<dynamic> route) => true,
+    );
   }
 }
