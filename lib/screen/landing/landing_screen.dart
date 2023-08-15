@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/bccwidgets/bcc_card_job.dart';
+import 'package:bcc/bccwidgets/bcc_card_perusahaan.dart';
+import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/banner_register.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
@@ -25,7 +27,7 @@ class _LandingScreenState extends State<LandingScreen> {
   bool _isLoadingPerusahaan = false;
 
   List<dynamic> dataLowonganPopuler = [];
-  List<dynamic> dataPerusahaanTerbaru = [];
+  List<dynamic> _dataPerusahaanTerbaru = [];
 
   _fetchLowonganPopuler() {
     Future<dynamic> reqLowonganPopuler =
@@ -44,18 +46,27 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   _fetchPerusahaanTerbaru() {
-    Future<dynamic> reqLowonganPopuler = _apiCall.getData('Perusahaan');
+    Future<dynamic> reqLowonganPopuler = _apiCall.getDataPendukung(
+        Constants.pathLandingCompany +
+            ('?limit=10&page=1&orderBy=id&sort=desc'));
     reqLowonganPopuler.then((value) {
       log('result $value');
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
+      if (mounted) {
+        _apiHelper.apiCallResponseHandler(value, context, (response) {
           setState(() {
             _isLoadingPerusahaan = false;
-            dataPerusahaanTerbaru.addAll(response['data']);
+            _dataPerusahaanTerbaru.addAll(response['data']);
           });
-        }
-      });
+        });
+      }
     });
+  }
+
+  @override
+  void initState() {
+    _isLoadingPerusahaan = true;
+    _fetchPerusahaanTerbaru();
+    super.initState();
   }
 
   @override
@@ -100,7 +111,7 @@ class _LandingScreenState extends State<LandingScreen> {
         const LandingGrid(),
         const Center(
           child: Text(
-            'Pekerjaan Terpopuler',
+            'Pekerjaan Terbaru',
             style: TextStyle(
               color: Colors.black,
               fontSize: 18,
@@ -141,15 +152,22 @@ class _LandingScreenState extends State<LandingScreen> {
         const Padding(padding: EdgeInsets.only(top: 20)),
         SizedBox(
           height: 310,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: const [
-              BccCardJob(),
-              BccCardJob(),
-              BccCardJob(),
-              BccCardJob(),
-            ],
-          ),
+          child: _isLoadingPerusahaan
+              ? const Center(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _dataPerusahaanTerbaru.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    dynamic perusahaan = _dataPerusahaanTerbaru[index];
+                    return BccCardPerusahaan(
+                      dataPerusahaan: perusahaan,
+                    );
+                  },
+                ),
         ),
         const Padding(padding: EdgeInsets.only(top: 20)),
 

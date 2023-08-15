@@ -22,6 +22,8 @@ class Constants {
   static String pathDataMasterSkill = 'admin/master_skill';
   static String pathDataJobseekerSkill = 'admin/jobseeker_skill';
 
+  static String pathLandingCompany = 'Comp';
+
   static Color boxColorBlueTrans = const Color(0x236fb6f7);
   static Color colorBiruGelap = const Color(0xFF003673);
   static Color colorGrey = const Color.fromARGB(255, 162, 162, 162);
