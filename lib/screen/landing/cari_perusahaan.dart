@@ -11,7 +11,7 @@ class CariPerusahaan extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.only(right: 0),
           child: BccTextFormField(
-            hint: 'Nama Perusahaan',
+            hint: 'Perusahaan',
             radius: 5,
             textAlign: TextAlign.left,
           ),

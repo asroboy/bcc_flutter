@@ -1,13 +1,22 @@
 import 'package:bcc/contants.dart';
+import 'package:bcc/providers/bcc_provider.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/pencaker/dashboard_tab_pencaker.dart';
 import 'package:bcc/screen/perusahaan/dashboard_tab_perusahaan.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   await GetStorage.init();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BccProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

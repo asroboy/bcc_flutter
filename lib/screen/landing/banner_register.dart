@@ -9,6 +9,7 @@ class BannerRegister extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double? sizeWidth = MediaQuery.of(context).size.width / 2.45;
     return Container(
       height: 370,
       padding: const EdgeInsets.all(15),
@@ -20,8 +21,8 @@ class BannerRegister extends StatelessWidget {
         const Positioned(right: 10, top: 45, child: BannerTextRich()),
         Positioned(
             bottom: 5,
-            left: 5,
-            right: 5,
+            left: 0,
+            right: 0,
             child: Column(
               children: [
                 Row(
@@ -31,6 +32,7 @@ class BannerRegister extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(5),
                       child: BccBigBannerButton(
+                          width: sizeWidth,
                           onTap: () {
                             Navigator.pushAndRemoveUntil(
                               context,
@@ -46,6 +48,7 @@ class BannerRegister extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(5),
                       child: BccBigBannerButton(
+                          width: sizeWidth,
                           onTap: () {
                             Navigator.pushAndRemoveUntil(
                               context,

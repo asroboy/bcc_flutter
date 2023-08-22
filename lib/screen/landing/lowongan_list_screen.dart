@@ -1,4 +1,9 @@
-import 'package:bcc/bccwidgets/bcc_text_form_field.dart';
+import 'package:bcc/api/api.dart';
+import 'package:bcc/api/api_call.dart';
+import 'package:bcc/bccwidgets/bcc_card_job_simple.dart';
+import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
+import 'package:bcc/bccwidgets/bcc_load_more_loading_indicator.dart';
+import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
 import 'package:bcc/screen/landing/cari_lokasi.dart';
@@ -13,6 +18,69 @@ class LowonganListScreen extends StatefulWidget {
 }
 
 class _LowonganListScreenState extends State<LowonganListScreen> {
+  final ApiCall _apiCall = ApiCall();
+  final ApiHelper _apiHelper = ApiHelper();
+
+  int _page = 1;
+  final int _max = 10;
+  bool _lastpage = false;
+
+  int _totalPage = 0;
+  bool _isLoadingLowongan = false;
+  bool _isLoadMore = false;
+  final List<dynamic> _dataLowonganPopuler = [];
+  String? search;
+  int? companyId;
+  int? cityId;
+
+  final TextEditingController _searchTextController = TextEditingController();
+
+  _fetchLowonganPopuler() {
+    Future<dynamic> reqLowonganPopuler = _apiCall.getLowonganPaged(
+        Constants.pathJobboard, _page, _max, search, companyId, cityId);
+    reqLowonganPopuler.then((value) {
+      // log('result $value');
+      if (mounted) {
+        _apiHelper.apiCallResponseHandler(value, context, (response) {
+          setState(() {
+            _isLoadingLowongan = false;
+            _isLoadMore = false;
+            List<dynamic> dresponse = response['data'];
+            _dataLowonganPopuler.addAll(dresponse);
+
+            dynamic metadata = response['meta'];
+
+            _totalPage = metadata['totalPage'];
+            if (_page < _totalPage) {
+              _page++;
+            } else {
+              _lastpage = true;
+            }
+          });
+        });
+      }
+    });
+  }
+
+  _reloadData() {
+    setState(() {
+      _isLoadingLowongan = true;
+      _totalPage = 0;
+      _page = 1;
+      _lastpage = false;
+      _dataLowonganPopuler.clear();
+    });
+
+    _fetchLowonganPopuler();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoadingLowongan = true;
+    _fetchLowonganPopuler();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +115,14 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
                 child: Column(children: [
-                  const CariJobs(),
+                  CariJobs(
+                      controller: _searchTextController,
+                      onPressed: () {
+                        setState(() {
+                          search = _searchTextController.text;
+                          _reloadData();
+                        });
+                      }),
                   const Padding(padding: EdgeInsets.only(top: 20)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,80 +174,43 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
               ),
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Card(
-                  margin: const EdgeInsets.only(
-                      left: 15, right: 15, top: 5, bottom: 5),
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 10, top: 10),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Image.asset(
-                                      'assets/images/dummy_logo_pt.png',
-                                      width: 50,
-                                      height: 50,
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Desain Grafis',
-                                        style: TextStyle(
-                                            color: Constants.colorBiruGelap,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const Text('Indoaksesmedia'),
-                                      const Text('Bogor Jawa Barat'),
-                                      const Text('3.000.000 - 5.000.000'),
-                                    ],
-                                  )
-                                ]),
-                          ),
-                          Positioned(
-                              top: -15,
-                              right: 5,
-                              child: IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.bookmark,
-                                    color: Colors.green,
-                                  ))),
-                          Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Constants.colorBiruGelap,
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(10))),
-                                padding: const EdgeInsets.only(
-                                    left: 15, right: 15, bottom: 5, top: 5),
-                                child: const Text(
-                                  '5 Hari yang lalu',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 12),
-                                ),
-                              ))
-                        ],
-                      )));
-            },
-          )
+          _isLoadingLowongan
+              ? const Padding(
+                  padding: EdgeInsets.only(top: 100),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : _dataLowonganPopuler.isEmpty
+                  ? const BccNoDataInfo()
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount:
+                          _dataLowonganPopuler.length + (_lastpage ? 0 : 1),
+                      itemBuilder: (context, index) {
+                        if (index == _dataLowonganPopuler.length) {
+                          if (_isLoadMore) {
+                            return const BccLoadMoreLoadingIndicator();
+                          }
+                          return Center(
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isLoadMore = true;
+                                  });
+                                  _fetchLowonganPopuler();
+                                },
+                                child: const Text('Muat data selanjutnya')),
+                          );
+                        }
+
+                        dynamic dataLowongan = _dataLowonganPopuler[index];
+                        return BccCardJobSimple(
+                          dataLowongan: dataLowongan,
+                        );
+                      },
+                    )
         ],
       ),
     );

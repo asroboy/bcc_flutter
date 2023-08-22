@@ -20,14 +20,22 @@ class BccCardPerusahaan extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: Container(
-                width: 160,
-                height: 30,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 35,
+                  minWidth: 160,
+                  maxHeight: 35.0,
+                  maxWidth: 160,
+                ),
                 child: Text(
-                  '${dataPerusahaan['name'] ?? '-'}',
+                  dataPerusahaan['name'].toString().length > 20
+                      ? dataPerusahaan['name'].toString().substring(0, 20) +
+                          ('...')
+                      : '${dataPerusahaan['name'] ?? '-'}',
                   textAlign: TextAlign.center,
+                  overflow: TextOverflow.clip,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 12),
+                      fontWeight: FontWeight.bold, fontSize: 11),
                 ),
               ),
             ),
@@ -44,9 +52,13 @@ class BccCardPerusahaan extends StatelessWidget {
                         height: 90,
                         width: 90,
                       )),
-            Container(
-              width: width,
-              height: 70,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 70,
+                minWidth: width,
+                maxHeight: 75.0,
+                maxWidth: width,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,10 +78,18 @@ class BccCardPerusahaan extends StatelessWidget {
                       ),
                       Flexible(
                         child: Text(
-                          '${dataPerusahaan['master_industry_name']}',
+                          dataPerusahaan['master_industry_name']
+                                      .toString()
+                                      .length >
+                                  40
+                              ? dataPerusahaan['master_industry_name']
+                                      .toString()
+                                      .substring(0, 37) +
+                                  ('...')
+                              : '${dataPerusahaan['master_industry_name']}',
                           overflow: TextOverflow.clip,
                           style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
+                              fontSize: 11, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -87,9 +107,20 @@ class BccCardPerusahaan extends StatelessWidget {
                           )),
                       Flexible(
                         child: Text(
-                          '${dataPerusahaan['master_city_name']}, ${dataPerusahaan['master_province_name']}',
+                          (dataPerusahaan['master_city_name'].toString() +
+                                          (', ${dataPerusahaan['master_province_name']}'))
+                                      .toString()
+                                      .length >
+                                  33
+                              ? (dataPerusahaan['master_city_name'].toString() +
+                                          (', ${dataPerusahaan['master_province_name']}'))
+                                      .toString()
+                                      .substring(0, 30)
+                                      .toLowerCase() +
+                                  ('...')
+                              : '${dataPerusahaan['master_city_name']}, ${dataPerusahaan['master_province_name']}',
                           overflow: TextOverflow.clip,
-                          style: const TextStyle(fontSize: 12),
+                          style: const TextStyle(fontSize: 11),
                         ),
                       ),
                     ],

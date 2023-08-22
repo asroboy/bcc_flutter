@@ -43,6 +43,36 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
   }
 
+  Future<dynamic> getLowonganPaged(String path, int page, int max,
+      String? title, int? companyId, int? cityId) {
+    String apiPath = Constants.host + path;
+    var body = {
+      "page": 1,
+      "limit": 10,
+      "orderBy": "id",
+      "sort": "desc",
+    };
+
+    if (title != null) {
+      body['title'] = title;
+    }
+
+    if (companyId != null) {
+      if (companyId > 0) {
+        body['company_id'] = companyId;
+      }
+    }
+
+    if (cityId != null) {
+      if (cityId > 0) {
+        body['master_city_id'] = cityId;
+      }
+    }
+
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
+  }
+
   Future<dynamic> getData(String path) {
     String apiPath = Constants.host + path;
     var body = {

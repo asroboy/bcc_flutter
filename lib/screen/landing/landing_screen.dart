@@ -4,7 +4,6 @@ import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/bccwidgets/bcc_card_job.dart';
 import 'package:bcc/bccwidgets/bcc_card_perusahaan.dart';
-import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/banner_register.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
@@ -26,22 +25,22 @@ class _LandingScreenState extends State<LandingScreen> {
   bool _isLoadingLowongan = false;
   bool _isLoadingPerusahaan = false;
 
-  List<dynamic> dataLowonganPopuler = [];
-  List<dynamic> _dataPerusahaanTerbaru = [];
+  final List<dynamic> _dataLowonganPopuler = [];
+  final List<dynamic> _dataPerusahaanTerbaru = [];
 
   _fetchLowonganPopuler() {
     Future<dynamic> reqLowonganPopuler =
-        _apiCall.getLowonganPopuler('jobseeker/Jobboard');
+        _apiCall.getLowonganPopuler(Constants.pathJobboard);
     reqLowonganPopuler.then((value) {
-      log('result $value');
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
+      // log('result $value');
+      if (mounted) {
+        _apiHelper.apiCallResponseHandler(value, context, (response) {
           setState(() {
             _isLoadingLowongan = false;
-            dataLowonganPopuler.addAll(response['data']);
+            _dataLowonganPopuler.addAll(response['data']);
           });
-        }
-      });
+        });
+      }
     });
   }
 
@@ -50,7 +49,7 @@ class _LandingScreenState extends State<LandingScreen> {
         Constants.pathLandingCompany +
             ('?limit=10&page=1&orderBy=id&sort=desc'));
     reqLowonganPopuler.then((value) {
-      log('result $value');
+      // log('result $value');
       if (mounted) {
         _apiHelper.apiCallResponseHandler(value, context, (response) {
           setState(() {
@@ -65,7 +64,9 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     _isLoadingPerusahaan = true;
+    _isLoadingLowongan = true;
     _fetchPerusahaanTerbaru();
+    _fetchLowonganPopuler();
     super.initState();
   }
 
@@ -73,7 +74,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(children: [
-        Container(
+        SizedBox(
           child: Image.asset('assets/images/bg_header_landing.png',
               fit: BoxFit.fill),
         ),
@@ -123,17 +124,23 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
         const Padding(padding: EdgeInsets.only(top: 20)),
         SizedBox(
-          height: 310,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: const [
-              BccCardJob(),
-              BccCardJob(),
-              BccCardJob(),
-              BccCardJob(),
-            ],
-          ),
-        ),
+            height: 320,
+            child: _isLoadingLowongan
+                ? const Center(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _dataLowonganPopuler.length,
+                    itemBuilder: (context, index) {
+                      dynamic lowongan = _dataLowonganPopuler[index];
+                      return BccCardJob(
+                        dataLowongan: lowongan,
+                      );
+                    },
+                  )),
         const Padding(padding: EdgeInsets.only(top: 20)),
         const BannerRegister(),
         const Padding(padding: EdgeInsets.only(top: 20)),
@@ -151,7 +158,7 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
         const Padding(padding: EdgeInsets.only(top: 20)),
         SizedBox(
-          height: 310,
+          height: 320,
           child: _isLoadingPerusahaan
               ? const Center(
                   child: Center(

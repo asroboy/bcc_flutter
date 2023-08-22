@@ -19,11 +19,18 @@ class BccCardJob extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: Container(
+              child: SizedBox(
                 width: 160,
                 height: 30,
                 child: Text(
-                  '${dataLowongan == null ? 'PT Dummy Data' : dataLowongan['company_name']}',
+                  dataLowongan == null
+                      ? 'PT Dummy Data'
+                      : (dataLowongan['company_name'].toString().length > 20
+                          ? dataLowongan['company_name']
+                                  .toString()
+                                  .substring(0, 20) +
+                              ('...')
+                          : dataLowongan['company_name'].toString()),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 11),
@@ -51,9 +58,13 @@ class BccCardJob extends StatelessWidget {
                           width: 90,
                         )),
             ),
-            Container(
-              width: width,
-              height: 70,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 70,
+                minWidth: width,
+                maxHeight: 80.0,
+                maxWidth: width,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +80,14 @@ class BccCardJob extends StatelessWidget {
                       ),
                       Flexible(
                         child: Text(
-                          '${dataLowongan == null ? 'Job Title' : dataLowongan['title']}',
+                          dataLowongan == null
+                              ? 'Job Title'
+                              : (dataLowongan['title'].toString().length > 30
+                                  ? dataLowongan['title']
+                                          .toString()
+                                          .substring(0, 30) +
+                                      ('...')
+                                  : dataLowongan['title'].toString()),
                           overflow: TextOverflow.clip,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
@@ -131,7 +149,7 @@ class BccCardJob extends StatelessWidget {
                 width: width,
                 child: BccNormalButton(
                   onPressed: () {},
-                  child: Text('Detail'),
+                  child: const Text('Detail'),
                 ))
           ],
         ),

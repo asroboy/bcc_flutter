@@ -3,19 +3,26 @@ import 'package:flutter/material.dart';
 
 class BccBigBannerButton extends StatelessWidget {
   const BccBigBannerButton(
-      {super.key, required this.iconData, required this.label, this.onTap});
+      {super.key,
+      required this.iconData,
+      required this.label,
+      this.onTap,
+      this.width});
 
   final IconData iconData;
   final String label;
   final Function()? onTap;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+          width: width,
           alignment: Alignment.center,
-          padding: const EdgeInsets.all(18),
+          padding:
+              const EdgeInsets.only(left: 5, right: 5, top: 15, bottom: 15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               color: Constants.colorBiruGelap,
@@ -40,7 +47,7 @@ class BccBigBannerButton extends StatelessWidget {
                   Text(
                     label,
                     textAlign: TextAlign.start,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
                   ),
                 ],
               )
