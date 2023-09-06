@@ -3,6 +3,7 @@ import 'package:bcc/api/api_call.dart';
 import 'package:bcc/bccwidgets/bcc_card_job_simple.dart';
 import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_load_more_loading_indicator.dart';
+import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
@@ -84,6 +85,7 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 235, 231, 231),
       appBar: AppBar(
         backgroundColor: Constants.colorBiruGelap,
         elevation: 0,
@@ -175,12 +177,7 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
             ),
           ),
           _isLoadingLowongan
-              ? const Padding(
-                  padding: EdgeInsets.only(top: 100),
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
+              ? const BccLoadingIndicator()
               : _dataLowonganPopuler.isEmpty
                   ? const BccNoDataInfo()
                   : ListView.builder(

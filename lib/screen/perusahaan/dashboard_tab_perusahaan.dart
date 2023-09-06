@@ -1,8 +1,8 @@
 import 'package:bcc/contants.dart';
-import 'package:bcc/screen/landing/hubungi_kami_screen.dart';
+import 'package:bcc/screen/landing/hubungi_kami/hubungi_kami_screen.dart';
 import 'package:bcc/screen/landing/landing_screen.dart';
-import 'package:bcc/screen/landing/lowongan_list_screen.dart';
-import 'package:bcc/screen/landing/perusahaan_list_screen.dart';
+import 'package:bcc/screen/landing/lowongan/lowongan_list_screen.dart';
+import 'package:bcc/screen/landing/perusahaan/perusahaan_list_screen.dart';
 import 'package:bcc/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 

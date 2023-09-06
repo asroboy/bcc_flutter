@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:bcc/contants.dart';
 import 'package:flutter/material.dart';
 
 class BccCardPerusahaanSimple extends StatelessWidget {
-  const BccCardPerusahaanSimple({super.key});
+  const BccCardPerusahaanSimple({super.key, this.perusahaan});
+
+  final dynamic perusahaan;
 
   @override
   Widget build(BuildContext context) {
+    log('perusahaan $perusahaan');
     return Card(
         margin: const EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
         child: Padding(
@@ -31,15 +36,30 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'PT Kerja Keras',
+                              perusahaan['name'],
                               style: TextStyle(
                                   color: Constants.colorBiruGelap,
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold),
                             ),
-                            const Text('Perusahaan tanpa henti'),
-                            const Text('10 Lowongan'),
-                            const Text('20 Pelamar'),
+                            Flex(
+                              direction: Axis.vertical,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  child: Text(
+                                    perusahaan['master_industry_name'],
+                                    style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.blueGrey[400]),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Text(perusahaan['master_company_size_name']),
+                            Text(perusahaan['master_city_name']),
+                            const Padding(padding: EdgeInsets.only(bottom: 10))
                           ],
                         )
                       ]),

@@ -62,7 +62,7 @@ class BccCardJob extends StatelessWidget {
               constraints: BoxConstraints(
                 minHeight: 70,
                 minWidth: width,
-                maxHeight: 80.0,
+                maxHeight: 90.0,
                 maxWidth: width,
               ),
               child: Column(
@@ -82,11 +82,11 @@ class BccCardJob extends StatelessWidget {
                         child: Text(
                           dataLowongan == null
                               ? 'Job Title'
-                              : (dataLowongan['title'].toString().length > 30
-                                  ? dataLowongan['title']
+                              : (dataLowongan['title'].toString().length > 20
+                                  ? (dataLowongan['title']
                                           .toString()
-                                          .substring(0, 30) +
-                                      ('...')
+                                          .substring(0, 20) +
+                                      ('...'))
                                   : dataLowongan['title'].toString()),
                           overflow: TextOverflow.clip,
                           style: const TextStyle(
