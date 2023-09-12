@@ -10,6 +10,7 @@ import 'package:bcc/screen/landing/cari_jobs.dart';
 import 'package:bcc/screen/landing/cari_lokasi.dart';
 import 'package:bcc/screen/landing/cari_perusahaan.dart';
 import 'package:bcc/screen/landing/landing_grid.dart';
+import 'package:bcc/screen/landing/perusahaan/perusahaan_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -172,6 +173,11 @@ class _LandingScreenState extends State<LandingScreen> {
                     dynamic perusahaan = _dataPerusahaanTerbaru[index];
                     return BccCardPerusahaan(
                       dataPerusahaan: perusahaan,
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                const PerusahaanDetailScreen()));
+                      },
                     );
                   },
                 ),

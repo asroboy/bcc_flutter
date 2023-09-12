@@ -215,13 +215,18 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(
                           Icons.pin_drop_outlined,
                           size: 18,
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
-                        Text('${loginInfo['data']['address']}')
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Text('${loginInfo['data']['address']}'),
+                        )
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),

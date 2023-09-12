@@ -1,5 +1,10 @@
 import 'package:bcc/bccwidgets/bcc_big_menu_button.dart';
+import 'package:bcc/screen/landing/lowongan/lowongan_list_screen.dart';
+import 'package:bcc/screen/pencaker/antrian_online.dart';
+import 'package:bcc/screen/pencaker/balai_latihan_kerja.dart';
+import 'package:bcc/screen/pencaker/pekerjaan_disimpan.dart';
 import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
+import 'package:bcc/screen/pencaker/riwayat_lamaran.dart';
 import 'package:flutter/material.dart';
 
 class LandingGridPencaker extends StatelessWidget {
@@ -20,7 +25,7 @@ class LandingGridPencaker extends StatelessWidget {
           1.5),
       children: <Widget>[
         BccBigMenuButton(
-          iconData: Icons.person_outline,
+          iconData: Icons.badge_outlined,
           label: "Identitas Diri",
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
@@ -28,25 +33,50 @@ class LandingGridPencaker extends StatelessWidget {
             ));
           },
         ),
-        const BccBigMenuButton(
-          iconData: Icons.work_outline_sharp,
+        BccBigMenuButton(
+          iconData: Icons.confirmation_num_outlined,
           label: "Antrian Online",
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const AntrianOnline(),
+            ));
+          },
         ),
-        const BccBigMenuButton(
-          iconData: Icons.filter_center_focus_rounded,
-          label: "Info Lowongan ",
+        BccBigMenuButton(
+          iconData: Icons.work_outline,
+          label: "Lowongan Pekerjaan ",
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const LowonganListScreen(),
+            ));
+          },
         ),
-        const BccBigMenuButton(
-          iconData: Icons.info,
+        BccBigMenuButton(
+          iconData: Icons.work_history_outlined,
           label: "Riwayat Lamaran",
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const RiwayatLamaran(),
+            ));
+          },
         ),
-        const BccBigMenuButton(
-          iconData: Icons.maps_home_work_outlined,
+        BccBigMenuButton(
+          iconData: Icons.bookmark_outline,
+          label: "Pekerjaan Disimpan",
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const PekerjaanDisimpan(),
+            ));
+          },
+        ),
+        BccBigMenuButton(
+          iconData: Icons.business_center_outlined,
           label: "Balai Latihan Kerja",
-        ),
-        const BccBigMenuButton(
-          iconData: Icons.light_mode_outlined,
-          label: "BCC Preneur",
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const BalaiLatihanKerja(),
+            ));
+          },
         ),
       ],
     );

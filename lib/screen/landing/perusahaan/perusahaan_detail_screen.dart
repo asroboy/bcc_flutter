@@ -1,3 +1,4 @@
+import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:flutter/material.dart';
 
 class PerusahaanDetailScreen extends StatefulWidget {
@@ -12,6 +13,7 @@ class _PerusahaanDetailScreenState extends State<PerusahaanDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Detail Perusahaan')),
+      body: const BccNoDataInfo(),
     );
   }
 }

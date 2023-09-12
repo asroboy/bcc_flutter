@@ -1,5 +1,6 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_card_job_simple.dart';
 import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_load_more_loading_indicator.dart';
@@ -9,6 +10,7 @@ import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
 import 'package:bcc/screen/landing/cari_lokasi.dart';
 import 'package:bcc/screen/landing/cari_perusahaan.dart';
+import 'package:bcc/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class LowonganListScreen extends StatefulWidget {
@@ -205,6 +207,16 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
                         dynamic dataLowongan = _dataLowonganPopuler[index];
                         return BccCardJobSimple(
                           dataLowongan: dataLowongan,
+                          onTap: () {
+                            showAlertDialogWithAction(
+                                'Silahkan login untuk melanjutkan', context,
+                                () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ));
+                            }, 'OK');
+                          },
                         );
                       },
                     )
