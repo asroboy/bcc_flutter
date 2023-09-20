@@ -87,10 +87,12 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
     _fetchLowonganPopuler();
   }
 
+  String? jenis;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 235, 231, 231),
+      backgroundColor: const Color.fromARGB(255, 235, 231, 231),
       appBar: AppBar(
         backgroundColor: Constants.colorBiruGelap,
         elevation: 0,
@@ -149,41 +151,55 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
               )
             ],
           ),
-          Center(
-            child: Card(
-              margin: const EdgeInsets.only(
-                left: 15,
-                right: 15,
-                top: 10,
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: ElevatedButton(
-                            onPressed: () {}, child: const Text('Filter')),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Full Time'))),
-                      Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Part Time'))),
-                      ElevatedButton(
-                          onPressed: () {}, child: const Text('Magang'))
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+          const Padding(padding: EdgeInsets.only(top: 10)),
+          // Center(
+          //   child: Card(
+          //     margin: const EdgeInsets.only(
+          //       left: 15,
+          //       right: 15,
+          //       top: 10,
+          //     ),
+          //     child: Column(
+          //       children: [
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 5),
+          //   child: ElevatedButton(
+          //       onPressed: () {}, child: const Text('Filter')),
+          // ),
+          //   Padding(
+          //       padding: const EdgeInsets.only(right: 5),
+          //       child: ElevatedButton(
+          //           onPressed: () {
+          //             setState(() {
+          //               jenis = 'Fulltime';
+          //             });
+          //           },
+          //           child: const Text('Full Time'))),
+          //   Padding(
+          //       padding: const EdgeInsets.only(right: 5),
+          //       child: ElevatedButton(
+          //           onPressed: () {
+          //             setState(() {
+          //               jenis = 'Parttime';
+          //             });
+          //           },
+          //           child: const Text('Part Time'))),
+          //   ElevatedButton(
+          //       onPressed: () {
+          //         setState(() {
+          //           jenis = 'Magang';
+          //         });
+          //       },
+          //       child: const Text('Magang'))
+          // ],
+          // )
+          //       ],
+          //     ),
+          //   ),
+          // ),
           _isLoadingLowongan
               ? const BccLoadingIndicator()
               : _dataLowonganPopuler.isEmpty
@@ -214,21 +230,21 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
                         return BccCardJobSimple(
                           dataLowongan: dataLowongan,
                           onTap: () {
-                            if (loginInfo != null) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    LowonganDetail(job: dataLowongan),
-                              ));
-                            } else {
-                              showAlertDialogWithAction(
-                                  'Silahkan login untuk melanjutkan', context,
-                                  () {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ));
-                              }, 'OK');
-                            }
+                            // if (loginInfo != null) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  LowonganDetail(job: dataLowongan),
+                            ));
+                            // } else {
+                            //   showAlertDialogWithAction(
+                            //       'Silahkan login untuk melanjutkan', context,
+                            //       () {
+                            //     Navigator.of(context).pop();
+                            //     Navigator.of(context).push(MaterialPageRoute(
+                            //       builder: (context) => const LoginScreen(),
+                            //     ));
+                            //   }, 'OK');
+                            // }
                           },
                         );
                       },

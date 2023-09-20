@@ -69,15 +69,15 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                           )
                         ]),
                   ),
-                  Positioned(
-                      top: -15,
-                      right: 5,
-                      child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.bookmark,
-                            color: Colors.green,
-                          ))),
+                  // Positioned(
+                  //     top: -15,
+                  //     right: 5,
+                  //     child: IconButton(
+                  //         onPressed: () {},
+                  //         icon: const Icon(
+                  //           Icons.bookmark,
+                  //           color: Colors.green,
+                  //         ))),
                   Positioned(
                       bottom: 0,
                       right: 0,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
@@ -40,6 +42,7 @@ class _LowonganDetailState extends State<LowonganDetail> {
 
   @override
   Widget build(BuildContext context) {
+    log('${widget.job}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lowongan Pekerjaan'),
@@ -144,9 +147,39 @@ class _LowonganDetailState extends State<LowonganDetail> {
                                     info:
                                         '${widget.job['total_application']} pelamar'),
                               ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 10),
+                              ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: const EdgeInsets.only(right: 10),
+                                      padding: const EdgeInsets.only(
+                                          top: 5,
+                                          bottom: 5,
+                                          right: 10,
+                                          left: 10),
+                                      color: Colors.blue[100],
+                                      child: Text(
+                                          '${widget.job['master_employment_type_name']}')),
+                                  Container(
+                                      margin: const EdgeInsets.only(right: 10),
+                                      padding: const EdgeInsets.only(
+                                          top: 5,
+                                          bottom: 5,
+                                          right: 10,
+                                          left: 10),
+                                      color: Colors.green[100],
+                                      child: Text(
+                                          '${widget.job['master_job_level_name']}')),
+                                ],
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 10),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ElevatedButton(
                                       onPressed: () {
