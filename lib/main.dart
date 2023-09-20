@@ -1,14 +1,41 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:bcc/contants.dart';
 import 'package:bcc/providers/bcc_provider.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/pencaker/dashboard_tab_pencaker.dart';
 import 'package:bcc/screen/perusahaan/dashboard_tab_perusahaan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
+  if (Platform.isAndroid) {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+
+    var swAvailable = await AndroidWebViewFeature.isFeatureSupported(
+        AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
+    var swInterceptAvailable = await AndroidWebViewFeature.isFeatureSupported(
+        AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+
+    if (swAvailable && swInterceptAvailable) {
+      AndroidServiceWorkerController serviceWorkerController =
+          AndroidServiceWorkerController.instance();
+
+      await serviceWorkerController
+          .setServiceWorkerClient(AndroidServiceWorkerClient(
+        shouldInterceptRequest: (request) async {
+          log('$request');
+          return null;
+        },
+      ));
+    }
+  }
+
   runApp(
     MultiProvider(
       providers: [
