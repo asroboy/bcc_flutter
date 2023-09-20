@@ -2,7 +2,6 @@ import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_card_job_simple.dart';
-import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_load_more_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
@@ -10,8 +9,10 @@ import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
 import 'package:bcc/screen/landing/cari_lokasi.dart';
 import 'package:bcc/screen/landing/cari_perusahaan.dart';
+import 'package:bcc/screen/landing/lowongan/lowongan_detail.dart';
 import 'package:bcc/screen/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LowonganListScreen extends StatefulWidget {
   const LowonganListScreen({super.key});
@@ -21,6 +22,8 @@ class LowonganListScreen extends StatefulWidget {
 }
 
 class _LowonganListScreenState extends State<LowonganListScreen> {
+  dynamic loginInfo = GetStorage().read(Constants.loginInfo);
+
   final ApiCall _apiCall = ApiCall();
   final ApiHelper _apiHelper = ApiHelper();
 
@@ -166,12 +169,15 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
                       Padding(
                           padding: const EdgeInsets.only(right: 5),
                           child: ElevatedButton(
-                              onPressed: () {}, child: Text('Full Time'))),
+                              onPressed: () {},
+                              child: const Text('Full Time'))),
                       Padding(
-                          padding: EdgeInsets.only(right: 5),
+                          padding: const EdgeInsets.only(right: 5),
                           child: ElevatedButton(
-                              onPressed: () {}, child: Text('Part Time'))),
-                      ElevatedButton(onPressed: () {}, child: Text('Magang'))
+                              onPressed: () {},
+                              child: const Text('Part Time'))),
+                      ElevatedButton(
+                          onPressed: () {}, child: const Text('Magang'))
                     ],
                   )
                 ],
@@ -208,14 +214,21 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
                         return BccCardJobSimple(
                           dataLowongan: dataLowongan,
                           onTap: () {
-                            showAlertDialogWithAction(
-                                'Silahkan login untuk melanjutkan', context,
-                                () {
-                              Navigator.of(context).pop();
+                            if (loginInfo != null) {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
+                                builder: (context) =>
+                                    LowonganDetail(job: dataLowongan),
                               ));
-                            }, 'OK');
+                            } else {
+                              showAlertDialogWithAction(
+                                  'Silahkan login untuk melanjutkan', context,
+                                  () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ));
+                              }, 'OK');
+                            }
                           },
                         );
                       },

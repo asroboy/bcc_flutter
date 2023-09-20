@@ -24,6 +24,7 @@ class Constants {
 
   static String pathLandingCompany = 'Comp';
   static String pathJobboard = 'jobseeker/jobboard';
+  static String pathWishList = 'jobseeker/wishlist';
 
   static Color boxColorBlueTrans = const Color(0x236fb6f7);
   static Color colorBiruGelap = const Color(0xFF003673);

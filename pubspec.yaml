@@ -38,10 +38,11 @@ dependencies:
   http: ^0.13.6
   get_storage: ^2.1.1
   webviewx: ^0.2.2
-  icons_plus: ^4.0.0
+  # icons_plus: ^4.0.0
   intl: ^0.18.1
   dropdown_search: ^5.0.6
   provider: ^6.0.5
+  flutter_html: ^2.1.2
 
 dev_dependencies:
   flutter_test:

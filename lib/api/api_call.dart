@@ -43,6 +43,20 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
   }
 
+  Future<dynamic> getLowonganWhishList(
+      String path, int page, int max, int userId) {
+    String apiPath = Constants.host + path;
+    var body = {
+      "page": page,
+      "limit": max,
+      'jobseeker_id': userId,
+      "orderBy": "id",
+      "sort": "desc",
+    };
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
+  }
+
   Future<dynamic> getLowonganPaged(String path, int page, int max,
       String? title, int? companyId, int? cityId) {
     String apiPath = Constants.host + path;

@@ -1,17 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
-import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_normal_button.dart';
-import 'package:bcc/bccwidgets/bcc_row_info1.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
-import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
 import 'package:bcc/screen/pencaker/profil/pengalaman_bekerja.dart';
 import 'package:bcc/screen/pencaker/profil/tambah_keterampilan.dart';
 import 'package:bcc/screen/pencaker/profil/tambah_pendidikan.dart';

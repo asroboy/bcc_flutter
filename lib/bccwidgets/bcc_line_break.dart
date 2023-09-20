@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class BccLineSparator extends StatelessWidget {
   const BccLineSparator({super.key, this.padding, this.margin});
@@ -12,8 +10,8 @@ class BccLineSparator extends StatelessWidget {
     return Container(
       padding: padding,
       margin: margin,
-      height: 0.5,
-      color: Colors.grey,
+      height: 0.75,
+      color: const Color.fromARGB(255, 109, 105, 105),
     );
   }
 }

@@ -1,10 +1,12 @@
 import 'package:bcc/bccwidgets/bcc_big_menu_button.dart';
 import 'package:bcc/screen/landing/lowongan/lowongan_list_screen.dart';
+import 'package:bcc/screen/landing/lowongan/lowongan_page_with_appbar.dart';
 import 'package:bcc/screen/pencaker/antrian_online.dart';
 import 'package:bcc/screen/pencaker/balai_latihan_kerja.dart';
-import 'package:bcc/screen/pencaker/pekerjaan_disimpan.dart';
+import 'package:bcc/screen/pencaker/whishlist/list_pekerjaan_disimpan.dart';
+import 'package:bcc/screen/pencaker/whishlist/pekerjaan_disimpan.dart';
 import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
-import 'package:bcc/screen/pencaker/riwayat_lamaran.dart';
+import 'package:bcc/screen/pencaker/riwayat/riwayat_lamaran.dart';
 import 'package:flutter/material.dart';
 
 class LandingGridPencaker extends StatelessWidget {
@@ -47,7 +49,7 @@ class LandingGridPencaker extends StatelessWidget {
           label: "Lowongan Pekerjaan ",
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const LowonganListScreen(),
+              builder: (context) => const LowonganPageWithAppBar(),
             ));
           },
         ),
@@ -65,7 +67,7 @@ class LandingGridPencaker extends StatelessWidget {
           label: "Pekerjaan Disimpan",
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const PekerjaanDisimpan(),
+              builder: (context) => const ListPekerjaanDisimpan(),
             ));
           },
         ),
