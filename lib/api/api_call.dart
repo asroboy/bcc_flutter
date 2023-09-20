@@ -57,6 +57,20 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
   }
 
+  Future<dynamic> getRiwayatLamaran(
+      String path, int page, int max, int userId) {
+    String apiPath = Constants.host + path;
+    var body = {
+      "page": page,
+      "limit": max,
+      'jobseeker_id': userId,
+      "orderBy": "id",
+      "sort": "desc",
+    };
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
+  }
+
   Future<dynamic> getLowonganPaged(String path, int page, int max,
       String? title, int? companyId, int? cityId) {
     String apiPath = Constants.host + path;
@@ -81,6 +95,24 @@ class ApiCall {
       if (cityId > 0) {
         body['master_city_id'] = cityId;
       }
+    }
+
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
+  }
+
+  Future<dynamic> getCompanyPaged(
+      String path, int page, int max, String? name) {
+    String apiPath = Constants.host + path;
+    var body = {
+      "page": 1,
+      "limit": 10,
+      "orderBy": "id",
+      "sort": "desc",
+    };
+
+    if (name != null) {
+      body['name'] = name;
     }
 
     log('path $apiPath');
@@ -112,6 +144,13 @@ class ApiCall {
     String apiPath = Constants.host + Constants.pathDaftarPencaker;
     log('path $apiPath');
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
+  }
+
+  Future<dynamic> ajukanLamaran(dynamic body, String token) {
+    String apiPath = Constants.host + Constants.pathAjukanLamaran;
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
   }
 
   Future<dynamic> simpanPendidikan(dynamic body, String token) {

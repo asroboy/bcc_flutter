@@ -1,10 +1,9 @@
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_big_menu_button.dart';
-import 'package:bcc/screen/landing/lowongan/lowongan_list_screen.dart';
 import 'package:bcc/screen/landing/lowongan/lowongan_page_with_appbar.dart';
 import 'package:bcc/screen/pencaker/antrian_online.dart';
 import 'package:bcc/screen/pencaker/balai_latihan_kerja.dart';
 import 'package:bcc/screen/pencaker/whishlist/list_pekerjaan_disimpan.dart';
-import 'package:bcc/screen/pencaker/whishlist/pekerjaan_disimpan.dart';
 import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
 import 'package:bcc/screen/pencaker/riwayat/riwayat_lamaran.dart';
 import 'package:flutter/material.dart';
@@ -36,15 +35,6 @@ class LandingGridPencaker extends StatelessWidget {
           },
         ),
         BccBigMenuButton(
-          iconData: Icons.confirmation_num_outlined,
-          label: "Antrian Online",
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const AntrianOnline(),
-            ));
-          },
-        ),
-        BccBigMenuButton(
           iconData: Icons.work_outline,
           label: "Lowongan Pekerjaan ",
           onTap: () {
@@ -72,12 +62,29 @@ class LandingGridPencaker extends StatelessWidget {
           },
         ),
         BccBigMenuButton(
+          iconData: Icons.confirmation_num_outlined,
+          label: "Antrian Online",
+          onTap: () {
+            showAlertDialogWithAction(
+                'Fitur ini untuk saat ini belum bisa digunakan', context, () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AntrianOnline(),
+              ));
+            }, 'OK');
+          },
+        ),
+        BccBigMenuButton(
           iconData: Icons.business_center_outlined,
           label: "Balai Latihan Kerja",
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const BalaiLatihanKerja(),
-            ));
+            showAlertDialogWithAction(
+                'Fitur ini untuk saat ini belum bisa digunakan', context, () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const BalaiLatihanKerja(),
+              ));
+            }, 'OK');
           },
         ),
       ],

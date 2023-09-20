@@ -1,9 +1,15 @@
+import 'package:bcc/api/api.dart';
+import 'package:bcc/api/api_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_label.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_row_info2.dart';
+import 'package:bcc/contants.dart';
+import 'package:bcc/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_html/flutter_html.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LowonganDetail extends StatefulWidget {
   const LowonganDetail({super.key, this.job});
@@ -14,6 +20,24 @@ class LowonganDetail extends StatefulWidget {
 }
 
 class _LowonganDetailState extends State<LowonganDetail> {
+  dynamic loginInfo = GetStorage().read(Constants.loginInfo);
+
+  final ApiCall _apiCall = ApiCall();
+  final ApiHelper _apiHelper = ApiHelper();
+
+  int idPencaker = 0;
+
+  @override
+  void initState() {
+    if (loginInfo != null) {
+      idPencaker = int.parse(loginInfo['data']['id']);
+    }
+
+    // _isLoadingLowongan = true;
+    // _fetchPekerjaanDisimpan();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +149,9 @@ class _LowonganDetailState extends State<LowonganDetail> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _ajukanLamaran(widget.job['id']);
+                                      },
                                       child: const Text('Ajukan lamaran'))
                                 ],
                               )
@@ -143,5 +169,30 @@ class _LowonganDetailState extends State<LowonganDetail> {
             ))
       ]),
     );
+  }
+
+  _ajukanLamaran(String jobId) {
+    if (loginInfo == null) {
+      showAlertDialogWithAction(
+          'Silahkan login terlebih dahulu jika ingin mengirimkan lamaran pekerjaan',
+          context, () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ));
+      }, 'OK');
+    } else {
+      String token = loginInfo['data']['token'];
+      dynamic body = {'jobseeker_id': idPencaker, 'company_job_id': jobId};
+      Future<dynamic> reqLowonganPopuler = _apiCall.ajukanLamaran(body, token);
+      reqLowonganPopuler.then((value) {
+        // log('result $value');
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(value, context, (response) {
+            showAlertDialog('Lamaran Kamu sudah diajukan', context);
+          });
+        }
+      });
+    }
   }
 }

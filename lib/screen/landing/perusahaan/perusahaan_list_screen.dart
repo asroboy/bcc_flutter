@@ -23,17 +23,22 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
   final ApiCall _apiCall = ApiCall();
   final ApiHelper _apiHelper = ApiHelper();
 
+  TextEditingController _searchTextController = TextEditingController();
+
   bool _isLoadingDataPerusahaan = false;
   bool _isLoadingMoreData = false;
   List<dynamic> _dataPerusahaan = [];
   final int _maxPerPage = 10;
   int _page = 1;
   bool _isLastePage = false;
+  String? search;
 
   _fetchPerusahaanTerbaru() {
+    // Future<dynamic> reqLowonganPopuler = _apiCall.getCompanyPaged(
+    //     Constants.pathLandingCompany, _page, _maxPerPage, search);
     Future<dynamic> reqLowonganPopuler = _apiCall.getDataPendukung(
         Constants.pathLandingCompany +
-            ('?limit=10&page=1&orderBy=id&sort=desc'));
+            ('?limit=10&page=1&orderBy=id&sort=desc&name=${search ?? ''}'));
     reqLowonganPopuler.then((value) {
       // log('result $value');
       if (mounted) {
@@ -53,6 +58,18 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
         });
       }
     });
+  }
+
+  _reloadData() {
+    setState(() {
+      _isLoadingDataPerusahaan = true;
+      // _totalPage = 0;
+      _page = 1;
+      _isLastePage = false;
+      _dataPerusahaan.clear();
+    });
+
+    _fetchPerusahaanTerbaru();
   }
 
   @override
@@ -76,7 +93,7 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
           Stack(
             children: [
               Container(
-                height: 180,
+                height: 120,
                 decoration: BoxDecoration(
                     color: Constants.colorBiruGelap,
                     borderRadius: const BorderRadius.only(
@@ -84,7 +101,7 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
                         bottomRight: Radius.circular(10))),
               ),
               Container(
-                height: 180,
+                height: 120,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(10),
@@ -97,61 +114,68 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
                 child: Column(children: [
-                  const CariJobs(),
+                  CariJobs(
+                      controller: _searchTextController,
+                      onPressed: () {
+                        setState(() {
+                          search = _searchTextController.text;
+                          _reloadData();
+                        });
+                      }),
                   const Padding(padding: EdgeInsets.only(top: 20)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2.3,
-                        child: const CariLokasi(),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2.1,
-                        child: const CariPerusahaan(),
-                      )
-                    ],
-                  )
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     SizedBox(
+                  //       width: MediaQuery.of(context).size.width / 2.3,
+                  //       child: const CariLokasi(),
+                  //     ),
+                  //     SizedBox(
+                  //       width: MediaQuery.of(context).size.width / 2.1,
+                  //       child: const CariPerusahaan(),
+                  //     )
+                  //   ],
+                  // )
                 ]),
               )
             ],
           ),
-          Center(
-            child: Card(
-              margin: const EdgeInsets.only(
-                left: 15,
-                right: 15,
-                top: 10,
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: ElevatedButton(
-                            onPressed: () {}, child: const Text('Filter')),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Full Time'))),
-                      Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Part Time'))),
-                      ElevatedButton(
-                          onPressed: () {}, child: const Text('Magang'))
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+          // Center(
+          //   child: Card(
+          //     margin: const EdgeInsets.only(
+          //       left: 15,
+          //       right: 15,
+          //       top: 10,
+          //     ),
+          //     child: Column(
+          //       children: [
+          //         Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             Padding(
+          //               padding: const EdgeInsets.only(right: 5),
+          //               child: ElevatedButton(
+          //                   onPressed: () {}, child: const Text('Filter')),
+          //             ),
+          //             Padding(
+          //                 padding: const EdgeInsets.only(right: 5),
+          //                 child: ElevatedButton(
+          //                     onPressed: () {},
+          //                     child: const Text('Full Time'))),
+          //             Padding(
+          //                 padding: const EdgeInsets.only(right: 5),
+          //                 child: ElevatedButton(
+          //                     onPressed: () {},
+          //                     child: const Text('Part Time'))),
+          //             ElevatedButton(
+          //                 onPressed: () {}, child: const Text('Magang'))
+          //           ],
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
           _isLoadingDataPerusahaan
               ? const BccLoadingIndicator()
               : _dataPerusahaan.isEmpty
@@ -188,8 +212,8 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
                           perusahaan: perusahaan,
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const PerusahaanDetailScreen(),
+                              builder: (context) => PerusahaanDetailScreen(
+                                  perusahaan: perusahaan),
                             ));
                           },
                         );

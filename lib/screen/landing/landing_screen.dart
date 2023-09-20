@@ -80,7 +80,7 @@ class _LandingScreenState extends State<LandingScreen> {
               fit: BoxFit.fill),
         ),
         Text(
-          'Cari Pekerjaan Anda disini',
+          'Bogor Career Center',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Constants.colorBiruGelap,
@@ -90,26 +90,26 @@ class _LandingScreenState extends State<LandingScreen> {
             letterSpacing: -0.24,
           ),
         ),
-        const Padding(padding: EdgeInsets.only(top: 15)),
-        const CariJobs(),
-        const Padding(padding: EdgeInsets.only(top: 5)),
-        const CariLokasi(),
-        const Padding(padding: EdgeInsets.only(top: 5)),
-        const CariPerusahaan(),
-        Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Text(
-            'Pencarian Terpopuler : Designer, Developer, Web, IOS, PHP',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Constants.colorBiruGelap,
-              fontSize: 12,
-              fontFamily: 'Jost',
-              fontWeight: FontWeight.w500,
-              letterSpacing: -0.24,
-            ),
-          ),
-        ),
+        // const Padding(padding: EdgeInsets.only(top: 15)),
+        // const CariJobs(),
+        // const Padding(padding: EdgeInsets.only(top: 5)),
+        // const CariLokasi(),
+        // const Padding(padding: EdgeInsets.only(top: 5)),
+        // const CariPerusahaan(),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 10),
+        //   child: Text(
+        //     'Pencarian Terpopuler : Designer, Developer, Web, IOS, PHP',
+        //     textAlign: TextAlign.center,
+        //     style: TextStyle(
+        //       color: Constants.colorBiruGelap,
+        //       fontSize: 12,
+        //       fontFamily: 'Jost',
+        //       fontWeight: FontWeight.w500,
+        //       letterSpacing: -0.24,
+        //     ),
+        //   ),
+        // ),
         const LandingGrid(),
         const Center(
           child: Text(
@@ -175,8 +175,9 @@ class _LandingScreenState extends State<LandingScreen> {
                       dataPerusahaan: perusahaan,
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                const PerusahaanDetailScreen()));
+                            builder: (context) => PerusahaanDetailScreen(
+                                  perusahaan: perusahaan,
+                                )));
                       },
                     );
                   },

@@ -1,6 +1,8 @@
 import 'package:bcc/bccwidgets/bcc_normal_button.dart';
 import 'package:flutter/material.dart';
 
+import '../screen/landing/lowongan/lowongan_detail.dart';
+
 class BccCardJob extends StatelessWidget {
   const BccCardJob({super.key, this.dataLowongan});
 
@@ -148,7 +150,11 @@ class BccCardJob extends StatelessWidget {
             SizedBox(
                 width: width,
                 child: BccNormalButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => LowonganDetail(job: dataLowongan),
+                    ));
+                  },
                   child: const Text('Detail'),
                 ))
           ],

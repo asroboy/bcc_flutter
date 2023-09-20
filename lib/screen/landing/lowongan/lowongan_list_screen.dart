@@ -101,7 +101,7 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
           Stack(
             children: [
               Container(
-                height: 180,
+                height: 120,
                 decoration: BoxDecoration(
                     color: Constants.colorBiruGelap,
                     borderRadius: const BorderRadius.only(
@@ -109,7 +109,7 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
                         bottomRight: Radius.circular(10))),
               ),
               Container(
-                height: 180,
+                height: 120,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(10),
@@ -131,20 +131,20 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
                         });
                       }),
                   const Padding(padding: EdgeInsets.only(top: 20)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2.3,
-                        child: CariLokasi(),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2.1,
-                        child: CariPerusahaan(),
-                      )
-                    ],
-                  )
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Container(
+                  //       width: MediaQuery.of(context).size.width / 2.3,
+                  //       child: CariLokasi(),
+                  //     ),
+                  //     Container(
+                  //       width: MediaQuery.of(context).size.width / 2.1,
+                  //       child: CariPerusahaan(),
+                  //     )
+                  //   ],
+                  // )
                 ]),
               )
             ],

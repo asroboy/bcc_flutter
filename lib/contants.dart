@@ -23,8 +23,11 @@ class Constants {
   static String pathDataJobseekerSkill = 'admin/jobseeker_skill';
 
   static String pathLandingCompany = 'Comp';
+  static String pathComp = 'jobseeker/Comp';
   static String pathJobboard = 'jobseeker/jobboard';
   static String pathWishList = 'jobseeker/wishlist';
+  static String pathRiwayatLamaran = 'jobseeker/application';
+  static String pathAjukanLamaran = 'admin/company_job_application';
 
   static Color boxColorBlueTrans = const Color(0x236fb6f7);
   static Color colorBiruGelap = const Color(0xFF003673);

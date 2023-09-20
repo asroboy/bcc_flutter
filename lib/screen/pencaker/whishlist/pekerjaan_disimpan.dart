@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_label.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
@@ -16,9 +17,12 @@ import 'package:get_storage/get_storage.dart';
 import '../../../bccwidgets/bcc_row_info2.dart';
 
 class PekerjaanDisimpan extends StatefulWidget {
-  const PekerjaanDisimpan({super.key, this.jobWhish});
+  const PekerjaanDisimpan(
+      {super.key, this.jobWhish, required this.showAjukanLamaran});
 
   final dynamic jobWhish;
+  final bool showAjukanLamaran;
+
   @override
   State<PekerjaanDisimpan> createState() => _PekerjaanDisimpanState();
 }
@@ -78,6 +82,7 @@ class _PekerjaanDisimpanState extends State<PekerjaanDisimpan> {
 
   @override
   Widget build(BuildContext context) {
+    log('job ${widget.jobWhish}');
     return Scaffold(
         appBar: AppBar(
           title: const Text('Pekerjaan Disimpan'),
@@ -144,7 +149,8 @@ class _PekerjaanDisimpanState extends State<PekerjaanDisimpan> {
                                           '${widget.jobWhish['company_name']}'),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 5),
+                                  padding:
+                                      const EdgeInsets.only(top: 5, bottom: 10),
                                   child: BccRowInfo2(
                                       icon: const Icon(
                                         Icons.pin_drop_outlined,
@@ -152,6 +158,57 @@ class _PekerjaanDisimpanState extends State<PekerjaanDisimpan> {
                                       ),
                                       info:
                                           '${widget.jobWhish['master_city_name']} ${widget.jobWhish['master_province_name']}'),
+                                ),
+                                widget.jobWhish[
+                                            'company_job_application_status'] !=
+                                        null
+                                    ? Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 10),
+                                        // padding: const EdgeInsets.only(
+                                        //     top: 5,
+                                        //     bottom: 5,
+                                        //     right: 10,
+                                        //     left: 10),
+                                        // color: Colors.blue[100],
+                                        child: Text(
+                                          widget.jobWhish[
+                                                      'company_job_application_status'] ==
+                                                  'PENDING'
+                                              ? 'Status Lamaran Terkirim'
+                                              : 'Status ${widget.jobWhish['company_job_application_status']}',
+                                          style: TextStyle(
+                                              color: Colors.blue[900]),
+                                        ))
+                                    : const Center(),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 10),
+                                        padding: const EdgeInsets.only(
+                                            top: 5,
+                                            bottom: 5,
+                                            right: 10,
+                                            left: 10),
+                                        color: Colors.blue[100],
+                                        child: Text(
+                                            '${widget.jobWhish['master_employment_type_name']}')),
+                                    Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 10),
+                                        padding: const EdgeInsets.only(
+                                            top: 5,
+                                            bottom: 5,
+                                            right: 10,
+                                            left: 10),
+                                        color: Colors.green[100],
+                                        child: Text(
+                                            '${widget.jobWhish['master_job_level_name']}')),
+                                  ],
                                 ),
                               ]),
                         ),
@@ -193,21 +250,49 @@ class _PekerjaanDisimpanState extends State<PekerjaanDisimpan> {
                       child: BccLineSparator(
                           margin: EdgeInsets.only(bottom: 10, top: 10)),
                     ),
+                    widget.showAjukanLamaran &&
+                            widget.jobWhish['company_job_application_status'] ==
+                                null
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    _ajukanLamaran(widget.jobWhish['id']);
+                                  },
+                                  child: const Text('Ajukan lamaran'))
+                            ],
+                          )
+                        : const Center(),
                     Html(
                       data: widget.jobWhish['description'],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {},
-                            child: const Text('Ajukan lamaran'))
-                      ],
-                    )
                   ],
                 ),
               ))
         ]));
+  }
+
+  _ajukanLamaran(String jobId) {
+    String token = loginInfo['data']['token'];
+    if (token == '') {
+      showAlertDialogWithAction(
+          'Silahkan login terlebih dahulu jika ingin mengirimkan lamaran pekerjaan',
+          context,
+          () {},
+          'OK');
+    } else {
+      dynamic body = {'jobseeker_id': idPencaker, 'company_job_id': jobId};
+      Future<dynamic> reqLowonganPopuler = _apiCall.ajukanLamaran(body, token);
+      reqLowonganPopuler.then((value) {
+        // log('result $value');
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(value, context, (response) {
+            showAlertDialog('Lamaran Kamu sudah diajukan', context);
+          });
+        }
+      });
+    }
   }
 }
