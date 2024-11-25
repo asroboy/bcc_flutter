@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TambahLowongan extends StatefulWidget {
-  const TambahLowongan({super.key});
+class DetailKandidat extends StatefulWidget {
+  const DetailKandidat({super.key});
 
   @override
-  State<TambahLowongan> createState() => _TambahLowonganState();
+  State<DetailKandidat> createState() => _DetailKandidatState();
 }
 
-class _TambahLowonganState extends State<TambahLowongan> {
+class _DetailKandidatState extends State<DetailKandidat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
-        title: const Text('Tambah Lowongan'),
+        title: const Text('Pelamar Kerja'),
       ),
     );
   }
