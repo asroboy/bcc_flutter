@@ -10,10 +10,30 @@ class DashboardPerusahaan extends StatefulWidget {
 class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
   @override
   Widget build(BuildContext context) {
+    double headerHeight = MediaQuery.of(context).size.height * 0.20;
+    double bodyHeight = MediaQuery.of(context).size.height - headerHeight;
+
     return Scaffold(
-      body: Center(
-        child: Text('Halo'),
+        body: Stack(children: [
+      Container(
+        height: headerHeight,
+        color: Theme.of(context).colorScheme.primary,
+        child: const Column(
+          children: [
+            Row(
+              children: [],
+            )
+          ],
+        ),
       ),
-    );
+      Container(
+        margin: EdgeInsets.only(
+            top: (headerHeight + 2), bottom: 10, left: 10, right: 10),
+        height: bodyHeight,
+        child: ListView(
+          children: [],
+        ),
+      )
+    ]));
   }
 }

@@ -5,6 +5,7 @@ import 'package:bcc/screen/perusahaan/profile_perusahaan/informasi_akun.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/pic.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profle_menu_widget.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_password.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_profil_perusahaan.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePerusahaan extends StatefulWidget {
@@ -84,12 +85,16 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const UbahProfilPerusahaan(),
+                    ));
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       side: BorderSide.none,
                       shape: const StadiumBorder()),
-                  child: const Text('Edit Profil',
+                  child: const Text('Ubah Profil',
                       style: TextStyle(color: Colors.white)),
                 ),
               ),

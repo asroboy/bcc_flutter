@@ -2,7 +2,7 @@ import 'package:bcc/contants.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/cari_kandidat.dart';
 import 'package:bcc/screen/perusahaan/dashboard_perusahaan.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/management_lowongan.dart';
-import 'package:bcc/screen/perusahaan/personalia.dart';
+import 'package:bcc/screen/perusahaan/personalia/personalia.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan.dart';
 import 'package:flutter/material.dart';
 
