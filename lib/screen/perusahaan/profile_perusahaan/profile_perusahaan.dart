@@ -1,4 +1,10 @@
+import 'package:bcc/screen/perusahaan/profile_perusahaan/alamat_perusahaan.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/badan_hukum_usaha.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/dokumen_perusahaan.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/informasi_akun.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/pic.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profle_menu_widget.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_password.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePerusahaan extends StatefulWidget {
@@ -97,21 +103,45 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
 
               /// -- MENU
               ProfileMenuWidget(
-                  title: "Informasi Akun", icon: Icons.info, onPress: () {}),
+                  title: "Informasi Akun",
+                  icon: Icons.info,
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const InformasiAkunPerusahaan(),
+                    ));
+                  }),
               ProfileMenuWidget(
                   title: "Alamat Perusahaan",
                   icon: Icons.location_on,
-                  onPress: () {}),
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const AlamatPerusahaan(),
+                    ));
+                  }),
               ProfileMenuWidget(
-                  title: "Identitas PIC", icon: Icons.person, onPress: () {}),
+                  title: "Identitas PIC",
+                  icon: Icons.person,
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const Pic(),
+                    ));
+                  }),
               ProfileMenuWidget(
                   title: "Dokumen Perusahaan",
                   icon: Icons.description,
-                  onPress: () {}),
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const DokumenPerusahaan(),
+                    ));
+                  }),
               ProfileMenuWidget(
                   title: "Badan Hukum/Usaha",
                   icon: Icons.policy,
-                  onPress: () {}),
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const BadanHukumUsaha(),
+                    ));
+                  }),
               const Divider(
                 endIndent: 10,
                 indent: 10,
@@ -119,7 +149,13 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
               ),
               const SizedBox(height: 10),
               ProfileMenuWidget(
-                  title: "Kata Sandi", icon: Icons.password, onPress: () {}),
+                  title: "Kata Sandi",
+                  icon: Icons.password,
+                  onPress: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const UbahPassword(),
+                    ));
+                  }),
               ProfileMenuWidget(
                   title: "Keluar",
                   icon: Icons.logout,

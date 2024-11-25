@@ -12,7 +12,7 @@ class _UbahPasswordState extends State<UbahPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ubah Password'),
+        title: const Text('Ubah Kata Sandi'),
       ),
     );
   }
