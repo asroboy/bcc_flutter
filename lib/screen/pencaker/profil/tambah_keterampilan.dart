@@ -36,9 +36,12 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
     Future<dynamic> req = _apiCall
         .getDataPendukung(Constants.pathDataMasterSkill + ('?name=') + filter);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        completer.complete(response['data']);
-      });
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            completer.complete(response['data']);
+          });
     });
     return completer.future;
   }
@@ -155,10 +158,12 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
                       if (!mounted) return;
                       Navigator.of(context).pop();
 
-                      _apiHelper.apiCallResponseHandler(value, context,
-                          (response) {
-                        Navigator.of(context).pop(response);
-                      });
+                      _apiHelper.apiCallResponseHandler(
+                          response: value,
+                          context: context,
+                          onSuccess: (response) {
+                            Navigator.of(context).pop(response);
+                          });
                     });
                   },
                   padding: const EdgeInsets.only(top: 20),

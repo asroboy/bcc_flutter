@@ -27,7 +27,12 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
             userInfo['photo'] == '' ||
             isErrorImageProfile)
         ? const AssetImage('assets/images/male.png')
-        : NetworkImage(userInfo['photo']));
+        : Image.network(
+            userInfo['photo'],
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset('assets/images/male.png');
+            },
+          ));
   }
 
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);

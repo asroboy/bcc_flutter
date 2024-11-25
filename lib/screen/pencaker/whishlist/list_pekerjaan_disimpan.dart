@@ -2,14 +2,9 @@ import 'dart:developer';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
-import 'package:bcc/bccwidgets/bcc_label.dart';
-import 'package:bcc/bccwidgets/bcc_line_break.dart';
-import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
-import 'package:bcc/bccwidgets/bcc_row_info2.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/whishlist/card_list_pekerjaan.dart';
-import 'package:bcc/screen/pencaker/whishlist/pekerjaan_disimpan.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -33,8 +28,8 @@ class _ListPekerjaanDisimpanState extends State<ListPekerjaanDisimpan> {
   String search = '';
 
   bool _isLoadingLowongan = false;
-  bool _isLoadMore = false;
-  bool _lastpage = false;
+  // bool _isLoadMore = false;
+  // bool _lastpage = false;
   int _totalPage = 0;
   final List<dynamic> _dataLowonganDiharapkan = [];
 
@@ -44,23 +39,26 @@ class _ListPekerjaanDisimpanState extends State<ListPekerjaanDisimpan> {
     reqLowonganPopuler.then((value) {
       // log('result $value');
       if (mounted) {
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          setState(() {
-            _isLoadingLowongan = false;
-            _isLoadMore = false;
-            List<dynamic> dresponse = response['data'];
-            _dataLowonganDiharapkan.addAll(dresponse);
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: context,
+            onSuccess: (response) {
+              setState(() {
+                _isLoadingLowongan = false;
+                // _isLoadMore = false;
+                List<dynamic> dresponse = response['data'];
+                _dataLowonganDiharapkan.addAll(dresponse);
 
-            dynamic metadata = response['meta'];
+                dynamic metadata = response['meta'];
 
-            _totalPage = metadata['totalPage'];
-            if (_page < _totalPage) {
-              _page++;
-            } else {
-              _lastpage = true;
-            }
-          });
-        });
+                _totalPage = metadata['totalPage'];
+                if (_page < _totalPage) {
+                  _page++;
+                } else {
+                  // _lastpage = true;
+                }
+              });
+            });
       }
     });
   }

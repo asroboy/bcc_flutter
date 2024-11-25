@@ -3,7 +3,6 @@ import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
-import 'package:bcc/bccwidgets/bcc_label.dart';
 import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
@@ -210,16 +209,18 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
                       if (!mounted) return;
                       Navigator.of(context).pop();
 
-                      _apiHelper.apiCallResponseHandler(value, context,
-                          (response) {
-                        Navigator.of(context).pop(response);
-                        // Navigator.pushAndRemoveUntil(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const RegisterComplete()),
-                        //   (Route<dynamic> route) => false,
-                        // );
-                      });
+                      _apiHelper.apiCallResponseHandler(
+                          response: value,
+                          context: context,
+                          onSuccess: (response) {
+                            Navigator.of(context).pop(response);
+                            // Navigator.pushAndRemoveUntil(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => const RegisterComplete()),
+                            //   (Route<dynamic> route) => false,
+                            // );
+                          });
                     });
                   },
                   padding: const EdgeInsets.only(top: 20),

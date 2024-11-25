@@ -38,21 +38,21 @@ class BccDropdownSearch extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: const BorderSide(width: 0.05)),
             ))),
-        asyncItems: asyncItems,
+        // asyncItems: asyncItems,
         itemAsString: itemAsString,
         selectedItem: selectedItem,
         onChanged: onChange,
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          textAlign: TextAlign.start,
-          dropdownSearchDecoration: InputDecoration(
-              focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white)),
-              alignLabelWithHint: true,
-              floatingLabelAlignment: FloatingLabelAlignment.start,
-              hintText: hint),
-        ),
+        // dropdownDecoratorProps: DropDownDecoratorProps(
+        //   textAlign: TextAlign.start,
+        //   dropdownSearchDecoration: InputDecoration(
+        //       focusedBorder: const UnderlineInputBorder(
+        //           borderSide: BorderSide(color: Colors.white)),
+        //       enabledBorder: const UnderlineInputBorder(
+        //           borderSide: BorderSide(color: Colors.white)),
+        //       alignLabelWithHint: true,
+        //       floatingLabelAlignment: FloatingLabelAlignment.start,
+        //       hintText: hint),
+        // ),
       ),
     );
   }

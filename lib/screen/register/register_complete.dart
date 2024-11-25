@@ -1,5 +1,4 @@
 import 'package:bcc/contants.dart';
-import 'package:bcc/screen/landing/landing_screen.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:flutter/material.dart';
 

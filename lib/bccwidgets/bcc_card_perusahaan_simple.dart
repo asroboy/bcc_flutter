@@ -53,7 +53,7 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                                     width:
                                         MediaQuery.of(context).size.width * 0.7,
                                     child: Text(
-                                      perusahaan['master_industry_name'],
+                                      perusahaan['master_industry_name'] ?? '-',
                                       style: TextStyle(
                                           fontStyle: FontStyle.italic,
                                           color: Colors.blueGrey[400]),
@@ -61,8 +61,14 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                                   )
                                 ],
                               ),
-                              Text(perusahaan['master_company_size_name']),
-                              Text(perusahaan['master_city_name']),
+                              perusahaan['master_company_size_name'] == null
+                                  ? const Center()
+                                  : Text(
+                                      perusahaan['master_company_size_name'] ??
+                                          '-'),
+                              perusahaan['master_city_name'] == null
+                                  ? const Center()
+                                  : Text(perusahaan['master_city_name'] ?? '-'),
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 10))
                             ],

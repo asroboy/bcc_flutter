@@ -46,16 +46,19 @@ class _UbahBiodataState extends State<UbahBiodata> {
     Future<dynamic> req =
         _apiCall.getDataPendukung(Constants.pathPendidikanTerakhir);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            pendidikanTerakhirObj.addAll(response['data']);
-            for (dynamic d in pendidikanTerakhirObj) {
-              pendidikanTerakhirListString.add(d['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                pendidikanTerakhirObj.addAll(response['data']);
+                for (dynamic d in pendidikanTerakhirObj) {
+                  pendidikanTerakhirListString.add(d['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -235,25 +238,25 @@ class _UbahBiodataState extends State<UbahBiodata> {
                     controller: _tahunLulusController,
                     padding: const EdgeInsets.only(top: 15),
                   ),
-                  BccTextFormFieldInput(
+                  const BccTextFormFieldInput(
                     hint: 'Tinggi Badan',
                     // controller: _tahunLulusController,
-                    padding: const EdgeInsets.only(top: 15),
+                    padding: EdgeInsets.only(top: 15),
                   ),
-                  BccTextFormFieldInput(
+                  const BccTextFormFieldInput(
                     hint: 'Berat Badan',
                     // controller: _tahunLulusController,
-                    padding: const EdgeInsets.only(top: 15),
+                    padding: EdgeInsets.only(top: 15),
                   ),
                   const BccTextFormFieldInput(
                     hint: 'No BPJS Kesehatan',
                     // controller: _tahunLulusController,
-                    padding: const EdgeInsets.only(top: 15),
+                    padding: EdgeInsets.only(top: 15),
                   ),
                   const BccTextFormFieldInput(
                     hint: 'No BPJS Ketenaga Kerjaan',
                     // controller: _tahunLulusController,
-                    padding: const EdgeInsets.only(top: 15),
+                    padding: EdgeInsets.only(top: 15),
                   ),
                   BccButton(
                     onPressed: () {},

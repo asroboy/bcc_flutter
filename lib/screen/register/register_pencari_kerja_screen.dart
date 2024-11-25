@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';

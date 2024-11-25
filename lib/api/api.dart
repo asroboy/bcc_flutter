@@ -4,24 +4,13 @@ import 'dart:developer';
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart';
 
 class ApiHelper {
   String? apiUrl;
-  // String apiUrlGlobal = 'https://asm.eakademik.id/ytb/Api';
-  // String apiUrlGlobalLogin = 'https://demo.ecampus.id/ecampus/Api';
-  String apiUrlGlobalLogin = 'https://apps-sd.tarunabakti.sch.id/ytb/Api';
-  // String apiUrlGlobalLogin = 'https://apps.tarunabakti.or.id/ytb/Api';
-  // String apiUrlGlobalLogin = 'https://sd.alirsyad.eschool.id/ia/Api';
-  // String apiUrlGlobalLogin = 'https://sd.eakademik.id/ytb/Api';
-
-  // String apiUrl = 'https://asm.eakademik.id/ytb//Api';
-  // String apiUrl = 'https://tb.eakademik.id/ytb/Api';
-  // String apiUrl = 'https://dev.ecampus.id/ecampus/Api';
-  // String apiUrl = 'https://eakademik.techno9indonesia.com/t/Api';
+  String apiUrlGlobalLogin = 'https://bogorcareercenter.bogorkab.go.id/';
 
   final dynamic body;
 
@@ -279,8 +268,14 @@ class ApiHelper {
   }
 
   apiCallResponseHandler(
-      dynamic response, BuildContext context, Function onSuccess) {
+      {required dynamic response,
+      required BuildContext? context,
+      required Function onSuccess,
+      Function? onFailedCallback}) {
     // log('response $response');
+    if (context == null) {
+      return;
+    }
     if (response['code'] == 200 && response['success'] == true) {
       onSuccess(response);
     } else {
@@ -290,10 +285,19 @@ class ApiHelper {
           _logout(context);
         }, 'Ok');
       } else {
-        showAlertDialog(
-            response['message'] ??
-                'Terjadi kendala silahkan coba lagi setelah beberapa saat',
-            context);
+        if (onFailedCallback != null) {
+          showAlertDialogWithAction(
+              response['message'] ??
+                  'Terjadi kendala silahkan coba lagi setelah beberapa saat',
+              context,
+              onFailedCallback,
+              'OK');
+        } else {
+          showAlertDialog(
+              response['message'] ??
+                  'Terjadi kendala silahkan coba lagi setelah beberapa saat',
+              context);
+        }
       }
     }
   }

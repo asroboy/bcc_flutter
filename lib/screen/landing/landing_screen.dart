@@ -1,14 +1,9 @@
-import 'dart:developer';
-
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/bccwidgets/bcc_card_job.dart';
 import 'package:bcc/bccwidgets/bcc_card_perusahaan.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/banner_register.dart';
-import 'package:bcc/screen/landing/cari_jobs.dart';
-import 'package:bcc/screen/landing/cari_lokasi.dart';
-import 'package:bcc/screen/landing/cari_perusahaan.dart';
 import 'package:bcc/screen/landing/landing_grid.dart';
 import 'package:bcc/screen/landing/perusahaan/perusahaan_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +30,15 @@ class _LandingScreenState extends State<LandingScreen> {
     reqLowonganPopuler.then((value) {
       // log('result $value');
       if (mounted) {
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          setState(() {
-            _isLoadingLowongan = false;
-            _dataLowonganPopuler.addAll(response['data']);
-          });
-        });
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: context,
+            onSuccess: (response) {
+              setState(() {
+                _isLoadingLowongan = false;
+                _dataLowonganPopuler.addAll(response['data']);
+              });
+            });
       }
     });
   }
@@ -52,12 +50,15 @@ class _LandingScreenState extends State<LandingScreen> {
     reqLowonganPopuler.then((value) {
       // log('result $value');
       if (mounted) {
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          setState(() {
-            _isLoadingPerusahaan = false;
-            _dataPerusahaanTerbaru.addAll(response['data']);
-          });
-        });
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: context,
+            onSuccess: (response) {
+              setState(() {
+                _isLoadingPerusahaan = false;
+                _dataPerusahaanTerbaru.addAll(response['data']);
+              });
+            });
       }
     });
   }

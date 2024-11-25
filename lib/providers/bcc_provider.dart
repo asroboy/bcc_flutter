@@ -1,14 +1,13 @@
 import 'dart:developer';
 
-import 'package:bcc/api/api.dart';
+// import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/contants.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 class BccProvider with ChangeNotifier, DiagnosticableTreeMixin {
   final ApiCall _apiCall = ApiCall();
-  final ApiHelper _apiHelper = ApiHelper();
+  // final ApiHelper _apiHelper = ApiHelper();
 
   bool _isLoadingDataPerusahaan = false;
   int _count = 0;

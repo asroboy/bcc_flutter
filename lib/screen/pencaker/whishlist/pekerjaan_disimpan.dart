@@ -3,15 +3,10 @@ import 'dart:developer';
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
-import 'package:bcc/bccwidgets/bcc_label.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
-import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
-import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
-import 'package:bcc/bccwidgets/bcc_row_info1.dart';
-import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/contants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_html/flutter_html.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../bccwidgets/bcc_row_info2.dart';
@@ -265,8 +260,8 @@ class _PekerjaanDisimpanState extends State<PekerjaanDisimpan> {
                             ],
                           )
                         : const Center(),
-                    Html(
-                      data: widget.jobWhish['description'],
+                    Text(
+                      widget.jobWhish['description'],
                     ),
                   ],
                 ),
@@ -288,9 +283,12 @@ class _PekerjaanDisimpanState extends State<PekerjaanDisimpan> {
       reqLowonganPopuler.then((value) {
         // log('result $value');
         if (mounted) {
-          _apiHelper.apiCallResponseHandler(value, context, (response) {
-            showAlertDialog('Lamaran Kamu sudah diajukan', context);
-          });
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                showAlertDialog('Lamaran Kamu sudah diajukan', context);
+              });
         }
       });
     }

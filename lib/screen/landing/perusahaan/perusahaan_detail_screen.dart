@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class _PerusahaanDetailScreenState extends State<PerusahaanDetailScreen> {
             children: [
               InAppWebView(
                 key: webViewKey,
-                initialUrlRequest: URLRequest(url: Uri.parse(url)),
+                initialUrlRequest: URLRequest(url: WebUri(url)),
                 initialOptions: options,
                 pullToRefreshController: pullToRefreshController,
                 onWebViewCreated: (controller) {
@@ -97,10 +98,10 @@ class _PerusahaanDetailScreenState extends State<PerusahaanDetailScreen> {
                     "javascript",
                     "about"
                   ].contains(uri.scheme)) {
-                    if (await canLaunch(url)) {
+                    if (await canLaunchUrl(Uri.dataFromString(url))) {
                       // Launch the App
-                      await launch(
-                        url,
+                      await launchUrl(
+                        Uri.dataFromString(url),
                       );
                       // and cancel the request
                       return NavigationActionPolicy.CANCEL;
@@ -125,7 +126,7 @@ class _PerusahaanDetailScreenState extends State<PerusahaanDetailScreen> {
                   }
                   setState(() {
                     this.progress = progress / 100;
-                    urlController.text = this.url;
+                    urlController.text = url;
                   });
                 },
                 onUpdateVisitedHistory: (controller, url, androidIsReload) {
@@ -135,7 +136,7 @@ class _PerusahaanDetailScreenState extends State<PerusahaanDetailScreen> {
                   });
                 },
                 onConsoleMessage: (controller, consoleMessage) {
-                  print(consoleMessage);
+                  log(consoleMessage.message);
                 },
               ),
               progress < 1.0

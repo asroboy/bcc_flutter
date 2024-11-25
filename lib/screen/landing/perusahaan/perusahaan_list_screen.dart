@@ -1,14 +1,11 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/bccwidgets/bcc_card_perusahaan_simple.dart';
-import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_load_more_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
-import 'package:bcc/screen/landing/cari_lokasi.dart';
-import 'package:bcc/screen/landing/cari_perusahaan.dart';
 import 'package:bcc/screen/landing/perusahaan/perusahaan_detail_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -23,11 +20,11 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
   final ApiCall _apiCall = ApiCall();
   final ApiHelper _apiHelper = ApiHelper();
 
-  TextEditingController _searchTextController = TextEditingController();
+  final TextEditingController _searchTextController = TextEditingController();
 
   bool _isLoadingDataPerusahaan = false;
   bool _isLoadingMoreData = false;
-  List<dynamic> _dataPerusahaan = [];
+  final List<dynamic> _dataPerusahaan = [];
   final int _maxPerPage = 10;
   int _page = 1;
   bool _isLastePage = false;
@@ -36,26 +33,29 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
   _fetchPerusahaanTerbaru() {
     // Future<dynamic> reqLowonganPopuler = _apiCall.getCompanyPaged(
     //     Constants.pathLandingCompany, _page, _maxPerPage, search);
-    Future<dynamic> reqLowonganPopuler = _apiCall.getDataPendukung(
-        Constants.pathLandingCompany +
-            ('?limit=10&page=1&orderBy=id&sort=desc&name=${search ?? ''}'));
+    Future<dynamic> reqLowonganPopuler = _apiCall.getDataPendukung(Constants
+            .pathLandingCompany +
+        ('?limit=10&page=$_page&orderBy=id&sort=desc&name=${search ?? ''}'));
     reqLowonganPopuler.then((value) {
       // log('result $value');
       if (mounted) {
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          setState(() {
-            _isLoadingDataPerusahaan = false;
-            _isLoadingMoreData = false;
-            List<dynamic> dataResponse = response['data'];
-            _dataPerusahaan.addAll(dataResponse);
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: context,
+            onSuccess: (response) {
+              setState(() {
+                _isLoadingDataPerusahaan = false;
+                _isLoadingMoreData = false;
+                List<dynamic> dataResponse = response['data'];
+                _dataPerusahaan.addAll(dataResponse);
 
-            if (dataResponse.length < _maxPerPage) {
-              _isLastePage = true;
-            } else {
-              _page++;
-            }
-          });
-        });
+                if (dataResponse.length < _maxPerPage) {
+                  _isLastePage = true;
+                } else {
+                  _page++;
+                }
+              });
+            });
       }
     });
   }
@@ -82,7 +82,7 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 235, 231, 231),
+      backgroundColor: const Color.fromARGB(255, 235, 231, 231),
       appBar: AppBar(
         toolbarHeight: 0,
         backgroundColor: Constants.colorBiruGelap,

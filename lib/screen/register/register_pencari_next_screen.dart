@@ -7,7 +7,6 @@ import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_search.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
-import 'package:bcc/bccwidgets/bcc_label.dart';
 import 'package:bcc/bccwidgets/bcc_row_label.dart';
 
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
@@ -99,16 +98,19 @@ class _RegisterPencariKerjaNextScreenState
   _fetchDataProvinsi() {
     Future<dynamic> req = _apiCall.getDataPendukung(Constants.pathProvinsi);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            provinsisObj.addAll(response['data']);
-            for (dynamic prov in provinsisObj) {
-              provinsiListString.add(prov['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                provinsisObj.addAll(response['data']);
+                for (dynamic prov in provinsisObj) {
+                  provinsiListString.add(prov['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -145,16 +147,19 @@ class _RegisterPencariKerjaNextScreenState
     Future<dynamic> req = _apiCall.getDataPendukung(
         Constants.pathKota + ('?master_province_id=') + idProvinsi);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            kotaObj.addAll(response['data']);
-            for (dynamic kota in kotaObj) {
-              kotaListString.add(kota['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                kotaObj.addAll(response['data']);
+                for (dynamic kota in kotaObj) {
+                  kotaListString.add(kota['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -162,16 +167,19 @@ class _RegisterPencariKerjaNextScreenState
     Future<dynamic> req = _apiCall.getDataPendukung(
         Constants.pathKecamatan + ('?master_city_id=') + idKota);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            kecamatanObj.addAll(response['data']);
-            for (dynamic kecamatan in kecamatanObj) {
-              kecamatanListString.add(kecamatan['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                kecamatanObj.addAll(response['data']);
+                for (dynamic kecamatan in kecamatanObj) {
+                  kecamatanListString.add(kecamatan['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -179,16 +187,19 @@ class _RegisterPencariKerjaNextScreenState
     Future<dynamic> req = _apiCall.getDataPendukung(
         Constants.pathDesa + ('?master_district_id=') + idKecamatan);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            desaObj.addAll(response['data']);
-            for (dynamic desa in desaObj) {
-              desaListString.add(desa['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                desaObj.addAll(response['data']);
+                for (dynamic desa in desaObj) {
+                  desaListString.add(desa['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -200,16 +211,19 @@ class _RegisterPencariKerjaNextScreenState
   _fetchDisabilitas() {
     Future<dynamic> req = _apiCall.getDataPendukung(Constants.pathDisable);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            disabilitasObj.addAll(response['data']);
-            for (dynamic d in disabilitasObj) {
-              disabilitasListString.add(d['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                disabilitasObj.addAll(response['data']);
+                for (dynamic d in disabilitasObj) {
+                  disabilitasListString.add(d['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -217,16 +231,19 @@ class _RegisterPencariKerjaNextScreenState
     Future<dynamic> req =
         _apiCall.getDataPendukung(Constants.pathPendidikanTerakhir);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            pendidikanTerakhirObj.addAll(response['data']);
-            for (dynamic d in pendidikanTerakhirObj) {
-              pendidikanTerakhirListString.add(d['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                pendidikanTerakhirObj.addAll(response['data']);
+                for (dynamic d in pendidikanTerakhirObj) {
+                  pendidikanTerakhirListString.add(d['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -238,16 +255,19 @@ class _RegisterPencariKerjaNextScreenState
   _fetchDataSekolah() {
     Future<dynamic> req = _apiCall.getDataPendukung(Constants.pathSekolah);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            sekolahObj.addAll(response['data']);
-            for (dynamic d in sekolahObj) {
-              sekolahListString.add(d['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                sekolahObj.addAll(response['data']);
+                for (dynamic d in sekolahObj) {
+                  sekolahListString.add(d['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -257,9 +277,12 @@ class _RegisterPencariKerjaNextScreenState
     Future<dynamic> req =
         _apiCall.getDataPendukung(Constants.pathSekolah + ('?name=') + name);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        completer.complete(response['data']);
-      });
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            completer.complete(response['data']);
+          });
     });
 
     return completer.future;
@@ -270,9 +293,12 @@ class _RegisterPencariKerjaNextScreenState
     Future<dynamic> req = _apiCall
         .getDataPendukung(Constants.pathJurusanSekolah + ('?name=') + filter);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        completer.complete(response['data']);
-      });
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            completer.complete(response['data']);
+          });
     });
     return completer.future;
   }
@@ -286,16 +312,19 @@ class _RegisterPencariKerjaNextScreenState
     Future<dynamic> req =
         _apiCall.getDataPendukung(Constants.pathJurusanSekolah);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            jurusanObj.addAll(response['data']);
-            for (dynamic d in jurusanObj) {
-              jurusanListString.add(d['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                jurusanObj.addAll(response['data']);
+                for (dynamic d in jurusanObj) {
+                  jurusanListString.add(d['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -891,15 +920,18 @@ class _RegisterPencariKerjaNextScreenState
                         if (!mounted) return;
                         Navigator.of(context).pop();
 
-                        _apiHelper.apiCallResponseHandler(value, context,
-                            (response) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RegisterComplete()),
-                            (Route<dynamic> route) => false,
-                          );
-                        });
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            context: context,
+                            onSuccess: (response) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegisterComplete()),
+                                (Route<dynamic> route) => false,
+                              );
+                            });
                       });
                     },
                     padding: const EdgeInsets.only(

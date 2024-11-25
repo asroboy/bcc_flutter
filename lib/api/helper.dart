@@ -57,8 +57,8 @@ void showAlertDialogWithTitleAndAction(
         actions: [
           ElevatedButton(
             onPressed: action,
-            child: Text(text),
             style: ElevatedButton.styleFrom(),
+            child: Text(text),
           ),
         ],
       ),
@@ -77,8 +77,8 @@ void showAlertDialogWithAction(
         actions: [
           ElevatedButton(
             onPressed: action,
-            child: Text(text),
             style: ElevatedButton.styleFrom(),
+            child: Text(text),
           ),
         ],
       ),

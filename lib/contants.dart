@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static String host = 'https://bogorcareercenter.bogorkab.go.id/api/';
+  static String serverDev = 'http://bogorcareercenter.indoaksesmedia.my.id';
+  static String serverProd = 'https://bogorcareercenter.bogorkab.go.id/';
+
+  static String host = '$serverDev/api/';
   static String pathLoginPencaker = 'jobseeker/auth';
   static String pathLoginPerusahaan = 'company/auth';
   static String pathProvinsi = 'admin/master_province';

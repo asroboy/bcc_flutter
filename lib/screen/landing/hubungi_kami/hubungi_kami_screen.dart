@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class _HubungiKamiScreenState extends State<HubungiKamiScreen> {
             children: [
               InAppWebView(
                 key: webViewKey,
-                initialUrlRequest: URLRequest(url: Uri.parse(url)),
+                initialUrlRequest: URLRequest(url: WebUri(url)),
                 initialOptions: options,
                 pullToRefreshController: pullToRefreshController,
                 onWebViewCreated: (controller) {
@@ -96,10 +97,10 @@ class _HubungiKamiScreenState extends State<HubungiKamiScreen> {
                     "javascript",
                     "about"
                   ].contains(uri.scheme)) {
-                    if (await canLaunch(url)) {
+                    if (await canLaunchUrl(Uri.dataFromString(url))) {
                       // Launch the App
-                      await launch(
-                        url,
+                      await launchUrl(
+                        Uri.dataFromString(url),
                       );
                       // and cancel the request
                       return NavigationActionPolicy.CANCEL;
@@ -124,7 +125,7 @@ class _HubungiKamiScreenState extends State<HubungiKamiScreen> {
                   }
                   setState(() {
                     this.progress = progress / 100;
-                    urlController.text = this.url;
+                    urlController.text = url;
                   });
                 },
                 onUpdateVisitedHistory: (controller, url, androidIsReload) {
@@ -134,7 +135,7 @@ class _HubungiKamiScreenState extends State<HubungiKamiScreen> {
                   });
                 },
                 onConsoleMessage: (controller, consoleMessage) {
-                  print(consoleMessage);
+                  log(consoleMessage.message);
                 },
               ),
               progress < 1.0

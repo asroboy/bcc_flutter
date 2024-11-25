@@ -28,6 +28,7 @@ class CariJobs extends StatelessWidget {
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               BccButtonCari(
                 onPressed: onPressed,
+                size: const Size(80, 40),
                 child: const Text('Cari'),
               )
             ]))

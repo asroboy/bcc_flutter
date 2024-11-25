@@ -36,22 +36,30 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
   dynamic biodataPencaker;
 
   _fetchBiodataRinciPencaker() {
-    String idPencaker = loginInfo['data']['id'];
+    String idPencaker = loginInfo['data']['unique_id'];
     String token = loginInfo['data']['token'];
     _apiCall
         .getDataRinci(Constants.pathDataPencaker, idPencaker, token)
         .then((value) {
       if (mounted) {
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          setState(() {
-            isLoading = false;
-            biodataPencaker = response['data'];
-            _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
-            _dataPendidikanPencaker.addAll(biodataPencaker['education']);
-            _dataSertifikat.addAll(biodataPencaker['certificate']);
-            _dataSkill.addAll(biodataPencaker['skill']);
-          });
-        });
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: context,
+            onSuccess: (response) {
+              setState(() {
+                isLoading = false;
+                biodataPencaker = response['data'];
+                _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
+                _dataPendidikanPencaker.addAll(biodataPencaker['education']);
+                _dataSertifikat.addAll(biodataPencaker['certificate']);
+                _dataSkill.addAll(biodataPencaker['skill']);
+              });
+            },
+            onFailedCallback: () {
+              setState(() {
+                isLoading = false;
+              });
+            });
       }
     });
   }
@@ -74,7 +82,12 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
             userInfo['photo'] == '' ||
             isErrorImageProfile)
         ? const AssetImage('assets/images/male.png')
-        : NetworkImage(userInfo['photo']));
+        : Image.network(
+            userInfo['photo'],
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset('assets/images/male.png');
+            },
+          ));
   }
 
   @override
@@ -82,6 +95,13 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Identitas Diri'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _logout();
+              },
+              icon: const Icon(Icons.lock))
+        ],
       ),
       body: ListView(children: [
         Stack(

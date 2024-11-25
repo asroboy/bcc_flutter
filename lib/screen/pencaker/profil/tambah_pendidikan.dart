@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
@@ -7,7 +6,6 @@ import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_search.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
-import 'package:bcc/bccwidgets/bcc_label.dart';
 import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
@@ -41,16 +39,19 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
     Future<dynamic> req =
         _apiCall.getDataPendukung(Constants.pathPendidikanTerakhir);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            pendidikanTerakhirObj.addAll(response['data']);
-            for (dynamic d in pendidikanTerakhirObj) {
-              pendidikanTerakhirListString.add(d['name']);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                pendidikanTerakhirObj.addAll(response['data']);
+                for (dynamic d in pendidikanTerakhirObj) {
+                  pendidikanTerakhirListString.add(d['name']);
+                }
+              });
             }
           });
-        }
-      });
     });
   }
 
@@ -63,9 +64,12 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
     Future<dynamic> req =
         _apiCall.getDataPendukung(Constants.pathSekolah + ('?name=') + name);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        completer.complete(response['data']);
-      });
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            completer.complete(response['data']);
+          });
     });
 
     return completer.future;
@@ -76,9 +80,12 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
     Future<dynamic> req = _apiCall
         .getDataPendukung(Constants.pathJurusanSekolah + ('?name=') + filter);
     req.then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        completer.complete(response['data']);
-      });
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            completer.complete(response['data']);
+          });
     });
     return completer.future;
   }
@@ -296,16 +303,18 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                       if (!mounted) return;
                       Navigator.of(context).pop();
 
-                      _apiHelper.apiCallResponseHandler(value, context,
-                          (response) {
-                        Navigator.of(context).pop(response);
-                        // Navigator.pushAndRemoveUntil(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const RegisterComplete()),
-                        //   (Route<dynamic> route) => false,
-                        // );
-                      });
+                      _apiHelper.apiCallResponseHandler(
+                          response: value,
+                          context: context,
+                          onSuccess: (response) {
+                            Navigator.of(context).pop(response);
+                            // Navigator.pushAndRemoveUntil(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => const RegisterComplete()),
+                            //   (Route<dynamic> route) => false,
+                            // );
+                          });
                     });
                   },
                   padding: const EdgeInsets.only(top: 20),

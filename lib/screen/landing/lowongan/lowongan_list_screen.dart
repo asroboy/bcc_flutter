@@ -1,16 +1,12 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
-import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_card_job_simple.dart';
 import 'package:bcc/bccwidgets/bcc_load_more_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
-import 'package:bcc/screen/landing/cari_lokasi.dart';
-import 'package:bcc/screen/landing/cari_perusahaan.dart';
 import 'package:bcc/screen/landing/lowongan/lowongan_detail.dart';
-import 'package:bcc/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -47,23 +43,26 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
     reqLowonganPopuler.then((value) {
       // log('result $value');
       if (mounted) {
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          setState(() {
-            _isLoadingLowongan = false;
-            _isLoadMore = false;
-            List<dynamic> dresponse = response['data'];
-            _dataLowonganPopuler.addAll(dresponse);
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: context,
+            onSuccess: (response) {
+              setState(() {
+                _isLoadingLowongan = false;
+                _isLoadMore = false;
+                List<dynamic> dresponse = response['data'];
+                _dataLowonganPopuler.addAll(dresponse);
 
-            dynamic metadata = response['meta'];
+                dynamic metadata = response['meta'];
 
-            _totalPage = metadata['totalPage'];
-            if (_page < _totalPage) {
-              _page++;
-            } else {
-              _lastpage = true;
-            }
-          });
-        });
+                _totalPage = metadata['totalPage'];
+                if (_page < _totalPage) {
+                  _page++;
+                } else {
+                  _lastpage = true;
+                }
+              });
+            });
       }
     });
   }

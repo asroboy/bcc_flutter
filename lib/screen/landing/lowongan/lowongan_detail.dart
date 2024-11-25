@@ -3,14 +3,13 @@ import 'dart:developer';
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
-import 'package:bcc/bccwidgets/bcc_label.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_row_info2.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_html/flutter_html.dart';
 import 'package:get_storage/get_storage.dart';
 
 class LowonganDetail extends StatefulWidget {
@@ -194,8 +193,8 @@ class _LowonganDetailState extends State<LowonganDetail> {
                   ),
                   const BccLineSparator(
                       margin: EdgeInsets.only(bottom: 10, top: 10)),
-                  Html(
-                    data: widget.job['description'],
+                  Text(
+                    widget.job['description'],
                   ),
                 ],
               ),
@@ -221,9 +220,12 @@ class _LowonganDetailState extends State<LowonganDetail> {
       reqLowonganPopuler.then((value) {
         // log('result $value');
         if (mounted) {
-          _apiHelper.apiCallResponseHandler(value, context, (response) {
-            showAlertDialog('Lamaran Kamu sudah diajukan', context);
-          });
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                showAlertDialog('Lamaran Kamu sudah diajukan', context);
+              });
         }
       });
     }

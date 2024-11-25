@@ -26,8 +26,8 @@ class _RiwayatLamaranState extends State<RiwayatLamaran> {
   String search = '';
 
   bool _isLoadingLowongan = false;
-  bool _isLoadMore = false;
-  bool _lastpage = false;
+  // bool _isLoadMore = false;
+  // bool _lastpage = false;
   int _totalPage = 0;
   final List<dynamic> _dataRiwayatLamaran = [];
 
@@ -37,23 +37,26 @@ class _RiwayatLamaranState extends State<RiwayatLamaran> {
     reqLowonganPopuler.then((value) {
       // log('result $value');
       if (mounted) {
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          setState(() {
-            _isLoadingLowongan = false;
-            _isLoadMore = false;
-            List<dynamic> dresponse = response['data'];
-            _dataRiwayatLamaran.addAll(dresponse);
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: context,
+            onSuccess: (response) {
+              setState(() {
+                _isLoadingLowongan = false;
+                // _isLoadMore = false;
+                List<dynamic> dresponse = response['data'];
+                _dataRiwayatLamaran.addAll(dresponse);
 
-            dynamic metadata = response['meta'];
+                dynamic metadata = response['meta'];
 
-            _totalPage = metadata['totalPage'];
-            if (_page < _totalPage) {
-              _page++;
-            } else {
-              _lastpage = true;
-            }
-          });
-        });
+                _totalPage = metadata['totalPage'];
+                if (_page < _totalPage) {
+                  _page++;
+                } else {
+                  // _lastpage = true;
+                }
+              });
+            });
       }
     });
   }
@@ -84,7 +87,6 @@ class _RiwayatLamaranState extends State<RiwayatLamaran> {
                       whishedJob: whishedJob,
                       showAjukanLamaran: false,
                     );
-                    ;
                   },
                 ),
     );

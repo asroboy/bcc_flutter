@@ -16,6 +16,7 @@ class BccButtonCari extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
+          foregroundColor: Colors.white,
           backgroundColor: Constants.colorBiruGelap),
       child: child,
     );

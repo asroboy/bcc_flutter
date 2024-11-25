@@ -1,9 +1,9 @@
 import 'package:bcc/contants.dart';
-import 'package:bcc/screen/landing/hubungi_kami/hubungi_kami_screen.dart';
-import 'package:bcc/screen/landing/landing_screen.dart';
-import 'package:bcc/screen/landing/lowongan/lowongan_list_screen.dart';
-import 'package:bcc/screen/landing/perusahaan/perusahaan_list_screen.dart';
-import 'package:bcc/screen/login_screen.dart';
+import 'package:bcc/screen/perusahaan/cari_kandidat.dart';
+import 'package:bcc/screen/perusahaan/dashboard_perusahaan.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan.dart';
+import 'package:bcc/screen/perusahaan/personalia.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan.dart';
 import 'package:flutter/material.dart';
 
 class DashboardTabPerusahaan extends StatefulWidget {
@@ -17,11 +17,11 @@ class _DashboardTabPerusahaanState extends State<DashboardTabPerusahaan> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const LandingScreen(),
-    const LowonganListScreen(),
-    const PerusahaanListScreen(),
-    const HubungiKamiScreen(),
-    const LoginScreen(),
+    const DashboardPerusahaan(),
+    const ManagementLowongan(),
+    const CariKandidat(),
+    const Personalia(),
+    const ProfilePerusahaan(),
   ];
 
   _onItemTapped(int index) {
@@ -52,19 +52,19 @@ class _DashboardTabPerusahaanState extends State<DashboardTabPerusahaan> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.work),
-              label: 'Lowongan',
+              label: 'Mng. Lowongan',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_work),
-              label: 'Perusahaan',
+              icon: Icon(Icons.person_pin_sharp),
+              label: 'Kadidat',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.phone),
-              label: 'Hubungi Kami',
+              icon: Icon(Icons.people),
+              label: 'Personalia',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.lock),
-              label: 'Login',
+              icon: Icon(Icons.assured_workload),
+              label: 'Profil',
             ),
           ],
         ),

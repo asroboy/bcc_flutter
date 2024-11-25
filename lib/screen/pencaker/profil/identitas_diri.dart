@@ -42,16 +42,19 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
         .getDataRinci(Constants.pathDataPencaker, idPencaker, token)
         .then((value) {
       if (mounted) {
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          setState(() {
-            isLoading = false;
-            biodataPencaker = response['data'];
-            _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
-            _dataPendidikanPencaker.addAll(biodataPencaker['education']);
-            _dataSertifikat.addAll(biodataPencaker['certificate']);
-            _dataSkill.addAll(biodataPencaker['skill']);
-          });
-        });
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: context,
+            onSuccess: (response) {
+              setState(() {
+                isLoading = false;
+                biodataPencaker = response['data'];
+                _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
+                _dataPendidikanPencaker.addAll(biodataPencaker['education']);
+                _dataSertifikat.addAll(biodataPencaker['certificate']);
+                _dataSkill.addAll(biodataPencaker['skill']);
+              });
+            });
       }
     });
   }
@@ -80,37 +83,45 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
     //NetworkImage(userInfo['photo'])
   }
 
+  // ignore: unused_element
   _fetchRiwayatPendidikan() {
     log('data $loginInfo');
     String jobseekerId = loginInfo['data']['id'];
     String path = Constants.pathPendidiksnPencaker +
         ('?jobseeker_id=$jobseekerId&limit=10');
     _apiCall.getDataPendukung(path).then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            List<dynamic> dataResponse = response['data'];
-            _dataPendidikanPencaker.addAll(dataResponse);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                List<dynamic> dataResponse = response['data'];
+                _dataPendidikanPencaker.addAll(dataResponse);
+              });
+            }
           });
-        }
-      });
     });
   }
 
+  // ignore: unused_element
   _fetchPengalamanBekerja() {
     log('data $loginInfo');
     String jobseekerId = loginInfo['data']['id'];
     String path = Constants.pathPengalamanBekerja +
         ('?jobseeker_id=$jobseekerId&limit=10');
     _apiCall.getDataPendukung(path).then((value) {
-      _apiHelper.apiCallResponseHandler(value, context, (response) {
-        if (mounted) {
-          setState(() {
-            List<dynamic> dataResponse = response['data'];
-            _dataPengalamanBekerja.addAll(dataResponse);
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          context: context,
+          onSuccess: (response) {
+            if (mounted) {
+              setState(() {
+                List<dynamic> dataResponse = response['data'];
+                _dataPengalamanBekerja.addAll(dataResponse);
+              });
+            }
           });
-        }
-      });
     });
   }
 

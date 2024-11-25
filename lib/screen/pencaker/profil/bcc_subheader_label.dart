@@ -1,4 +1,3 @@
-import 'package:bcc/contants.dart';
 import 'package:flutter/material.dart';
 
 class BccSubheaderLabel extends StatelessWidget {

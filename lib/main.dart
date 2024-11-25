@@ -11,6 +11,8 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 
+import 'my_http_override.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
@@ -35,7 +37,7 @@ void main() async {
       ));
     }
   }
-
+  HttpOverrides.global = MyHttpOverrides();
   runApp(
     MultiProvider(
       providers: [
@@ -55,6 +57,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Bogor Career Center',
+      themeMode: ThemeMode.light,
       theme: ThemeData(
           colorScheme: ColorScheme(
               brightness: Brightness.light,
@@ -64,9 +67,7 @@ class MyApp extends StatelessWidget {
               onSecondary: Colors.white,
               error: Colors.red,
               onError: Colors.white,
-              background: Colors.white54,
-              onBackground: Colors.black87,
-              surface: Colors.black87,
+              surface: Colors.white,
               onSurface: Colors.black87)),
       home: _goToMainPage(),
     );

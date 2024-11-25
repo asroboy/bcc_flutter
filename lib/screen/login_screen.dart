@@ -6,7 +6,6 @@ import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_button.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field.dart';
 import 'package:bcc/contants.dart';
-import 'package:bcc/screen/landing/landing_screen.dart';
 import 'package:bcc/screen/pencaker/dashboard_tab_pencaker.dart';
 import 'package:bcc/screen/perusahaan/dashboard_tab_perusahaan.dart';
 import 'package:bcc/screen/pilih_jenis_user_screen.dart';
@@ -55,10 +54,14 @@ class _LoginScreenState extends State<LoginScreen> {
         // log('result login $value');
         log('success ${value['success']}');
         log('code ${value['code']}');
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          _simpanUser(response, Constants.userPencaker);
-          _redirectToMainPagePencaker();
-        });
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: mounted ? context : null,
+            onSuccess: (response) {
+              log('result login $response');
+              _simpanUser(response, Constants.userPencaker);
+              _redirectToMainPagePencaker();
+            });
       });
     } else {
       _apiCall
@@ -66,10 +69,13 @@ class _LoginScreenState extends State<LoginScreen> {
           .then((value) {
         log('success ${value['success']}');
         log('code ${value['code']}');
-        _apiHelper.apiCallResponseHandler(value, context, (response) {
-          _simpanUser(response, Constants.userPerusahaan);
-          _redirectToMainPagePerusahaan();
-        });
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            context: mounted ? context : null,
+            onSuccess: (response) {
+              _simpanUser(response, Constants.userPerusahaan);
+              _redirectToMainPagePerusahaan();
+            });
       });
     }
   }
