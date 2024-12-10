@@ -155,7 +155,12 @@ class BccCardJob extends StatelessWidget {
                       builder: (context) => LowonganDetail(job: dataLowongan),
                     ));
                   },
-                  child: const Text('Detail'),
+                  child: const Text(
+                    'Detail',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ))
           ],
         ),

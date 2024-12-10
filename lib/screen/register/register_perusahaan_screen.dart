@@ -116,7 +116,12 @@ class _RegisterPerusahaanScreenState extends State<RegisterPerusahaanScreen> {
                     },
                     padding:
                         const EdgeInsets.only(left: 10, right: 10, top: 10),
-                    child: const Text('Selanjutnya'),
+                    child: const Text(
+                      'Selanjutnya',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15),

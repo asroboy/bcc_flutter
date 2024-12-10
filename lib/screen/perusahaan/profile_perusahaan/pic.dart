@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Pic extends StatefulWidget {
-  const Pic({super.key});
+  const Pic({super.key, this.profilPerusahaan});
 
+  final dynamic profilPerusahaan;
   @override
   State<Pic> createState() => _PicState();
 }
@@ -12,7 +13,7 @@ class _PicState extends State<Pic> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PIC'),
+        title: const Text('PIC'),
       ),
     );
   }

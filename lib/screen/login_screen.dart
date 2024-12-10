@@ -189,7 +189,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   _login();
                 },
                 padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
-                child: const Text('Masuk'),
+                child: const Text(
+                  'Masuk',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15),

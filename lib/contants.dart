@@ -32,8 +32,24 @@ class Constants {
   static String pathRiwayatLamaran = 'jobseeker/application';
   static String pathAjukanLamaran = 'admin/company_job_application';
 
+//PERUSAHAAN
+  static String pathProfilPerusahaan = 'admin/company/';
+  static String pathAlamatPerusahaan =
+      'admin/company_address'; // /api/admin/company_address/880
+  static String pathCompanyJob =
+      'admin/company_job'; //??orderBy=id&sort=desc&limit=50&page=1&company_id=id_co
+
+//master data pendukung
+  static String pathMasterCompanySize = 'admin/master_company_size';
+  static String pathMasterIndustry = 'admin/master_industry';
+  static String pathCompanyLegality = 'admin/company_legality?company_id=880';
+  static String pathMasterEmplymentType =
+      'admin/master_employment_type?type=BCC';
+  static String pathMasterLevelPerkerjaan = 'admin/master_job_level?type=BCC';
+
   static Color boxColorBlueTrans = const Color(0x236fb6f7);
   static Color colorBiruGelap = const Color(0xFF003673);
+  static Color colorBiruMuda = const Color.fromARGB(255, 24, 77, 138);
   static Color colorGrey = const Color.fromARGB(255, 162, 162, 162);
 
   static String userType = 'user-type';

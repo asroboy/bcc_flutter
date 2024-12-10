@@ -140,7 +140,12 @@ class BccCardPerusahaan extends StatelessWidget {
                   width: width,
                   child: BccNormalButton(
                     onPressed: onTap,
-                    child: const Text('Detail'),
+                    child: const Text(
+                      'Detail',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ))
             ],
           ),

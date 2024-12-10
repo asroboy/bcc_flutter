@@ -8,9 +8,11 @@ import 'package:bcc/bccwidgets/bcc_row_info2.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 // import 'package:flutter_html/flutter_html.dart';
 import 'package:get_storage/get_storage.dart';
+// import 'package:webviewx/webviewx.dart';
 
 class LowonganDetail extends StatefulWidget {
   const LowonganDetail({super.key, this.job});
@@ -46,7 +48,7 @@ class _LowonganDetailState extends State<LowonganDetail> {
       appBar: AppBar(
         title: const Text('Lowongan Pekerjaan'),
       ),
-      body: ListView(children: [
+      body: ListView(shrinkWrap: true, children: [
         Card(
             margin:
                 const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 5),
@@ -66,20 +68,20 @@ class _LowonganDetailState extends State<LowonganDetail> {
                         child: widget.job != null
                             ? Image.asset(
                                 'assets/images/dummy_logo_pt.png',
-                                width: 70,
-                                height: 70,
+                                width: 50,
+                                height: 50,
                               )
                             : (widget.job['company_logo'] != null &&
                                     widget.job['company_logo'] != ''
                                 ? Image.network(
                                     widget.job['company_logo'],
-                                    height: 70,
-                                    width: 70,
+                                    height: 50,
+                                    width: 50,
                                   )
                                 : Image.asset(
                                     'assets/images/dummy_logo_pt.png',
-                                    height: 70,
-                                    width: 70,
+                                    height: 50,
+                                    width: 50,
                                   )),
                       ),
                       SizedBox(
@@ -193,9 +195,12 @@ class _LowonganDetailState extends State<LowonganDetail> {
                   ),
                   const BccLineSparator(
                       margin: EdgeInsets.only(bottom: 10, top: 10)),
-                  Text(
+                  HtmlWidget(
                     widget.job['description'],
-                  ),
+                  )
+                  // Text(
+                  //   widget.job['description'],
+                  // ),
                 ],
               ),
             ))

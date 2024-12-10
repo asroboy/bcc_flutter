@@ -6,6 +6,7 @@ import 'package:bcc/providers/bcc_provider.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/pencaker/dashboard_tab_pencaker.dart';
 import 'package:bcc/screen/perusahaan/dashboard_tab_perusahaan.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get_storage/get_storage.dart';
@@ -42,6 +43,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BccProvider()),
+        ChangeNotifierProvider(create: (_) => ProfilePerusahaanModel()),
       ],
       child: const MyApp(),
     ),
@@ -59,6 +61,19 @@ class MyApp extends StatelessWidget {
       title: 'Bogor Career Center',
       themeMode: ThemeMode.light,
       theme: ThemeData(
+          appBarTheme: AppBarTheme(
+              color: Constants.colorBiruGelap, foregroundColor: Colors.white),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.resolveWith(
+                    (states) {
+                      if (states.contains(WidgetState.pressed)) {
+                        return Constants.colorBiruMuda;
+                      }
+                      return Constants.colorBiruGelap;
+                    },
+                  ),
+                  foregroundColor: const WidgetStatePropertyAll(Colors.white))),
           colorScheme: ColorScheme(
               brightness: Brightness.light,
               primary: Constants.colorBiruGelap,
