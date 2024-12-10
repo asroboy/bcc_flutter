@@ -1,6 +1,8 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/contants.dart';
+import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/alamat_perusahaan.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/badan_hukum_usaha.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/dokumen_perusahaan.dart';
@@ -221,6 +223,12 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
                     textColor: Colors.red,
                     endIcon: false,
                     onPress: () {
+                      showAlertDialogWithAction2(
+                          'Apakah yakin ingin keluar?', context, () {
+                        Navigator.of(context).pop();
+                      }, () {
+                        _logout(context);
+                      }, 'Batal', 'OK');
                       // Get.defaultDialog(
                       //   title: "LOGOUT",
                       //   titleStyle: const TextStyle(fontSize: 20),
@@ -247,6 +255,16 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
           ),
         ),
       ),
+    );
+  }
+
+  _logout(BuildContext context) {
+    GetStorage().remove(Constants.loginInfo);
+    GetStorage().remove(Constants.userType);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LandingTab()),
+      (Route<dynamic> route) => true,
     );
   }
 }
