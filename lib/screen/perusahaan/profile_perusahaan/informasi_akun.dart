@@ -1,4 +1,6 @@
+import 'package:bcc/screen/perusahaan/profile_perusahaan/header_label.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/row_data.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_profil_perusahaan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -88,71 +90,12 @@ class _InformasiAkunPerusahaanState extends State<InformasiAkunPerusahaan> {
           ),
           RowData(
             label: 'TKA Perempuan',
-            value: profile.profil['e'] ?? '0',
+            value: profile.profil['internship'] ?? '0',
           ),
           RowData(
             label: 'TKA Laki-laki',
-            value: profile.profil['e'] ?? '0',
+            value: profile.profil['termination_of_employment'] ?? '0',
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class HeaderLabel extends StatelessWidget {
-  const HeaderLabel({super.key, required this.label, this.padding});
-
-  final String label;
-  final EdgeInsets? padding;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          padding ?? const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      child: Text(
-        label,
-        style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.bold,
-            fontSize: 18),
-      ),
-    );
-  }
-}
-
-class RowData extends StatefulWidget {
-  const RowData(
-      {super.key, required this.label, required this.value, this.padding});
-
-  final String label;
-  final String value;
-  final EdgeInsets? padding;
-  @override
-  State<RowData> createState() => _RowDataState();
-}
-
-class _RowDataState extends State<RowData> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: widget.padding ??
-          const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.label,
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ),
-          Flexible(
-            child: Text(
-              widget.value,
-              textAlign: TextAlign.right,
-            ),
-          )
         ],
       ),
     );

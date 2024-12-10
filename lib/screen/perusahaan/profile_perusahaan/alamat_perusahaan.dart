@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/contants.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,7 +19,7 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
   final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
 
-  bool isLoading = false;
+  bool isLoading = true;
   final ApiHelper _apiHelper = ApiHelper();
 
   final List<dynamic> _alamats = [];
@@ -64,53 +65,62 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
         onPressed: () {},
         child: const Icon(Icons.add),
       ),
-      body: ListView.builder(
-        itemCount: _alamats.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(5),
-            child: Card(
-                child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        '${_alamats[index]['title']}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        (_alamats[index]['is_primary'] == '1')
-                            ? ' (Utama)'
-                            : '',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Flexible(
-                          child: Text(
-                              '${_alamats[index]['address']}, ${_alamats[index]['master_village_name']},${_alamats[index]['master_district_name']}, ${_alamats[index]['master_city_name']}, ${_alamats[index]['master_province_name']}'))
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      (_alamats[index]['is_primary'] != '1')
-                          ? IconButton(
-                              onPressed: () {}, icon: const Icon(Icons.check))
-                          : const Center(),
-                      IconButton(onPressed: () {}, icon: const Icon(Icons.edit))
-                    ],
-                  )
-                ],
-              ),
-            )),
-          );
-        },
-      ),
+      body: isLoading
+          ? SizedBox(
+              height: MediaQuery.of(context).size.height * 0.25,
+              child: const BccLoadingIndicator(),
+            )
+          : ListView.builder(
+              itemCount: _alamats.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Card(
+                      child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '${_alamats[index]['title']}',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              (_alamats[index]['is_primary'] == '1')
+                                  ? ' (Utama)'
+                                  : '',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Flexible(
+                                child: Text(
+                                    '${_alamats[index]['address']}, ${_alamats[index]['master_village_name']},${_alamats[index]['master_district_name']}, ${_alamats[index]['master_city_name']}, ${_alamats[index]['master_province_name']}'))
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            (_alamats[index]['is_primary'] != '1')
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.check))
+                                : const Center(),
+                            IconButton(
+                                onPressed: () {}, icon: const Icon(Icons.edit))
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
+                );
+              },
+            ),
     );
   }
 }

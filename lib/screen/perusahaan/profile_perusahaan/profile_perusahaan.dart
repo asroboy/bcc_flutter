@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
 import 'package:bcc/contants.dart';
@@ -8,7 +7,6 @@ import 'package:bcc/screen/perusahaan/profile_perusahaan/dokumen_perusahaan.dart
 import 'package:bcc/screen/perusahaan/profile_perusahaan/informasi_akun.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/pic.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
-import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_state.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profle_menu_widget.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_password.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_profil_perusahaan.dart';
