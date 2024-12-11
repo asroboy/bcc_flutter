@@ -5,20 +5,25 @@ class BccDropDownString extends StatelessWidget {
       {super.key,
       required this.data,
       required this.onChanged,
+      this.padding,
+      this.margin,
       this.hint,
       this.value});
 
   final List<String> data;
   final Widget? hint;
   final String? value;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
   final Function(String?)? onChanged;
   @override
   Widget build(BuildContext context) {
     return Container(
         height: 50,
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        margin: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
+        padding: padding ?? const EdgeInsets.only(left: 15, right: 15),
+        margin: margin ??
+            const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
         decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.black54, width: 1),

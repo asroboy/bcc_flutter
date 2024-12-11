@@ -26,6 +26,9 @@ class BccDropdownSearch extends StatelessWidget {
           border: Border.all(width: 0.75),
           borderRadius: BorderRadius.circular(10.0)),
       child: DropdownSearch<dynamic>(
+        compareFn: (item1, item2) {
+          return item1 == item2;
+        },
         popupProps: PopupProps.menu(
             showSearchBox: true,
             searchFieldProps: TextFieldProps(
@@ -36,7 +39,7 @@ class BccDropdownSearch extends StatelessWidget {
               contentPadding: const EdgeInsets.all(10.0),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(width: 0.05)),
+                  borderSide: const BorderSide(width: 0.15)),
             ))),
         // asyncItems: asyncItems,
         itemAsString: itemAsString,
