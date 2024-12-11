@@ -1,5 +1,9 @@
+import 'package:bcc/api/api.dart';
+import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/contants.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class Personalia extends StatefulWidget {
   const Personalia({super.key});
@@ -9,6 +13,23 @@ class Personalia extends StatefulWidget {
 }
 
 class _PersonaliaState extends State<Personalia> {
+  final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
+  dynamic loginInfo = GetStorage().read(Constants.loginInfo);
+
+  bool isLoading = false;
+
+  // final ApiCall _apiCall = ApiCall();
+  final ApiHelper _apiHelper = ApiHelper();
+  dynamic _profilPerusahaan;
+
+  _ambilDataPersonalia() {}
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double headerHeight = MediaQuery.of(context).size.height * 0.20;

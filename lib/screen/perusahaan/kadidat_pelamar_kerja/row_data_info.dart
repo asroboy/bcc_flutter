@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class RowDataInfo extends StatelessWidget {
-  const RowDataInfo({super.key, required this.label, required this.info});
+  const RowDataInfo(
+      {super.key, required this.label, required this.info, this.infoColor});
 
   final String label;
   final String info;
+  final Color? infoColor;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class RowDataInfo extends StatelessWidget {
               child: Text(
                 info,
                 textAlign: TextAlign.end,
+                style: TextStyle(color: infoColor ?? Colors.black),
               )),
         )
       ],

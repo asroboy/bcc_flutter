@@ -43,6 +43,7 @@ class Constants {
   static String pathMasterCompanySize = 'admin/master_company_size';
   static String pathMasterIndustry = 'admin/master_industry';
   static String pathCompanyLegality = 'admin/company_legality';
+  static String pathLowongan = 'admin/company_job';
   static String pathMasterEmplymentType =
       'admin/master_employment_type?type=BCC';
   static String pathMasterLevelPerkerjaan = 'admin/master_job_level?type=BCC';

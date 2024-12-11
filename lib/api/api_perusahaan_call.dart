@@ -32,4 +32,11 @@ class ApiPerusahaanCall {
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
+
+  Future<dynamic> getLowongan(String companyId, String token) {
+    String apiPath =
+        '${Constants.host}${Constants.pathLowongan}?company_id=$companyId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
 }
