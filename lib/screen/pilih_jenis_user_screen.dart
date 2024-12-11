@@ -55,7 +55,12 @@ class _PilihJenisUserScreenState extends State<PilihJenisUserScreen> {
                 );
               },
               padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-              child: const Text('Pencari Kerja'),
+              child: const Text(
+                'Pencari Kerja',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
             BccButton(
               onPressed: () {
@@ -67,7 +72,12 @@ class _PilihJenisUserScreenState extends State<PilihJenisUserScreen> {
                 );
               },
               padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-              child: const Text('Perusahaan'),
+              child: const Text(
+                'Perusahaan',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         ),

@@ -34,6 +34,7 @@ class Constants {
 
   static Color boxColorBlueTrans = const Color(0x236fb6f7);
   static Color colorBiruGelap = const Color(0xFF003673);
+  static Color colorBiruMuda = const Color.fromARGB(255, 24, 77, 138);
   static Color colorGrey = const Color.fromARGB(255, 162, 162, 162);
 
   static String userType = 'user-type';

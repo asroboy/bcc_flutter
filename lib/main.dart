@@ -59,6 +59,19 @@ class MyApp extends StatelessWidget {
       title: 'Bogor Career Center',
       themeMode: ThemeMode.light,
       theme: ThemeData(
+          appBarTheme: AppBarTheme(
+              color: Constants.colorBiruGelap, foregroundColor: Colors.white),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.resolveWith(
+                    (states) {
+                      if (states.contains(WidgetState.pressed)) {
+                        return Constants.colorBiruMuda;
+                      }
+                      return Constants.colorBiruGelap;
+                    },
+                  ),
+                  foregroundColor: const WidgetStatePropertyAll(Colors.white))),
           colorScheme: ColorScheme(
               brightness: Brightness.light,
               primary: Constants.colorBiruGelap,
