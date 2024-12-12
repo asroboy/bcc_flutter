@@ -52,7 +52,7 @@ class _TambahLowonganState extends State<TambahLowongan> {
   String? _selectedKabkoString;
   bool _isLoadingKabko = false;
 
-  String tanggalString = 'dd/MM/yyyy';
+  String tanggalString = 'yyyy-MM-dd';
   String tampilGaji = 'Tidak';
 
   _getJenisPekerjaan() {
@@ -72,6 +72,14 @@ class _TambahLowonganState extends State<TambahLowongan> {
                   }
                   log('jenis pekerjaan result $response');
                   _isLoadingJenisPekerjaan = false;
+
+                  if (widget.lowongan != null) {
+                    _selectedJenisPekerjaanString =
+                        widget.lowongan['master_employment_type_name'];
+                    _selectedJenisPekerjaan = _jenisPekerjaan.singleWhere(
+                        (element) =>
+                            element['name'] == _selectedJenisPekerjaanString);
+                  }
                 });
               });
         }
@@ -96,6 +104,14 @@ class _TambahLowonganState extends State<TambahLowongan> {
                   }
                   log('jenis pekerjaan result $response');
                   _isLoadingLevelPekerjaan = false;
+
+                  if (widget.lowongan != null) {
+                    _selectedLevelPekerjaanString =
+                        widget.lowongan['master_job_level_name'];
+                    _selectedLevelPekerjaan = _levelPekerjaan.singleWhere(
+                        (element) =>
+                            element['name'] == _selectedLevelPekerjaanString);
+                  }
                 });
               });
         }
@@ -120,6 +136,15 @@ class _TambahLowonganState extends State<TambahLowongan> {
                   }
                   log('provinsi result $response');
                   _isLoadingProvinsi = false;
+
+                  if (widget.lowongan != null) {
+                    _selectedProvinsiString =
+                        widget.lowongan['master_province_name'];
+                    _selectedProvinsi = _provinsi.singleWhere((element) =>
+                        element['name'] == _selectedProvinsiString);
+                    _isLoadingKabko = true;
+                    _getKabko(_selectedProvinsi['id']);
+                  }
                 });
               });
         }
@@ -144,6 +169,12 @@ class _TambahLowonganState extends State<TambahLowongan> {
                   }
                   // log('kabko result $response');
                   _isLoadingKabko = false;
+
+                  if (widget.lowongan != null) {
+                    _selectedKabkoString = widget.lowongan['master_city_name'];
+                    _selectedKabko = _kabko.singleWhere(
+                        (element) => element['name'] == _selectedKabkoString);
+                  }
                 });
               });
         }
@@ -151,7 +182,7 @@ class _TambahLowonganState extends State<TambahLowongan> {
     );
   }
 
-  bool _isLoadingSimpan = false;
+  // bool _isLoadingSimpan = false;
 
   _simpanPekerjaan(dynamic body) {
     String token = loginInfo['data']['token'];
@@ -169,10 +200,7 @@ class _TambahLowonganState extends State<TambahLowongan> {
               context: context,
               onSuccess: (response) {
                 setState(() {
-                  // log('kabko result $response');
-                  _isLoadingSimpan = false;
-
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop('OK');
                 });
               });
         }
@@ -183,13 +211,13 @@ class _TambahLowonganState extends State<TambahLowongan> {
   _updatePekerjaan(dynamic body) {
     String token = loginInfo['data']['token'];
     String lowonganId = widget.lowongan['id'];
-    String idPerusahaan = loginInfo['data']['id'];
+    // String idPerusahaan = loginInfo['data']['id'];
     _apiPerusahaanCall
         .updateLowonganPekerjaan(
-            requestBody: body,
-            token: token,
-            lowonganId: lowonganId,
-            idPerusahaan: idPerusahaan)
+      requestBody: body,
+      token: token,
+      lowonganId: lowonganId,
+    )
         .then(
       (value) {
         log('update result $value');
@@ -200,10 +228,7 @@ class _TambahLowonganState extends State<TambahLowongan> {
               context: context,
               onSuccess: (response) {
                 setState(() {
-                  // log('kabko result $response');
-                  _isLoadingSimpan = false;
-
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop('OK');
                 });
               });
         }
@@ -231,6 +256,11 @@ class _TambahLowonganState extends State<TambahLowongan> {
           widget.lowongan == null ? '0' : widget.lowongan['range_salary_to'];
       descCont.text =
           widget.lowongan == null ? '' : widget.lowongan['description'];
+
+      tampilGaji =
+          widget.lowongan['is_show_salary'] == '1' ? 'Tampil' : 'Tidak';
+
+      tanggalString = widget.lowongan['vacancies_expired'];
     }
   }
 
@@ -436,7 +466,7 @@ class _TambahLowonganState extends State<TambahLowongan> {
                         setState(() {
                           if (value == null) return;
                           tanggalString =
-                              DateFormat('dd/MM/yyyy').format(value);
+                              DateFormat('yyyy-MM-dd').format(value);
                         });
                       });
                     },
@@ -475,10 +505,10 @@ class _TambahLowonganState extends State<TambahLowongan> {
                         showAlertDialog('Harap pilih kota', context);
                         return;
                       }
-                      // if (tanggalString == 'dd/MM/yyyy') {
-                      //   showAlertDialog('Harap isi tanggal expired', context);
-                      //   return;
-                      // }
+                      if (tanggalString == 'yyyy-MM-dd') {
+                        showAlertDialog('Harap isi tanggal expired', context);
+                        return;
+                      }
 
                       dynamic body = {
                         'company_id': idPerusahaan,
@@ -496,12 +526,10 @@ class _TambahLowonganState extends State<TambahLowongan> {
                         'created_by': idPerusahaan,
                       };
 
-                      if (tanggalString != 'dd/MM/yyyy') {
+                      if (tanggalString != 'yyyy-MM-dd') {
                         body['vacancies_expired'] = tanggalString;
                       }
-                      setState(() {
-                        _isLoadingSimpan = true;
-                      });
+
                       showLoaderDialog(
                           context: context, message: 'Harap tunggu..');
 

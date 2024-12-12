@@ -1,6 +1,7 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
 import 'package:bcc/contants.dart';
+import 'package:bcc/screen/perusahaan/dashboard_perusahaan_grid.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -123,10 +124,10 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
               ),
               Container(
                 margin: EdgeInsets.only(
-                    top: (headerHeight + 2), bottom: 10, left: 10, right: 10),
+                    top: (headerHeight - 50), bottom: 10, left: 10, right: 10),
                 height: bodyHeight,
                 child: ListView(
-                  children: [],
+                  children: const [DashboardPerusahaanGrid()],
                 ),
               )
             ]))));

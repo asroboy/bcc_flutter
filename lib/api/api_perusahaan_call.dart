@@ -69,18 +69,27 @@ class ApiPerusahaanCall {
       {required dynamic requestBody,
       required String token,
       required String idPerusahaan}) {
-    String apiPath = '${Constants.host}${Constants.pathLowongan}/$token';
+    String apiPath = '${Constants.host}${Constants.pathLowongan}';
     log('path $apiPath');
-    return ApiHelper(body: requestBody, apiUrl: apiPath).requestDataGet();
+    return ApiHelper(body: requestBody, apiUrl: apiPath)
+        .requestDataPost(token: token);
   }
 
   Future<dynamic> updateLowonganPekerjaan(
       {required dynamic requestBody,
       required String lowonganId,
-      required String idPerusahaan,
       required String token}) {
     String apiPath = '${Constants.host}${Constants.pathLowongan}/$lowonganId';
     log('path $apiPath');
-    return ApiHelper(body: requestBody, apiUrl: apiPath).requestDataPost();
+    return ApiHelper(body: requestBody, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
+  }
+
+  Future<dynamic> deleteLowonganPekerjaan(
+      {required String lowonganId, required String token}) {
+    String apiPath = '${Constants.host}${Constants.pathLowongan}/$lowonganId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath)
+        .requestAuthenticatedDataDelete(token);
   }
 }

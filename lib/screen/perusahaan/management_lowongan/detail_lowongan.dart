@@ -1,7 +1,16 @@
+import 'dart:developer';
+
+import 'package:bcc/api/api.dart';
+import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
+import 'package:bcc/bccwidgets/bcc_loading_dialog.dart';
+import 'package:bcc/contants.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan/data_pelamar_kerja.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/tambah_lowongan.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/header_label.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/row_data.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 class DetailLowongan extends StatefulWidget {
@@ -14,6 +23,48 @@ class DetailLowongan extends StatefulWidget {
 }
 
 class _DetailLowonganState extends State<DetailLowongan> {
+  final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
+  dynamic loginInfo = GetStorage().read(Constants.loginInfo);
+
+  bool isLoading = true;
+  final ApiHelper _apiHelper = ApiHelper();
+
+  _deleteLowongan() {
+    BccLoadingDialog bccLoadingDialog =
+        BccLoadingDialog(context: context, message: 'Loading...');
+
+    bccLoadingDialog.showLoaderDialog();
+
+    String token = loginInfo['data']['token'];
+    String lowonganId = widget.lowongan['id'];
+    // String idPerusahaan = loginInfo['data']['id'];
+    _apiPerusahaanCall
+        .deleteLowonganPekerjaan(
+      token: token,
+      lowonganId: lowonganId,
+    )
+        .then(
+      (value) {
+        log('update result $value');
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                setState(() {
+                  bccLoadingDialog.dismiss();
+                  showAlertDialogWithAction('Data berhasil dihapus', context,
+                      () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop('OK');
+                  }, 'Ok');
+                });
+              });
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime tanggalKadaluarsa = DateFormat("yyyy-MM-dd")
@@ -24,34 +75,6 @@ class _DetailLowonganState extends State<DetailLowongan> {
       appBar: AppBar(
         title: const Text('Lowongan'),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.all(8.0),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.end,
-      //     children: <Widget>[
-      //       FloatingActionButton(
-      //         backgroundColor: Colors.red,
-      //         onPressed: () {},
-      //         heroTag: 'fab1',
-      //         child: const Icon(Icons.delete),
-      //       ),
-      //       const Padding(padding: EdgeInsets.only(right: 10)),
-      //       FloatingActionButton(
-      //         onPressed: () {
-      //           Navigator.of(context).push(MaterialPageRoute(
-      //             builder: (context) => TambahLowongan(
-      //               label: 'Ubah Lowongan',
-      //               lowongan: widget.lowongan,
-      //             ),
-      //           ));
-      //         },
-      //         heroTag: 'fab2',
-      //         child: const Icon(Icons.edit),
-      //       )
-      //     ],
-      //   ),
-      // ),
       body: ListView(
         children: [
           const Padding(
@@ -60,7 +83,9 @@ class _DetailLowonganState extends State<DetailLowongan> {
           HeaderLabel(label: widget.lowongan['title']),
           RowData(
             label: 'Deskripsi',
-            isHtml: true,
+            isHtml: widget.lowongan['description'].toString().contains('<p>')
+                ? true
+                : false,
             value: widget.lowongan['description'] ?? '',
           ),
           RowData(
@@ -97,10 +122,17 @@ class _DetailLowonganState extends State<DetailLowongan> {
                         TextStyle(color: Theme.of(context).colorScheme.primary),
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                    Checkbox(
-                        value: widget.lowongan['status'] == 'Aktif',
-                        onChanged: (value) {}),
-                    Text(widget.lowongan['status'])
+                    // Checkbox(
+                    //     value: widget.lowongan['status'] == 'Aktif',
+                    //     onChanged: (value) {}),
+                    Text(
+                      widget.lowongan['status'],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: widget.lowongan['status'] == 'Aktif'
+                              ? Colors.green
+                              : Colors.red),
+                    )
                   ]),
                 ],
               )),
@@ -109,7 +141,15 @@ class _DetailLowonganState extends State<DetailLowongan> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showAlertDialogWithAction2(
+                        'Apakah Kamu yakin menghapus data ini?', context, () {
+                      Navigator.of(context).pop();
+                    }, () {
+                      Navigator.of(context).pop();
+                      _deleteLowongan();
+                    }, 'Batal', 'OK');
+                  },
                   style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.red)),
                   child: const Row(
@@ -119,7 +159,13 @@ class _DetailLowonganState extends State<DetailLowongan> {
                 padding: EdgeInsets.only(left: 5),
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DataPelamarKerja(
+                        lowongan: widget.lowongan,
+                      ),
+                    ));
+                  },
                   child: const Row(
                     children: [Icon(Icons.people_alt)],
                   )),
@@ -127,12 +173,25 @@ class _DetailLowonganState extends State<DetailLowongan> {
                 padding: const EdgeInsets.only(left: 5, right: 15),
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
                         builder: (context) => TambahLowongan(
                           label: 'Ubah Lowongan',
                           lowongan: widget.lowongan,
                         ),
-                      ));
+                      ))
+                          .then(
+                        (value) {
+                          if (value == 'OK') {
+                            showAlertDialogWithAction(
+                                'Data telah diupdate, klik OK untuk kembali mereload data',
+                                context, () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop('OK');
+                            }, 'OK');
+                          }
+                        },
+                      );
                     },
                     child: const Row(
                       children: [Icon(Icons.edit)],

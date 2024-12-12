@@ -4,6 +4,7 @@ import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan/data_pelamar_kerja.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/detail_lowongan.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/tambah_lowongan.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,16 @@ class _ManagementLowonganState extends State<ManagementLowongan> {
     );
   }
 
+  _reload(value) {
+    if (value == 'OK') {
+      setState(() {
+        _daftarLowongan.clear();
+        _isLoading = true;
+      });
+      _ambilDataLowongan();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -73,9 +84,13 @@ class _ManagementLowonganState extends State<ManagementLowongan> {
       floatingActionButton: FloatingActionButton(
         heroTag: 'fab0',
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const TambahLowongan(),
-          ));
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                builder: (context) => const TambahLowongan(),
+              ))
+              .then(
+                (value) => _reload(value),
+              );
         },
         child: const Icon(Icons.add),
       ),
@@ -127,12 +142,32 @@ class _ManagementLowonganState extends State<ManagementLowongan> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              DataPelamarKerja(
+                                            lowongan: lowongan,
+                                          ),
+                                        ));
+                                      },
+                                      child: const Row(
+                                        children: [Icon(Icons.people_alt)],
+                                      )),
+                                  const Padding(
+                                      padding: EdgeInsets.only(right: 5)),
+                                  ElevatedButton(
                                     onPressed: () {
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailLowongan(lowongan: lowongan),
-                                      ));
+                                            builder: (context) =>
+                                                DetailLowongan(
+                                                    lowongan: lowongan),
+                                          ))
+                                          .then(
+                                            (value) => _reload(value),
+                                          );
+                                      ;
                                     },
                                     style: ElevatedButton.styleFrom(
                                         foregroundColor: Colors.white,
