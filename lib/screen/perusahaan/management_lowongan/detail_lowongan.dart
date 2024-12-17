@@ -5,7 +5,8 @@ import 'package:bcc/api/api_perusahaan_call.dart';
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_loading_dialog.dart';
 import 'package:bcc/contants.dart';
-import 'package:bcc/screen/perusahaan/management_lowongan/data_pelamar_kerja.dart';
+// import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/data_pelamar_kerja.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/pelamar_tab.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/tambah_lowongan.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/header_label.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/row_data.dart';
@@ -83,7 +84,11 @@ class _DetailLowonganState extends State<DetailLowongan> {
           HeaderLabel(label: widget.lowongan['title']),
           RowData(
             label: 'Deskripsi',
-            isHtml: widget.lowongan['description'].toString().contains('<p>')
+            isHtml: widget.lowongan['description'].toString().contains('<p>') ||
+                    widget.lowongan['description']
+                        .toString()
+                        .contains('<ul>') ||
+                    widget.lowongan['description'].toString().contains('<div>')
                 ? true
                 : false,
             value: widget.lowongan['description'] ?? '',
@@ -161,7 +166,7 @@ class _DetailLowonganState extends State<DetailLowongan> {
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DataPelamarKerja(
+                      builder: (context) => PelamarTab(
                         lowongan: widget.lowongan,
                       ),
                     ));

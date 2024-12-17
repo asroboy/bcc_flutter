@@ -1,5 +1,6 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/bccwidgets/bcc_text_form_field.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:flutter/material.dart';
@@ -26,32 +27,20 @@ class _PersonaliaState extends State<Personalia> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double headerHeight = MediaQuery.of(context).size.height * 0.20;
-    double bodyHeight = MediaQuery.of(context).size.height - headerHeight;
-
     return Scaffold(
       body: Stack(children: [
         Container(
-          height: headerHeight,
-          color: Theme.of(context).colorScheme.primary,
-          child: const Column(
-            children: [
-              Row(
-                children: [],
-              )
-            ],
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(
-              top: (headerHeight + 2), bottom: 10, left: 10, right: 10),
-          height: bodyHeight,
+          padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.13,
+              bottom: 5,
+              left: 10,
+              right: 10),
+          height: MediaQuery.of(context).size.height,
           child: ListView.builder(
             itemBuilder: (context, index) {
               return Card(
@@ -98,7 +87,41 @@ class _PersonaliaState extends State<Personalia> {
               );
             },
           ),
-        )
+        ),
+        Container(
+          padding: const EdgeInsets.only(top: 80),
+          height: MediaQuery.of(context).size.height * 0.20,
+          width: MediaQuery.of(context).size.height,
+          color: Theme.of(context).colorScheme.primary,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.85,
+                    child: const BccTextFormField(
+                      autoFocus: false,
+                      hint: 'Cari',
+                    ),
+                  ),
+                  IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {},
+                      icon: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Icon(
+                          Icons.search,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ))
+                ],
+              )
+            ],
+          ),
+        ),
       ]),
     );
   }

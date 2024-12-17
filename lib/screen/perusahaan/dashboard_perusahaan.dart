@@ -1,5 +1,6 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/perusahaan/dashboard_perusahaan_grid.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
@@ -18,7 +19,7 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
   final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
   // final ApiCall _apiCall = ApiCall();
   final ApiHelper _apiHelper = ApiHelper();
@@ -43,7 +44,7 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
                   // _dataPendidikanPencaker.addAll(biodataPencaker['education']);
                   // _dataSertifikat.addAll(biodataPencaker['certificate']);
                   // _dataSkill.addAll(biodataPencaker['skill']);
-                  isLoading = false;
+                  _isLoading = false;
                 });
               });
         }
@@ -66,62 +67,74 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
         builder: (context, ProfilePerusahaanModel model, _) => Scaffold(
                 body: Scaffold(
                     body: Stack(children: [
-              Container(
-                height: headerHeight,
-                padding: EdgeInsets.only(top: headerHeight / 2),
-                color: Theme.of(context).colorScheme.primary,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(left: 25),
-                          width: 70,
-                          height: 70,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: const Color.fromARGB(255, 209, 208, 208)),
-                          child: model.profil['logo'] == ''
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: const Icon(
-                                    Icons.assured_workload,
-                                    size: 45,
-                                  ))
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.network(
-                                    model.profil['logo'],
-                                    fit: BoxFit.fill,
-                                  )),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+              _isLoading
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      child: const BccLoadingIndicator(),
+                    )
+                  : Container(
+                      height: headerHeight,
+                      padding: EdgeInsets.only(top: headerHeight / 2),
+                      color: Theme.of(context).colorScheme.primary,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text(
-                                'Selamat Datang',
-                                style: TextStyle(color: Colors.white),
+                              Container(
+                                margin: const EdgeInsets.only(left: 25),
+                                width: 70,
+                                height: 70,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: const Color.fromARGB(
+                                        255, 209, 208, 208)),
+                                child: (model.profil == null ||
+                                        model.profil['logo'] == null ||
+                                        model.profil['logo'] == '')
+                                    ? ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: const Icon(
+                                          Icons.assured_workload,
+                                          size: 45,
+                                        ))
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.network(
+                                          model.profil['logo'] ?? "",
+                                          fit: BoxFit.fill,
+                                        )),
                               ),
-                              Text(
-                                model.profil['name'],
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Selamat Datang',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    Text(
+                                      model.profil == null
+                                          ? "..."
+                                          : model.profil['name'],
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
               Container(
                 margin: EdgeInsets.only(
                     top: (headerHeight - 50), bottom: 10, left: 10, right: 10),

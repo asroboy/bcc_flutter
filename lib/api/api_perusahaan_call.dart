@@ -4,6 +4,8 @@ import 'package:bcc/api/api.dart';
 import 'package:bcc/contants.dart';
 
 class ApiPerusahaanCall {
+  static int STATUS_PENDING = 0;
+  // static int STATUS_PENDING = 1;
   ApiPerusahaanCall();
 
   Future<dynamic> getProfilPerusahaan(String idPerusahaan, String token) {
@@ -36,6 +38,22 @@ class ApiPerusahaanCall {
   Future<dynamic> getLowongan(String companyId, String token) {
     String apiPath =
         '${Constants.host}${Constants.pathLowongan}?company_id=$companyId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getPelamarByLowongan(
+      String lowonganId, String token, String status) {
+    String apiPath =
+        '${Constants.host}${Constants.pathAjukanLamaran}?company_job_id=$lowonganId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getPelamarByPerusahaan(
+      String companyId, String token, String status) {
+    String apiPath =
+        '${Constants.host}${Constants.pathAjukanLamaran}?company_id=$companyId';
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }

@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           appBarTheme: AppBarTheme(
               color: Constants.colorBiruGelap, foregroundColor: Colors.white),
+          scaffoldBackgroundColor: Colors.grey[200],
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.resolveWith(

@@ -4,7 +4,7 @@ import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
 
-import 'package:bcc/bccwidgets/bcc_normal_button.dart';
+// import 'package:bcc/bccwidgets/bcc_normal_button.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
 import 'package:bcc/screen/pencaker/profil/pengalaman_bekerja.dart';
@@ -16,7 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 class IdentitasDiri extends StatefulWidget {
-  const IdentitasDiri({super.key});
+  const IdentitasDiri({super.key, this.isPerusahaan, this.pencakerId});
+
+  final bool? isPerusahaan;
+  final String? pencakerId;
 
   @override
   State<IdentitasDiri> createState() => _IdentitasDiriState();
@@ -36,8 +39,16 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
   dynamic biodataPencaker;
 
   _fetchBiodataRinciPencaker() {
-    String idPencaker = loginInfo['data']['id'];
+    String idPencaker = '';
     String token = loginInfo['data']['token'];
+    if (widget.isPerusahaan != null) {
+      if (widget.isPerusahaan == true) {
+        idPencaker = widget.pencakerId.toString();
+      }
+    } else {
+      idPencaker = loginInfo['data']['id'];
+    }
+
     _apiCall
         .getDataRinci(Constants.pathDataPencaker, idPencaker, token)
         .then((value) {
@@ -129,7 +140,9 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Identitas Diri'),
+        title: Text(widget.isPerusahaan == true
+            ? 'Identitas Pelamar'
+            : 'Identitas Diri'),
       ),
       body: ListView(children: [
         Stack(
@@ -179,41 +192,47 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                             image: getProfileImage()))),
               ),
             ),
-            Positioned(
-              right: MediaQuery.of(context).size.width / 2 - 65,
-              bottom: 0,
-              child: Material(
-                elevation: 4,
-                color: Colors.white,
-                type: MaterialType.circle,
-                child: Container(
-                  width: 43,
-                  height: 43,
-                  decoration: BoxDecoration(
+            widget.isPerusahaan == true
+                ? const Center()
+                : Positioned(
+                    right: MediaQuery.of(context).size.width / 2 - 65,
+                    bottom: 0,
+                    child: Material(
+                      elevation: 4,
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(25)),
-                  child: Center(
-                    child: IconButton(
-                      color: Constants.colorBiruGelap,
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              UbahBiodata(biodataPencaker: biodataPencaker),
-                        ));
-                      },
-                      icon: const Icon(Icons.edit),
+                      type: MaterialType.circle,
+                      child: Container(
+                        width: 43,
+                        height: 43,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25)),
+                        child: Center(
+                          child: IconButton(
+                            color: Constants.colorBiruGelap,
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => UbahBiodata(
+                                    biodataPencaker: biodataPencaker),
+                              ));
+                            },
+                            icon: const Icon(Icons.edit),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            )
+                  )
           ],
         ),
         Container(
             margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
             child: Column(children: [
               Text(
-                '${userInfo['name']}',
+                widget.isPerusahaan == true
+                    ? (biodataPencaker == null
+                        ? '...'
+                        : biodataPencaker['name'])
+                    : '${userInfo['name']}',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -245,7 +264,10 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const BccSubheaderLabel(label: 'BIODATA DIRI'),
+                    BccSubheaderLabel(
+                        label: widget.isPerusahaan == true
+                            ? 'BIODATA PELAMAR'
+                            : 'BIODATA DIRI'),
                     Row(
                       children: [
                         const Icon(
@@ -253,8 +275,11 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                           size: 18,
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
-                        Text(
-                            'Terdaftar sejak ${loginInfo['data']['created_at']}')
+                        Text(widget.isPerusahaan == true
+                            ? (biodataPencaker == null
+                                ? ''
+                                : 'Terdaftar sejak ${biodataPencaker['created_at']}')
+                            : 'Terdaftar sejak ${loginInfo['data']['created_at']}')
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
@@ -269,7 +294,11 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                         const Padding(padding: EdgeInsets.only(right: 10)),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
-                          child: Text('${loginInfo['data']['address']}'),
+                          child: Text(widget.isPerusahaan == true
+                              ? (biodataPencaker == null
+                                  ? ''
+                                  : biodataPencaker['address'])
+                              : '${loginInfo['data']['address']}'),
                         )
                       ],
                     ),
@@ -281,8 +310,11 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                           size: 18,
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
-                        Text(
-                            '${loginInfo['data']['email']}  ${loginInfo['data']['verified_email'] == '1' ? '(Terverifikasi)' : '(Belum terverifikasi)'}')
+                        Text(widget.isPerusahaan == true
+                            ? (biodataPencaker == null
+                                ? ''
+                                : ('${biodataPencaker['email']} ${biodataPencaker['verified_email'] == '1' ? '(Terverifikasi)' : '(Belum terverifikasi)'}'))
+                            : '${loginInfo['data']['email']}  ${loginInfo['data']['verified_email'] == '1' ? '(Terverifikasi)' : '(Belum terverifikasi)'}')
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
@@ -293,20 +325,24 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                           size: 18,
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
-                        Text('${loginInfo['data']['gender']}')
+                        Text(widget.isPerusahaan == true
+                            ? biodataPencaker['gender']
+                            : '${loginInfo['data']['gender']}')
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
-                    const BccSubheaderLabel(
-                      label: 'Tentang Saya',
+                    BccSubheaderLabel(
+                      label: widget.isPerusahaan == true
+                          ? 'Tentang Pencari Kerja'
+                          : 'Tentang Saya',
                     ),
                     Text(
-                      '${biodataPencaker == null ? '' : biodataPencaker['headline']}',
+                      '${biodataPencaker == null ? '' : (biodataPencaker['headline'] ?? '')}',
                       textAlign: TextAlign.justify,
                     ),
                     BccSubheaderLabel(
                       label: 'Riwayat Pendidikan',
-                      showButton: true,
+                      showButton: widget.isPerusahaan == true ? false : true,
                       onPressed: () {
                         Future<dynamic> tambahPendidikan =
                             Navigator.of(context).push(MaterialPageRoute(
@@ -347,52 +383,77 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    BccNormalButton(
-                                      onPressed: () {
-                                        _hapus(
-                                            Constants.pathPendidiksnPencaker,
-                                            dataPendidikan['id'],
-                                            '${dataPendidikan['master_degree_name']} ${dataPendidikan['master_school_name']}');
-                                      },
-                                      size: const Size(50, 40),
-                                      backgroundColor: Colors.red,
-                                      child: const Icon(
-                                        Icons.delete,
-                                        size: 16,
-                                      ),
-                                    ),
-                                    const Padding(
-                                        padding: EdgeInsets.only(right: 5)),
-                                    BccNormalButton(
-                                      onPressed: () {
-                                        Future<dynamic> tambahPendidikan =
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              TambahPendidikan(
-                                            riwayatPendidikanEdit:
-                                                dataPendidikan,
-                                          ),
-                                        ));
+                                widget.isPerusahaan == true
+                                    ? const Center()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                              padding: const EdgeInsets.all(3),
+                                              onPressed: () {
+                                                _hapus(
+                                                    Constants
+                                                        .pathPendidiksnPencaker,
+                                                    dataPendidikan['id'],
+                                                    '${dataPendidikan['master_degree_name']} ${dataPendidikan['master_school_name']}');
+                                              },
+                                              icon: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                          IconButton(
+                                              padding: const EdgeInsets.all(3),
+                                              onPressed: () {
+                                                Future<dynamic>
+                                                    tambahPendidikan =
+                                                    Navigator.of(context)
+                                                        .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TambahPendidikan(
+                                                    riwayatPendidikanEdit:
+                                                        dataPendidikan,
+                                                  ),
+                                                ));
 
-                                        tambahPendidikan.then((value) {
-                                          if (value != null) {
-                                            _reloadData();
-                                          }
-                                        });
-                                      },
-                                      size: const Size(50, 40),
-                                      child: const Icon(
-                                        Icons.edit,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                                tambahPendidikan.then((value) {
+                                                  if (value != null) {
+                                                    _reloadData();
+                                                  }
+                                                });
+                                              },
+                                              icon: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                        ],
+                                      )
                               ],
                             ),
                           ),
@@ -401,7 +462,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                     ),
                     BccSubheaderLabel(
                       label: 'Pengalaman Bekerja',
-                      showButton: true,
+                      showButton: widget.isPerusahaan == true ? false : true,
                       onPressed: () {
                         Future<dynamic> tambahPengalaman =
                             Navigator.of(context).push(MaterialPageRoute(
@@ -442,36 +503,74 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    BccNormalButton(
-                                      onPressed: () {
-                                        _hapus(
-                                            Constants.pathPengalamanBekerja,
-                                            dataPengalaman['id'],
-                                            '${dataPengalaman['title']}');
-                                      },
-                                      size: const Size(50, 40),
-                                      backgroundColor: Colors.red,
-                                      child: const Icon(
-                                        Icons.delete,
-                                        size: 16,
-                                      ),
-                                    ),
-                                    const Padding(
-                                        padding: EdgeInsets.only(right: 5)),
-                                    BccNormalButton(
-                                      onPressed: () {},
-                                      size: const Size(50, 40),
-                                      child: const Icon(
-                                        Icons.edit,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                widget.isPerusahaan == true
+                                    ? const Center()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                              padding: const EdgeInsets.all(3),
+                                              onPressed: () {
+                                                _hapus(
+                                                    Constants
+                                                        .pathPengalamanBekerja,
+                                                    dataPengalaman['id'],
+                                                    '${dataPengalaman['title']}');
+                                              },
+                                              icon: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                          IconButton(
+                                              padding: const EdgeInsets.all(3),
+                                              onPressed: () {
+                                                Future<dynamic>
+                                                    tambahPendidikan =
+                                                    Navigator.of(context)
+                                                        .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const PengalamanBekerja(),
+                                                ));
+
+                                                tambahPendidikan.then((value) {
+                                                  if (value != null) {
+                                                    _reloadData();
+                                                  }
+                                                });
+                                              },
+                                              icon: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                        ],
+                                      )
                               ],
                             ),
                           ),
@@ -480,7 +579,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                     ),
                     BccSubheaderLabel(
                       label: 'Lisensi & Sertifikat',
-                      showButton: true,
+                      showButton: widget.isPerusahaan == true ? false : true,
                       onPressed: () {
                         Future<dynamic> tambahSert =
                             Navigator.of(context).push(MaterialPageRoute(
@@ -516,36 +615,66 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                                   style: const TextStyle(
                                       fontStyle: FontStyle.italic),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    BccNormalButton(
-                                      onPressed: () {
-                                        _hapus(
-                                            Constants.pathSertifikatPencker,
-                                            lisensi['id'],
-                                            '${lisensi['name']}');
-                                      },
-                                      size: const Size(50, 40),
-                                      backgroundColor: Colors.red,
-                                      child: const Icon(
-                                        Icons.delete,
-                                        size: 16,
-                                      ),
-                                    ),
-                                    const Padding(
-                                        padding: EdgeInsets.only(right: 5)),
-                                    BccNormalButton(
-                                      onPressed: () {},
-                                      size: const Size(50, 40),
-                                      child: const Icon(
-                                        Icons.edit,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                widget.isPerusahaan == true
+                                    ? const Center()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                              padding: const EdgeInsets.all(3),
+                                              onPressed: () {
+                                                _hapus(
+                                                    Constants
+                                                        .pathSertifikatPencker,
+                                                    lisensi['id'],
+                                                    '${lisensi['name']}');
+                                              },
+                                              icon: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                          IconButton(
+                                              padding: const EdgeInsets.all(3),
+                                              onPressed: () {
+                                                _hapus(
+                                                    Constants
+                                                        .pathSertifikatPencker,
+                                                    lisensi['id'],
+                                                    '${lisensi['name']}');
+                                              },
+                                              icon: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                        ],
+                                      )
                               ],
                             ),
                           ),
@@ -554,7 +683,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                     ),
                     BccSubheaderLabel(
                       label: 'Keterampilan',
-                      showButton: true,
+                      showButton: widget.isPerusahaan == true ? false : true,
                       onPressed: () {
                         Future<dynamic> tambahKetrampilan =
                             Navigator.of(context).push(MaterialPageRoute(
@@ -584,36 +713,66 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                               children: [
                                 Text(
                                     '${skill['master_skill_name']} (${skill['percentage']} %)'),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    BccNormalButton(
-                                      onPressed: () {
-                                        _hapus(
-                                            Constants.pathDataJobseekerSkill,
-                                            skill['id'],
-                                            '${skill['master_skill_name']}');
-                                      },
-                                      size: const Size(50, 40),
-                                      backgroundColor: Colors.red,
-                                      child: const Icon(
-                                        Icons.delete,
-                                        size: 16,
-                                      ),
-                                    ),
-                                    const Padding(
-                                        padding: EdgeInsets.only(right: 5)),
-                                    BccNormalButton(
-                                      onPressed: () {},
-                                      size: const Size(50, 40),
-                                      child: const Icon(
-                                        Icons.edit,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                widget.isPerusahaan == true
+                                    ? const Center()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                              padding: const EdgeInsets.all(3),
+                                              onPressed: () {
+                                                _hapus(
+                                                    Constants
+                                                        .pathDataJobseekerSkill,
+                                                    skill['id'],
+                                                    '${skill['master_skill_name']}');
+                                              },
+                                              icon: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                          IconButton(
+                                              padding: const EdgeInsets.all(3),
+                                              onPressed: () {
+                                                _hapus(
+                                                    Constants
+                                                        .pathDataJobseekerSkill,
+                                                    skill['id'],
+                                                    '${skill['master_skill_name']}');
+                                              },
+                                              icon: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
+                                        ],
+                                      )
                               ],
                             ),
                           ),

@@ -4,8 +4,9 @@ import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
-import 'package:bcc/screen/perusahaan/management_lowongan/data_pelamar_kerja.dart';
+// import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/data_pelamar_kerja.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/detail_lowongan.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/pelamar_tab.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/tambah_lowongan.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -145,11 +146,17 @@ class _ManagementLowonganState extends State<ManagementLowongan> {
                                       onPressed: () {
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              DataPelamarKerja(
+                                          builder: (context) => PelamarTab(
                                             lowongan: lowongan,
                                           ),
                                         ));
+                                        // Navigator.of(context)
+                                        //     .push(MaterialPageRoute(
+                                        //   builder: (context) =>
+                                        //       DataPelamarKerja(
+                                        //     lowongan: lowongan,
+                                        //   ),
+                                        // ));
                                       },
                                       child: const Row(
                                         children: [Icon(Icons.people_alt)],

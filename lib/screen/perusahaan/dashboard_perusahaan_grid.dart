@@ -6,6 +6,7 @@ import 'package:bcc/screen/landing/info/informasi_publik.dart';
 import 'package:bcc/screen/landing/lowongan/lowongan_page_with_appbar.dart';
 import 'package:bcc/screen/landing/pelayanan/pelayanan_screen.dart';
 import 'package:bcc/screen/landing/preneur/preneur_screen.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan/management_lowongan.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPerusahaanGrid extends StatelessWidget {
@@ -39,7 +40,7 @@ class DashboardPerusahaanGrid extends StatelessWidget {
           label: "Lowongan Kerja",
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const LowonganPageWithAppBar(),
+              builder: (context) => const ManagementLowongan(),
             ));
           },
         ),

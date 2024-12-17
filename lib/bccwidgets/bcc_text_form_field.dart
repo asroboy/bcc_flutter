@@ -8,7 +8,8 @@ class BccTextFormField extends StatelessWidget {
       this.padding,
       this.radius,
       this.textAlign,
-      this.inputType});
+      this.inputType,
+      this.autoFocus});
 
   final String hint;
   final TextEditingController? controller;
@@ -16,6 +17,7 @@ class BccTextFormField extends StatelessWidget {
   final double? radius;
   final TextAlign? textAlign;
   final TextInputType? inputType;
+  final bool? autoFocus;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class BccTextFormField extends StatelessWidget {
           height: 50,
           child: TextFormField(
             keyboardType: inputType ?? TextInputType.text,
-            autofocus: false,
+            autofocus: autoFocus ?? false,
             textAlign: textAlign ?? TextAlign.center,
             controller: controller,
             obscureText:
