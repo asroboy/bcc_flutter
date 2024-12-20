@@ -1,5 +1,6 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
@@ -7,20 +8,37 @@ import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/jadwal_interview.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
+enum StatusLamaran {
+  pending,
+  onreview,
+  approved,
+  interview,
+  rejected,
+  accepted
+}
+
 class DataPelamarKerja extends StatefulWidget {
-  const DataPelamarKerja({super.key, this.lowongan});
+  const DataPelamarKerja(
+      {super.key, this.lowongan, required this.status, required this.title});
 
   final dynamic lowongan;
+  final StatusLamaran status;
+  final String title;
   @override
   State<DataPelamarKerja> createState() => _DataPelamarKerjaState();
 }
 
-class _DataPelamarKerjaState extends State<DataPelamarKerja> {
+class _DataPelamarKerjaState extends State<DataPelamarKerja>
+    with AutomaticKeepAliveClientMixin<DataPelamarKerja> {
   final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
+
+// 'PENDING','ONREVIEW','APPROVED','INTERVIEW','REJECTED','ACCEPTED'
+// 1,2,3,4,5,6
 
   bool _isLoading = true;
 
@@ -28,11 +46,57 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja> {
   final ApiHelper _apiHelper = ApiHelper();
   final List<dynamic> _daftarPelamar = [];
 
+  String _getStatus() {
+    return widget.status == StatusLamaran.pending
+        ? 'PENDING'
+        : widget.status == StatusLamaran.onreview
+            ? 'ACCPTED'
+            : widget.status == StatusLamaran.approved
+                ? 'APPROVED'
+                : widget.status == StatusLamaran.interview
+                    ? 'INTERVIEW'
+                    : widget.status == StatusLamaran.accepted
+                        ? 'ACCEPTED'
+                        : 'REJECTED';
+  }
+
+  String _getStatusUpdateInfo() {
+    return widget.status == StatusLamaran.pending
+        ? 'Lolos Adm.'
+        : widget.status == StatusLamaran.onreview
+            ? 'Interview'
+            : widget.status == StatusLamaran.approved
+                ? 'Diterima'
+                : widget.status == StatusLamaran.interview
+                    ? 'Diterima Kerja'
+                    : widget.status == StatusLamaran.accepted
+                        ? 'Interview'
+                        : 'Ditolak';
+  }
+
+// 'PENDING','ONREVIEW','APPROVED','INTERVIEW','REJECTED','ACCEPTED'
+// 1,2,3,4,5,6
+  String _getStatusUpdate({StatusLamaran? statusUpdate}) {
+    return (statusUpdate ?? widget.status) == StatusLamaran.pending
+        ? '6'
+        : widget.status == StatusLamaran.onreview
+            ? '4'
+            : widget.status == StatusLamaran.approved
+                ? '5'
+                : widget.status == StatusLamaran.interview
+                    ? '3'
+                    : widget.status == StatusLamaran.accepted
+                        ? '4'
+                        : '5';
+  }
+
   _ambilDataLowongan() {
     // String idPerusahaan = loginInfo['data']['id'];
     String token = loginInfo['data']['token'];
+
+    String mStatus = _getStatus();
     _apiPerusahaanCall
-        .getPelamarByLowongan(widget.lowongan['id'], token, 'PENDING')
+        .getPelamarByLowongan(widget.lowongan['id'], token, mStatus)
         .then(
       (value) {
         if (mounted) {
@@ -42,14 +106,34 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja> {
               onSuccess: (response) {
                 setState(() {
                   _daftarPelamar.addAll(response['data']);
-                  // Provider.of<ProfilePerusahaanModel>(context, listen: false)
-                  //     .set(_profilPerusahaan);
-                  // log('profil perusahaan result $_profilPerusahaan');
-                  // _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
-                  // _dataPendidikanPencaker.addAll(biodataPencaker['education']);
-                  // _dataSertifikat.addAll(biodataPencaker['certificate']);
-                  // _dataSkill.addAll(biodataPencaker['skill']);
+
                   _isLoading = false;
+                });
+              });
+        }
+      },
+    );
+  }
+
+  _updateStatusLamaran(
+      {StatusLamaran? statusUpdate, required dynamic lamaran}) {
+    // String idPerusahaan = loginInfo['data']['id'];
+    String token = loginInfo['data']['token'];
+
+    String mStatus = _getStatusUpdate(statusUpdate: statusUpdate);
+    dynamic updateLowongan = {'id': lamaran['id'], 'status': mStatus};
+
+    _apiPerusahaanCall.updateLamaran(updateLowongan, token, mStatus).then(
+      (value) {
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                setState(() {
+                  _daftarPelamar.clear();
+                  _ambilDataLowongan();
+                  // _isLoading = false;
                 });
               });
         }
@@ -64,11 +148,15 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Data Pelamar'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Data Pelamar ${widget.title}'),
+      // ),
       body: _isLoading
           ? SizedBox(
               height: MediaQuery.of(context).size.height * 0.25,
@@ -163,9 +251,48 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja> {
                                           color: Colors.white,
                                         ),
                                       )),
+                                  widget.status == StatusLamaran.interview
+                                      ? IconButton(
+                                          padding: const EdgeInsets.all(3),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  JadwalInterview(
+                                                jobApplication: mlowongan,
+                                              ),
+                                            ));
+                                          },
+                                          icon: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            child: const Icon(
+                                              Icons.calendar_today_outlined,
+                                              color: Colors.white,
+                                            ),
+                                          ))
+                                      : const Center(),
                                   IconButton(
                                       padding: const EdgeInsets.all(3),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showAlertDialogWithAction2(
+                                            'Apakah Anda yakin merubah status Pelamar ini untuk masuk ke proses  ${_getStatusUpdateInfo()}',
+                                            context, () {
+                                          Navigator.of(context).pop();
+                                        }, () {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            _isLoading = true;
+                                          });
+                                          _updateStatusLamaran(
+                                              lamaran: mlowongan);
+                                        }, 'Batal', 'OK');
+                                      },
                                       icon: Container(
                                         padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(

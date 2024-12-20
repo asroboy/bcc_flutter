@@ -4,9 +4,35 @@ import 'package:bcc/api/api.dart';
 import 'package:bcc/contants.dart';
 
 class ApiPerusahaanCall {
-  static int STATUS_PENDING = 0;
+  static int statusPending = 0;
   // static int STATUS_PENDING = 1;
   ApiPerusahaanCall();
+
+  Future<dynamic> simpanProfilPerusahaan(
+      String idPerusahaan, String token, dynamic data) {
+    String apiPath =
+        '${Constants.host}${Constants.pathProfilPerusahaan}$idPerusahaan/$token';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
+  }
+
+  Future<dynamic> simpanJobInterview(
+      String jobInterviewId, dynamic data, String token) {
+    String apiPath =
+        '${Constants.host}${Constants.pathJobInterview}/$jobInterviewId/$token';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
+  }
+
+  Future<dynamic> getJobInterview(
+      String idLamaran, String pelamarId, String token) {
+    String apiPath =
+        '${Constants.host}${Constants.pathJobInterview}?company_job_application_id=$idLamaran&jobseeker_id=$pelamarId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
 
   Future<dynamic> getProfilPerusahaan(String idPerusahaan, String token) {
     String apiPath =
@@ -45,9 +71,18 @@ class ApiPerusahaanCall {
   Future<dynamic> getPelamarByLowongan(
       String lowonganId, String token, String status) {
     String apiPath =
-        '${Constants.host}${Constants.pathAjukanLamaran}?company_job_id=$lowonganId';
+        '${Constants.host}${Constants.pathAjukanLamaran}?company_job_id=$lowonganId&status=$status';
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> updateLamaran(
+      dynamic dataLamaran, String token, String status) {
+    String apiPath =
+        '${Constants.host}${Constants.pathAjukanLamaran}/${dataLamaran['id']}';
+    log('path $apiPath');
+    return ApiHelper(body: dataLamaran, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
   }
 
   Future<dynamic> getPelamarByPerusahaan(
