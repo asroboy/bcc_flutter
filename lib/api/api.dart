@@ -181,9 +181,11 @@ class ApiHelper {
     };
 
     if (response.body != '') {
+      log('Response ${response.body}');
       try {
         data = json.decode(response.body);
       } catch (ex) {
+        log('Error $ex');
         data = {
           'message': 'Terjadi kendala. \nError: $ex',
           'status': 'Failed',

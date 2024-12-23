@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
@@ -41,6 +43,15 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
                   infoUkuranPerusahaan.addAll(response['data']);
                   for (var ukuran in infoUkuranPerusahaan) {
                     infoUkuranPerusahaanString.add(ukuran['name']);
+                  }
+
+                  if (widget.profilPerusahaan['master_company_size_id'] !=
+                      null) {
+                    selectedUkuranPerusahaan = infoUkuranPerusahaan.singleWhere(
+                      (element) =>
+                          element['id'] ==
+                          widget.profilPerusahaan['master_company_size_id'],
+                    );
                   }
 
                   // _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
@@ -184,7 +195,23 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      dynamic perusahaanUpdate = {
+                        'id': widget.profilPerusahaan['id'],
+                        'name': namaController.text,
+                        'tagline': taglineController.text,
+                        'about_company': tentangController.text,
+                        'phone_number_company': teleponPerusahaan.text,
+                        'website': websitePerusahaan.text,
+                        'founded': tahunPendiaranController.text,
+                        'master_company_size_id':
+                            selectedUkuranPerusahaan['id'],
+                        'master_company_size_name':
+                            selectedUkuranPerusahaan['name'],
+                      };
+
+                      _simpan(perusahaanUpdate);
+                    },
                     child: const Row(
                       children: [Icon(Icons.save), Text('Simpan')],
                     )),
@@ -193,6 +220,39 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
           )
         ],
       ),
+    );
+  }
+
+  _simpan(dynamic perusahaanUpdate) {
+    String token = loginInfo['data']['token'];
+    String perusahaanId = widget.profilPerusahaan['unique_id'];
+
+    //widget.profilPerusahaan;
+
+    log('data $perusahaanUpdate');
+    _apiPerusahaanCall
+        .simpanProfilPerusahaan(perusahaanId, token, perusahaanUpdate)
+        .then(
+      (value) {
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                setState(() {
+                  // infoUkuranPerusahaan.addAll(response['data']);
+                  // for (var ukuran in infoUkuranPerusahaan) {
+                  //   infoUkuranPerusahaanString.add(ukuran['name']);
+                  // }
+
+                  // _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
+                  // _dataPendidikanPencaker.addAll(biodataPencaker['education']);
+                  // _dataSertifikat.addAll(biodataPencaker['certificate']);
+                  // _dataSkill.addAll(biodataPencaker['skill']);
+                });
+              });
+        }
+      },
     );
   }
 }
