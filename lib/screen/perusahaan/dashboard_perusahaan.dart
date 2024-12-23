@@ -137,7 +137,7 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
                     ),
               Container(
                 margin: EdgeInsets.only(
-                    top: (headerHeight - 50), bottom: 10, left: 10, right: 10),
+                    top: (headerHeight - 20), bottom: 10, left: 10, right: 10),
                 height: bodyHeight,
                 child: ListView(
                   children: const [DashboardPerusahaanGrid()],

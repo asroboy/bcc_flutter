@@ -3,7 +3,7 @@ import 'package:bcc/screen/landing/careercanter/career_center_screen.dart';
 import 'package:bcc/screen/landing/disnaker/disnaker_screen.dart';
 import 'package:bcc/screen/landing/info/informasi_publik.dart';
 // import 'package:bcc/screen/landing/lowongan/lowongan_list_screen.dart';
-import 'package:bcc/screen/landing/lowongan/lowongan_page_with_appbar.dart';
+// import 'package:bcc/screen/landing/lowongan/lowongan_page_with_appbar.dart';
 import 'package:bcc/screen/landing/pelayanan/pelayanan_screen.dart';
 import 'package:bcc/screen/landing/preneur/preneur_screen.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/management_lowongan.dart';
