@@ -5,6 +5,7 @@ import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/contants.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/alamat_perusahaan/tambah_alamat_perusahaan.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -62,7 +63,11 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
         title: const Text('Alamat Perusahaan'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const TambahAlamatPerusahaan(),
+          ));
+        },
         child: const Icon(Icons.add),
       ),
       body: isLoading

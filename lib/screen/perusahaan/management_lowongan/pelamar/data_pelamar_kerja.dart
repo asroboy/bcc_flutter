@@ -81,13 +81,13 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
   String _getStatusUpdate({StatusLamaran? statusUpdate}) {
     return (statusUpdate ?? widget.status) == StatusLamaran.pending
         ? '6'
-        : widget.status == StatusLamaran.onreview
+        : (statusUpdate ?? widget.status) == StatusLamaran.onreview
             ? '4'
-            : widget.status == StatusLamaran.approved
+            : (statusUpdate ?? widget.status) == StatusLamaran.approved
                 ? '5'
-                : widget.status == StatusLamaran.interview
+                : (statusUpdate ?? widget.status) == StatusLamaran.interview
                     ? '3'
-                    : widget.status == StatusLamaran.accepted
+                    : (statusUpdate ?? widget.status) == StatusLamaran.accepted
                         ? '4'
                         : '5';
   }
@@ -118,11 +118,16 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
   }
 
   _updateStatusLamaran(
-      {StatusLamaran? statusUpdate, required dynamic lamaran}) {
+      {StatusLamaran? statusUpdate,
+      required dynamic lamaran,
+      bool? terimaKembali}) {
     // String idPerusahaan = loginInfo['data']['id'];
     String token = loginInfo['data']['token'];
 
     String mStatus = _getStatusUpdate(statusUpdate: statusUpdate);
+    if (terimaKembali == true) {
+      mStatus = '1';
+    }
     dynamic updateLowongan = {'id': lamaran['id'], 'status': mStatus};
 
     _apiPerusahaanCall.updateLamaran(updateLowongan, token, mStatus).then(
@@ -150,7 +155,7 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 
   @override
   Widget build(BuildContext context) {
@@ -206,9 +211,9 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
                               // RowDataInfo(
                               //     label: 'Job',
                               //     info: mlowongan['company_job_id'] ?? ''),
-                              // RowDataInfo(
-                              //     label: 'Jobseeker',
-                              //     info: mlowongan['jobseeker_id']),
+                              RowDataInfo(
+                                  label: 'Jobseeker',
+                                  info: mlowongan['jobseeker_id']),
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 10)),
                               Row(
@@ -237,155 +242,11 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  IconButton(
-                                      padding: const EdgeInsets.all(3),
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                          builder: (context) => IdentitasDiri(
-                                            isPerusahaan: true,
-                                            pencakerId: mlowongan[
-                                                'jobseeker_unique_id'],
-                                          ),
-                                        ));
-                                      },
-                                      icon: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: const Icon(
-                                          Icons.person,
-                                          color: Colors.white,
-                                        ),
-                                      )),
-                                  widget.status == StatusLamaran.interview
-                                      ? IconButton(
-                                          padding: const EdgeInsets.all(3),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  JadwalInterview(
-                                                jobApplication: mlowongan,
-                                              ),
-                                            ));
-                                          },
-                                          icon: Container(
-                                            padding: const EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            child: const Icon(
-                                              Icons.calendar_today_outlined,
-                                              color: Colors.white,
-                                            ),
-                                          ))
-                                      : const Center(),
-                                  IconButton(
-                                      padding: const EdgeInsets.all(3),
-                                      onPressed: () {
-                                        showAlertDialogWithAction2(
-                                            'Apakah Anda yakin merubah status Pelamar ini untuk masuk ke proses  ${_getStatusUpdateInfo()}',
-                                            context, () {
-                                          Navigator.of(context).pop();
-                                        }, () {
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            _isLoading = true;
-                                          });
-                                          if (mlowongan['status'] ==
-                                              'ACCEPTED') {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                String tglNow =
-                                                    DateFormat('yyyy-MM-dd')
-                                                        .format(DateTime.now());
-                                                // String tglNow2 = DateFormat(
-                                                //         'yyyy-MM-dd HH:mm:ss')
-                                                //     .format(DateTime.now());
-                                                dynamic newJadwal = {
-                                                  'jobseeker_id':
-                                                      mlowongan['jobseeker_id'],
-                                                  'company_job_application_id':
-                                                      mlowongan['id'],
-                                                  'company_id':
-                                                      mlowongan['company_id'],
-                                                  'company_job_id': mlowongan[
-                                                      'company_job_id'],
-                                                  'description': '',
-                                                  'schedule_date': tglNow,
-                                                  'created_by':
-                                                      mlowongan['company_id'],
-                                                };
-                                                return UbahJadwalDialog(
-                                                  title:
-                                                      'Buat Jadwal Interview',
-                                                  jadwal: newJadwal,
-                                                  onSave: (data) {
-                                                    if (data != null) {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      setState(() {
-                                                        _isLoading = true;
-                                                        _simpanJadwal(
-                                                            data, mlowongan);
-                                                      });
-                                                    }
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          } else {
-                                            _updateStatusLamaran(
-                                                lamaran: mlowongan);
-                                          }
-                                        }, 'Batal', 'OK');
-                                      },
-                                      icon: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: const Icon(
-                                          Icons.check,
-                                          color: Colors.white,
-                                        ),
-                                      )),
-                                  IconButton(
-                                      padding: const EdgeInsets.all(3),
-                                      onPressed: () {},
-                                      icon: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .error,
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          child: const Row(
-                                            children: [
-                                              Icon(
-                                                Icons.close,
-                                                color: Colors.white,
-                                              ),
-                                              Text(
-                                                'Tolak',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              )
-                                            ],
-                                          )))
+                                  _buttonViewProfilePencaker(mlowongan),
+                                  _buttonJadwal(mlowongan),
+                                  _buttonTerima(mlowongan),
+                                  _buttonTolak(mlowongan),
+                                  _buttonBatalkanTolak(mlowongan)
                                 ],
                               )
                             ],
@@ -394,6 +255,110 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
                   },
                 ),
     );
+  }
+
+  Widget _buttonTolak(dynamic mlowongan) {
+    return widget.status != StatusLamaran.rejected &&
+            widget.status != StatusLamaran.approved
+        ? IconButton(
+            padding: const EdgeInsets.all(3),
+            onPressed: () {
+              showAlertDialogWithAction2(
+                  'Apakah Anda yakin menolak lamaran ini?', context, () {
+                Navigator.of(context).pop();
+              }, () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _isLoading = true;
+                });
+                _updateStatusLamaran(
+                    statusUpdate: StatusLamaran.rejected, lamaran: mlowongan);
+              }, 'Batal', 'OK');
+            },
+            icon: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.error,
+                    borderRadius: BorderRadius.circular(15)),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      'Tolak',
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ],
+                )))
+        : const Center();
+  }
+
+  Widget _buttonTerima(dynamic mlowongan) {
+    return widget.status == StatusLamaran.rejected ||
+            widget.status == StatusLamaran.approved
+        ? const Center()
+        : IconButton(
+            padding: const EdgeInsets.all(3),
+            onPressed: () {
+              showAlertDialogWithAction2(
+                  'Apakah Anda yakin merubah status Pelamar ini untuk masuk ke proses  ${_getStatusUpdateInfo()}',
+                  context, () {
+                Navigator.of(context).pop();
+              }, () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _isLoading = true;
+                });
+                if (mlowongan['status'] == 'ACCEPTED') {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      String tglNow =
+                          DateFormat('yyyy-MM-dd').format(DateTime.now());
+                      // String tglNow2 = DateFormat(
+                      //         'yyyy-MM-dd HH:mm:ss')
+                      //     .format(DateTime.now());
+                      dynamic newJadwal = {
+                        'jobseeker_id': mlowongan['jobseeker_id'],
+                        'company_job_application_id': mlowongan['id'],
+                        'company_id': mlowongan['company_id'],
+                        'company_job_id': mlowongan['company_job_id'],
+                        'description': '',
+                        'schedule_date': tglNow,
+                        'created_by': mlowongan['company_id'],
+                      };
+                      return UbahJadwalDialog(
+                        title: 'Buat Jadwal Interview',
+                        jadwal: newJadwal,
+                        onSave: (data) {
+                          if (data != null) {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              _isLoading = true;
+                              _simpanJadwal(data, mlowongan);
+                            });
+                          }
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  _updateStatusLamaran(lamaran: mlowongan);
+                }
+              }, 'Batal', 'OK');
+            },
+            icon: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(15)),
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            ));
   }
 
   _simpanJadwal(dynamic data, dynamic mlowongan) {
@@ -412,6 +377,90 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
         }
       },
     );
+  }
+
+  Widget _buttonBatalkanTolak(dynamic mlowongan) {
+    return widget.status == StatusLamaran.rejected
+        ? IconButton(
+            padding: const EdgeInsets.all(3),
+            onPressed: () {
+              showAlertDialogWithAction2(
+                  'Apakah Anda yakin membuka kembali lamaran ini?', context,
+                  () {
+                Navigator.of(context).pop();
+              }, () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _isLoading = true;
+                });
+                _updateStatusLamaran(terimaKembali: true, lamaran: mlowongan);
+              }, 'Batal', 'OK');
+            },
+            icon: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(15)),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      'Buka Kembali',
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ],
+                )))
+        : const Center();
+  }
+
+  Widget _buttonJadwal(dynamic mlowongan) {
+    return widget.status == StatusLamaran.interview
+        ? IconButton(
+            padding: const EdgeInsets.all(3),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => JadwalInterview(
+                  jobApplication: mlowongan,
+                ),
+              ));
+            },
+            icon: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(15)),
+              child: const Icon(
+                Icons.calendar_today_outlined,
+                color: Colors.white,
+              ),
+            ))
+        : const Center();
+  }
+
+  Widget _buttonViewProfilePencaker(dynamic mlowongan) {
+    return IconButton(
+        padding: const EdgeInsets.all(3),
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => IdentitasDiri(
+              isPerusahaan: true,
+              pencakerId: mlowongan['jobseeker_unique_id'],
+            ),
+          ));
+        },
+        icon: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(15)),
+          child: const Icon(
+            Icons.person,
+            color: Colors.white,
+          ),
+        ));
   }
 
   Color _getColorStatus(dynamic mlowongan) {
