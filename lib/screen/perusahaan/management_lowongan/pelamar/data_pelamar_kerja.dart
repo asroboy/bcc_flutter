@@ -9,8 +9,10 @@ import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/jadwal_interview.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/ubah_jadwal_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 enum StatusLamaran {
   pending,
@@ -198,6 +200,15 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
                               RowDataInfo(
                                   label: 'Alamat',
                                   info: mlowongan['jobseeker_address']),
+                              // RowDataInfo(
+                              //     label: 'Company',
+                              //     info: mlowongan['company_id']),
+                              // RowDataInfo(
+                              //     label: 'Job',
+                              //     info: mlowongan['company_job_id'] ?? ''),
+                              // RowDataInfo(
+                              //     label: 'Jobseeker',
+                              //     info: mlowongan['jobseeker_id']),
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 10)),
                               Row(
@@ -209,7 +220,7 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 5),
                                     decoration: BoxDecoration(
-                                        color: Colors.orange,
+                                        color: _getColorStatus(mlowongan),
                                         borderRadius:
                                             BorderRadius.circular(15)),
                                     child: Text(
@@ -289,8 +300,53 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
                                           setState(() {
                                             _isLoading = true;
                                           });
-                                          _updateStatusLamaran(
-                                              lamaran: mlowongan);
+                                          if (mlowongan['status'] ==
+                                              'ACCEPTED') {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                String tglNow =
+                                                    DateFormat('yyyy-MM-dd')
+                                                        .format(DateTime.now());
+                                                // String tglNow2 = DateFormat(
+                                                //         'yyyy-MM-dd HH:mm:ss')
+                                                //     .format(DateTime.now());
+                                                dynamic newJadwal = {
+                                                  'jobseeker_id':
+                                                      mlowongan['jobseeker_id'],
+                                                  'company_job_application_id':
+                                                      mlowongan['id'],
+                                                  'company_id':
+                                                      mlowongan['company_id'],
+                                                  'company_job_id': mlowongan[
+                                                      'company_job_id'],
+                                                  'description': '',
+                                                  'schedule_date': tglNow,
+                                                  'created_by':
+                                                      mlowongan['company_id'],
+                                                };
+                                                return UbahJadwalDialog(
+                                                  title:
+                                                      'Buat Jadwal Interview',
+                                                  jadwal: newJadwal,
+                                                  onSave: (data) {
+                                                    if (data != null) {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      setState(() {
+                                                        _isLoading = true;
+                                                        _simpanJadwal(
+                                                            data, mlowongan);
+                                                      });
+                                                    }
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            _updateStatusLamaran(
+                                                lamaran: mlowongan);
+                                          }
                                         }, 'Batal', 'OK');
                                       },
                                       icon: Container(
@@ -338,5 +394,42 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
                   },
                 ),
     );
+  }
+
+  _simpanJadwal(dynamic data, dynamic mlowongan) {
+    // String idPerusahaan = loginInfo['data']['id'];
+    String token = loginInfo['data']['token'];
+
+    _apiPerusahaanCall.simpanJobInterview(data, token).then(
+      (value) {
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                _updateStatusLamaran(lamaran: mlowongan);
+              });
+        }
+      },
+    );
+  }
+
+  Color _getColorStatus(dynamic mlowongan) {
+    if (mlowongan['status'] == 'PENDING') {
+      return Colors.orange;
+    }
+    if (mlowongan['status'] == 'ACCEPTED') {
+      return const Color.fromARGB(255, 51, 135, 204);
+    }
+    if (mlowongan['status'] == 'INTERVIEW') {
+      return Colors.blueGrey;
+    }
+    if (mlowongan['status'] == 'APPROVED') {
+      return Colors.green;
+    }
+    if (mlowongan['status'] == 'REJECTED') {
+      return const Color.fromARGB(255, 224, 33, 33);
+    }
+    return Colors.orange;
   }
 }

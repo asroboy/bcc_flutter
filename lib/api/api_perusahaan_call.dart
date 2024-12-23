@@ -17,13 +17,20 @@ class ApiPerusahaanCall {
         .requestAuthenticatedDataPut(token);
   }
 
-  Future<dynamic> simpanJobInterview(
+  Future<dynamic> updateJobInterview(
       String jobInterviewId, dynamic data, String token) {
     String apiPath =
         '${Constants.host}${Constants.pathJobInterview}/$jobInterviewId/$token';
     log('path $apiPath');
     return ApiHelper(body: data, apiUrl: apiPath)
         .requestAuthenticatedDataPut(token);
+  }
+
+  Future<dynamic> simpanJobInterview(dynamic data, String token) {
+    String apiPath = '${Constants.host}${Constants.pathSimpanInterview}';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
   }
 
   Future<dynamic> getJobInterview(

@@ -57,7 +57,7 @@ class _JadwalInterviewState extends State<JadwalInterview> {
     // String idPerusahaan = loginInfo['data']['id'];
     String token = loginInfo['data']['token'];
 
-    _apiPerusahaanCall.simpanJobInterview(jadwalId, data, token).then(
+    _apiPerusahaanCall.updateJobInterview(jadwalId, data, token).then(
       (value) {
         if (mounted) {
           _apiHelper.apiCallResponseHandler(

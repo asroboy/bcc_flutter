@@ -65,7 +65,7 @@ class _CariKandidatState extends State<CariKandidat> {
         children: [
           Container(
             padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.13,
+                top: MediaQuery.of(context).size.height * 0.17,
                 bottom: 5,
                 left: 10,
                 right: 10),

@@ -4,8 +4,9 @@ import 'package:intl/intl.dart';
 
 class UbahJadwalDialog extends StatefulWidget {
   const UbahJadwalDialog(
-      {super.key, required this.jadwal, required this.onSave});
+      {super.key, required this.jadwal, required this.onSave, this.title});
 
+  final String? title;
   final dynamic jadwal;
   final Function(dynamic) onSave;
 
@@ -30,7 +31,7 @@ class _UbahJadwalDialogState extends State<UbahJadwalDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Ubah Jadwal Interview'),
+      title: Text(widget.title ?? 'Ubah Jadwal Interview'),
       content: SizedBox(
         height: 220,
         child: Column(
@@ -93,10 +94,17 @@ class _UbahJadwalDialogState extends State<UbahJadwalDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            widget.onSave({
+            dynamic dataToSave = {
               'schedule_date': ubahTanggalFormat,
               'description': _controller.text
-            });
+            };
+            if (widget.title != null) {
+              dataToSave = widget.jadwal;
+              dataToSave['schedule_date'] = ubahTanggalFormat;
+              dataToSave['description'] = _controller.text;
+            }
+
+            widget.onSave(dataToSave);
           },
           style: ElevatedButton.styleFrom(),
           child: const Text('Simpan'),

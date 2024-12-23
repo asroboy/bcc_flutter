@@ -32,6 +32,7 @@ class Constants {
   static String pathRiwayatLamaran = 'jobseeker/application';
   static String pathAjukanLamaran = 'admin/company_job_application';
   static String pathJobInterview = 'admin/company_job_interview';
+  static String pathSimpanInterview = 'company/application/interview';
 
 //PERUSAHAAN
   static String pathProfilPerusahaan = 'admin/company/';
