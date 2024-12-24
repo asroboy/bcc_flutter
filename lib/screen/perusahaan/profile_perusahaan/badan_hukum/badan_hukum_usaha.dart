@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/badan_hukum/tambah_badan_hukum.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/row_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -58,7 +62,21 @@ class _BadanHukumUsahaState extends State<BadanHukumUsaha> {
         title: const Text('Badan Hukum Perusahaan'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+            builder: (context) => const TambahBadanHukum(),
+          ))
+              .then((value) {
+            if (value == 'OK') {
+              setState(() {
+                isLoading = true;
+                legalitas.clear();
+                _getBadanHukumUsahaPerusahaan();
+              });
+            }
+          });
+        },
         child: const Icon(Icons.add),
       ),
       body: isLoading
@@ -93,18 +111,71 @@ class _BadanHukumUsahaState extends State<BadanHukumUsaha> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    ElevatedButton(
-                                        onPressed: () {},
-                                        style: const ButtonStyle(
-                                            backgroundColor:
-                                                WidgetStatePropertyAll(
-                                                    Colors.red)),
-                                        child: const Icon(Icons.delete)),
                                     const Padding(
                                         padding: EdgeInsets.only(right: 5)),
-                                    ElevatedButton(
-                                        onPressed: () {},
-                                        child: const Icon(Icons.edit))
+                                    IconButton(
+                                        padding: const EdgeInsets.all(3),
+                                        onPressed: () {
+                                          showAlertDialogWithAction2(
+                                              "Apakah kamu yakin menghapus data ini?",
+                                              context, () {
+                                            Navigator.of(context).pop();
+                                          }, () {
+                                            Navigator.of(context).pop();
+                                            String idAlamat = mlegalitas['id'];
+
+                                            showLoaderDialog(
+                                                context: context,
+                                                message: 'Harap tunggu...');
+
+                                            _hapus(idAlamat);
+                                          }, 'Batal', 'OK');
+                                        },
+                                        icon: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        )),
+                                    IconButton(
+                                        padding: const EdgeInsets.all(3),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                TambahBadanHukum(
+                                                    mlegalitas: mlegalitas),
+                                          ))
+                                              .then((value) {
+                                            if (value == 'OK') {
+                                              setState(() {
+                                                isLoading = true;
+                                                legalitas.clear();
+                                                _getBadanHukumUsahaPerusahaan();
+                                              });
+                                            }
+                                          });
+                                        },
+                                        icon: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          child: const Icon(
+                                            Icons.edit,
+                                            color: Colors.white,
+                                          ),
+                                        )),
                                   ],
                                 )
                               ],
@@ -113,6 +184,63 @@ class _BadanHukumUsahaState extends State<BadanHukumUsaha> {
                     );
                   },
                 ),
+    );
+  }
+
+  _hapus(String idLegalitas) {
+    String token = loginInfo['data']['token'];
+    log('data $idLegalitas');
+    _apiPerusahaanCall
+        .hapusLegalitasHukum(
+      idLegalitas: idLegalitas,
+      token: token,
+    )
+        .then(
+      (value) {
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                setState(() {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    isLoading = true;
+                    legalitas.clear();
+                  });
+                  _getBadanHukumUsahaPerusahaan();
+                });
+              });
+        }
+      },
+    );
+  }
+
+  showLoaderDialog({required BuildContext context, String? message}) {
+    AlertDialog alert = AlertDialog(
+      content: SizedBox(
+        height: 80,
+        width: MediaQuery.of(context).size.width * 0.75,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.50,
+                  margin: const EdgeInsets.only(left: 15),
+                  child: Text(message ?? 'Loading...')),
+            ],
+          ),
+        ),
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field.dart';
 import 'package:bcc/contants.dart';
+import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,16 +19,41 @@ class _PersonaliaState extends State<Personalia> {
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
 
   bool isLoading = false;
-
+//
   // final ApiCall _apiCall = ApiCall();
   final ApiHelper _apiHelper = ApiHelper();
-  dynamic _profilPerusahaan;
 
-  _ambilDataPersonalia() {}
+  List<dynamic> _personalia = [];
+
+  bool _isLoading = true;
+
+  _ambilDataPersonalia() {
+    // String idPerusahaan = loginInfo['data']['id'];
+    String token = loginInfo['data']['token'];
+    String idPerusahaan = loginInfo['data']['id'];
+
+    _apiPerusahaanCall.getPersonalia(idPerusahaan, token).then(
+      (value) {
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                setState(() {
+                  _personalia.addAll(response['data']);
+
+                  _isLoading = false;
+                });
+              });
+        }
+      },
+    );
+  }
 
   @override
   void initState() {
     super.initState();
+    _ambilDataPersonalia();
   }
 
   @override
@@ -41,52 +67,72 @@ class _PersonaliaState extends State<Personalia> {
               left: 10,
               right: 10),
           height: MediaQuery.of(context).size.height,
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Card(
-                child: ListTile(
-                  title: Text('Siti Jubaedah',
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  subtitle: Column(
-                    children: [
-                      const RowDataInfo(
-                        label: 'Alamat',
-                        info:
-                            'Jl Raya Bogor Jakarta no 24, gg Mangga, rt 12/rw 04 Kecamatan Cibinong Bogor',
-                      ),
-                      const RowDataInfo(label: 'Jenis Kerja', info: 'Magang'),
-                      const RowDataInfo(label: 'No. HP', info: '08123456789'),
-                      const RowDataInfo(
-                          label: 'Email', info: 'personil@gmail.com'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //   builder: (context) => const DetailKandidat(),
-                              // ));
-                            },
-                            style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+          child: _isLoading
+              ? const SizedBox(
+                  height: 50,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _personalia.length,
+                  itemBuilder: (context, index) {
+                    dynamic personil = _personalia[index];
+
+                    return Card(
+                      child: ListTile(
+                        title: Text(personil['jobseeker_name'],
+                            style: Theme.of(context).textTheme.headlineSmall),
+                        subtitle: Column(
+                          children: [
+                            RowDataInfo(
+                              label: 'Alamat',
+                              info: personil['jobseeker_address'],
+                            ),
+                            RowDataInfo(
+                                label: 'Jenis Kerja',
+                                info: personil['master_employment_type_name']),
+                            RowDataInfo(
+                                label: 'No. HP',
+                                info: personil['jobseeker_phone_number']),
+                            RowDataInfo(
+                                label: 'Email',
+                                info: personil['jobseeker_email']),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text('Detail'),
-                                Icon(Icons.navigate_next)
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => IdentitasDiri(
+                                        isPerusahaan: true,
+                                        pencakerId:
+                                            personil['jobseeker_unique_id'],
+                                      ),
+                                    ));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Detail'),
+                                      Icon(Icons.navigate_next)
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
         Container(
           padding: const EdgeInsets.only(top: 80),

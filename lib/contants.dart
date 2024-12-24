@@ -31,6 +31,7 @@ class Constants {
   static String pathWishList = 'jobseeker/wishlist';
   static String pathRiwayatLamaran = 'jobseeker/application';
   static String pathAjukanLamaran = 'admin/company_job_application';
+  static String pathPersonalia = 'company/candidate/employee';
   static String pathJobInterview = 'admin/company_job_interview';
   static String pathSimpanInterview = 'company/application/interview';
 

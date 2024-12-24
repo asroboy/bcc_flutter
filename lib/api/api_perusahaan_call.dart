@@ -116,6 +116,31 @@ class ApiPerusahaanCall {
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
 
+  Future<dynamic> simpanLegalitasHukum({dynamic data, required String token}) {
+    String apiPath = '${Constants.host}${Constants.pathCompanyLegality}';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> updateLegalitasHukum(
+      {dynamic data, required String token, required String idLegalitas}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathCompanyLegality}/$idLegalitas';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
+  }
+
+  Future<dynamic> hapusLegalitasHukum(
+      {required String token, required String idLegalitas}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathCompanyLegality}/$idLegalitas';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath)
+        .requestAuthenticatedDataDelete(token);
+  }
+
   Future<dynamic> getLowongan(String companyId, String token) {
     String apiPath =
         '${Constants.host}${Constants.pathLowongan}?company_id=$companyId';
@@ -129,6 +154,13 @@ class ApiPerusahaanCall {
     log('path $apiPath');
     return ApiHelper(body: data, apiUrl: apiPath)
         .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> getPersonalia(String companyid, String status) {
+    String apiPath =
+        '${Constants.host}${Constants.pathPersonalia}?company_id=$companyid';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
 
   Future<dynamic> getPelamarByLowongan(
@@ -152,6 +184,14 @@ class ApiPerusahaanCall {
       String companyId, String token, String status) {
     String apiPath =
         '${Constants.host}${Constants.pathAjukanLamaran}?company_id=$companyId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getPelamarByPerusahaanAndName(
+      String companyId, String token, String name) {
+    String apiPath =
+        '${Constants.host}${Constants.pathAjukanLamaran}?company_id=$companyId&jobseeker_name=$name';
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
