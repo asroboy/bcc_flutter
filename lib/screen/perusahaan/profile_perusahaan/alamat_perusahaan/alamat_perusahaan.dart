@@ -127,11 +127,14 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
                                 ? IconButton(
                                     padding: const EdgeInsets.all(3),
                                     onPressed: () {
-                                      // Navigator.of(context).push(MaterialPageRoute(
-                                      //   builder: (context) => JadwalInterview(
-                                      //     jobApplication: mlowongan,
-                                      //   ),
-                                      // ));
+                                      showAlertDialogWithAction2(
+                                          'Kamu akan menjadikan alamat ini sebagai alamat utama, lanjutkan?',
+                                          context, () {
+                                        Navigator.of(context).pop();
+                                      }, () {
+                                        // Navigator.of(context).pop();
+                                        _ubahAlamatUtama(alamat['id']);
+                                      }, 'Batal', 'OK');
                                     },
                                     icon: Container(
                                       padding: const EdgeInsets.all(10),
@@ -150,12 +153,22 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
                             IconButton(
                                 padding: const EdgeInsets.all(3),
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(
                                     builder: (context) =>
                                         TambahAlamatPerusahaan(
                                       alamat: alamat,
                                     ),
-                                  ));
+                                  ))
+                                      .then((value) {
+                                    if (value == 'OK') {
+                                      setState(() {
+                                        isLoading = true;
+                                        _alamats.clear();
+                                      });
+                                      _getAlamatPerusahaan();
+                                    }
+                                  });
                                 },
                                 icon: Container(
                                   padding: const EdgeInsets.all(10),
@@ -217,6 +230,31 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
       token: token,
     )
         .then(
+      (value) {
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                setState(() {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    isLoading = true;
+                    _alamats.clear();
+                  });
+                  _getAlamatPerusahaan();
+                });
+              });
+        }
+      },
+    );
+  }
+
+  _ubahAlamatUtama(String idAlamat) {
+    String token = loginInfo['data']['token'];
+    log('data $idAlamat');
+    _apiPerusahaanCall.setAlamatUtamaPerusahaan(
+        idAlamat: idAlamat, token: token, data: {'is_primary': 1}).then(
       (value) {
         if (mounted) {
           _apiHelper.apiCallResponseHandler(

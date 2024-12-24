@@ -4,7 +4,7 @@ import 'package:bcc/api/helper.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/alamat_perusahaan/alamat_perusahaan.dart';
-import 'package:bcc/screen/perusahaan/profile_perusahaan/badan_hukum_usaha.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/badan_hukum/badan_hukum_usaha.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/dokumen_perusahaan.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/informasi_akun.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/pic.dart';

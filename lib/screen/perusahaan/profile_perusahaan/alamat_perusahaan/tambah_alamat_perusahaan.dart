@@ -42,6 +42,8 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
   dynamic _selectedKabko;
   String? _selectedKabkoString;
   bool _isLoadingKabko = false;
+  bool _isLoadingKecamatan = false;
+  bool _isLoadingDesa = false;
 
   List<dynamic> kecamatanObj = [];
   List<dynamic> desaObj = [];
@@ -52,7 +54,7 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
   dynamic selectedKecamatan;
   dynamic selectedDesa;
 
-  bool? _alamatUtama = false;
+  // bool? _alamatUtama;
 
   _getProvinsi() {
     // String idPerusahaan = loginInfo['data']['id'];
@@ -73,10 +75,9 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
                   _isLoadingProvinsi = false;
 
                   if (widget.alamat != null) {
-                    _selectedProvinsiString =
-                        widget.alamat['master_province_name'];
                     _selectedProvinsi = _provinsi.singleWhere((element) =>
-                        element['name'] == _selectedProvinsiString);
+                        element['id'] == widget.alamat['master_province_id']);
+                    _selectedProvinsiString = _selectedProvinsi['name'];
                     _isLoadingKabko = true;
                     _getKabko(_selectedProvinsi['id']);
                   }
@@ -106,9 +107,11 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
                   _isLoadingKabko = false;
 
                   if (widget.alamat != null) {
-                    _selectedKabkoString = widget.alamat['master_city_name'];
-                    _selectedKabko = _kabko.singleWhere(
-                        (element) => element['name'] == _selectedKabkoString);
+                    _selectedKabko = _kabko.singleWhere((element) =>
+                        element['id'] == widget.alamat['master_city_id']);
+                    _selectedKabkoString = _selectedKabko['name'];
+                    _isLoadingKecamatan = true;
+                    _fetchDataKecamatan(_selectedKabko['id']);
                   }
                 });
               });
@@ -127,11 +130,20 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
           onSuccess: (response) {
             if (mounted) {
               setState(() {
+                _isLoadingKecamatan = false;
                 kecamatanObj.addAll(response['data']);
                 for (dynamic kecamatan in kecamatanObj) {
                   kecamatanListString.add(kecamatan['name']);
                 }
               });
+
+              if (widget.alamat != null) {
+                selectedKecamatan = kecamatanObj.singleWhere((element) =>
+                    element['id'] == widget.alamat['master_district_id']);
+                selectedKecamatanString = selectedKecamatan['name'];
+                _isLoadingDesa = true;
+                _fetchDataDesa(selectedKecamatan['id']);
+              }
             }
           });
     });
@@ -143,15 +155,22 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
+          context: mounted ? context : null,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
+                _isLoadingDesa = false;
                 desaObj.addAll(response['data']);
                 for (dynamic desa in desaObj) {
                   desaListString.add(desa['name']);
                 }
               });
+
+              if (widget.alamat != null) {
+                selectedDesa = desaObj.singleWhere((element) =>
+                    element['id'] == widget.alamat['master_village_id']);
+                selectedDesaString = selectedDesa['name'];
+              }
             }
           });
     });
@@ -190,6 +209,12 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
   void initState() {
     _getProvinsi();
     super.initState();
+
+    if (widget.alamat != null) {
+      // _alamatUtama = widget.alamat['is_primary'] == '1';
+      _selectedJenisKantor = widget.alamat['title'];
+      _alamatController.text = widget.alamat['address'];
+    }
   }
 
   @override
@@ -292,58 +317,70 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
                 label: 'Kecamatan*',
                 padding: EdgeInsets.only(left: 15),
               ),
-              BccDropDownString(
-                margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 5, bottom: 10),
-                value: selectedKecamatanString,
-                hint: const Text('Kecamatan'),
-                data: kecamatanListString,
-                onChanged: (value) {
-                  setState(() {
-                    selectedKecamatanString = value;
-                    selectedKecamatan = kecamatanObj
-                        .singleWhere((element) => element['name'] == value);
+              _isLoadingKecamatan
+                  ? const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: LinearProgressIndicator(),
+                    )
+                  : BccDropDownString(
+                      margin: const EdgeInsets.only(
+                          left: 15, right: 15, top: 5, bottom: 10),
+                      value: selectedKecamatanString,
+                      hint: const Text('Kecamatan'),
+                      data: kecamatanListString,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedKecamatanString = value;
+                          selectedKecamatan = kecamatanObj.singleWhere(
+                              (element) => element['name'] == value);
 
-                    if (selectedKecamatan != null) {
-                      _resetDesa();
-                      _fetchDataDesa(selectedKecamatan['id']);
-                    }
-                  });
-                },
-              ),
+                          if (selectedKecamatan != null) {
+                            _resetDesa();
+                            _fetchDataDesa(selectedKecamatan['id']);
+                          }
+                        });
+                      },
+                    ),
               const BccRowLabel(
                 label: 'Desa*',
                 padding: EdgeInsets.only(left: 15),
               ),
-              BccDropDownString(
-                margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 5, bottom: 10),
-                value: selectedDesaString,
-                hint: const Text('Desa'),
-                data: desaListString,
-                onChanged: (value) {
-                  setState(() {
-                    selectedDesaString = value;
-                    selectedDesa = desaObj
-                        .singleWhere((element) => element['name'] == value);
-                  });
-                },
-              ),
-              Row(
-                children: [
-                  Checkbox(
-                      value: _alamatUtama,
+              _isLoadingDesa
+                  ? const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: LinearProgressIndicator(),
+                    )
+                  : BccDropDownString(
+                      margin: const EdgeInsets.only(
+                          left: 15, right: 15, top: 5, bottom: 10),
+                      value: selectedDesaString,
+                      hint: const Text('Desa'),
+                      data: desaListString,
                       onChanged: (value) {
                         setState(() {
-                          _alamatUtama = value;
+                          selectedDesaString = value;
+                          selectedDesa = desaObj.singleWhere(
+                              (element) => element['name'] == value);
                         });
-                      }),
-                  const Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text('Alamat utama'),
-                  )
-                ],
-              ),
+                      },
+                    ),
+              // Row(
+              //   children: [
+              //     Checkbox(
+              //         value: _alamatUtama,
+              //         onChanged: (value) {
+              //           setState(() {
+              //             _alamatUtama = value;
+              //           });
+              //         }),
+              //     const Padding(
+              //       padding: EdgeInsets.only(right: 10),
+              //       child: Text('Alamat utama'),
+              //     )
+              //   ],
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -391,8 +428,12 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
                             'master_district_id': selectedKecamatan['id'],
                             'master_village_id': selectedDesa['id'],
                             'address': _alamatController.text,
-                            'is_primary': _alamatUtama == true ? 1 : 0
+                            // 'is_primary': _alamatUtama == true ? 1 : 0
                           };
+
+                          if (widget.alamat != null) {
+                            alamatPerusahaan['id'] = widget.alamat['id'];
+                          }
 
                           _simpan(alamatPerusahaan);
                         },
@@ -410,17 +451,22 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
 
   _simpan(dynamic dataAlamatPerusahaan) {
     String token = loginInfo['data']['token'];
-    String idPerusahaan = loginInfo['data']['id'];
+    // String idPerusahaan = loginInfo['data']['id'];
 
     //widget.profilPerusahaan;
 
     log('data $dataAlamatPerusahaan');
-    _apiPerusahaanCall
-        .simpanAlamatPerusahaan(
-            idPerusahaan: idPerusahaan,
-            token: token,
-            data: dataAlamatPerusahaan)
-        .then(
+
+    Future<dynamic> simpan = _apiPerusahaanCall.simpanAlamatPerusahaan(
+        token: token, data: dataAlamatPerusahaan);
+    if (widget.alamat != null) {
+      simpan = _apiPerusahaanCall.updateAlamatPerusahaan(
+          idAlamat: widget.alamat['id'],
+          token: token,
+          data: dataAlamatPerusahaan);
+    }
+
+    simpan.then(
       (value) {
         if (mounted) {
           _apiHelper.apiCallResponseHandler(

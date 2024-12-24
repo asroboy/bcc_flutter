@@ -67,11 +67,20 @@ class ApiPerusahaanCall {
   }
 
   Future<dynamic> simpanAlamatPerusahaan(
-      {dynamic data, required String idPerusahaan, required String token}) {
+      {dynamic data, required String token}) {
     String apiPath = '${Constants.host}${Constants.pathAlamatPerusahaan}';
     log('path $apiPath');
     return ApiHelper(body: data, apiUrl: apiPath)
         .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> updateAlamatPerusahaan(
+      {dynamic data, required String idAlamat, required String token}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathAlamatPerusahaan}/$idAlamat';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
   }
 
   Future<dynamic> hapusAlamatPerusahaan(
@@ -81,6 +90,17 @@ class ApiPerusahaanCall {
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath)
         .requestAuthenticatedDataDelete(token);
+  }
+
+  Future<dynamic> setAlamatUtamaPerusahaan(
+      {required String idAlamat,
+      required String token,
+      required dynamic data}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathAlamatPrimary}/$idAlamat';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
   }
 
   Future<dynamic> getUkuranPerusahaan(String token) {
