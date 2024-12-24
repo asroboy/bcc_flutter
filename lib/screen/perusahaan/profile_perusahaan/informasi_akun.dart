@@ -22,11 +22,19 @@ class _InformasiAkunPerusahaanState extends State<InformasiAkunPerusahaan> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => UbahProfilPerusahaan(
+          Future<dynamic> req = Navigator.of(context).push(MaterialPageRoute(
+            builder: (context_) => UbahProfilPerusahaan(
               profilPerusahaan: profile.profil,
             ),
           ));
+
+          req.then((value) {
+            if (value == 'OK') {
+              if (mounted) {
+                Navigator.of(context).pop('OK');
+              }
+            }
+          });
         },
         child: const Icon(Icons.edit_outlined),
       ),
@@ -55,6 +63,10 @@ class _InformasiAkunPerusahaanState extends State<InformasiAkunPerusahaan> {
           RowData(
             label: 'Tentang',
             value: profile.profil['about_company'] ?? '',
+          ),
+          RowData(
+            label: 'Tagline',
+            value: profile.profil['tagline'] ?? '',
           ),
           RowData(
             label: 'Telepon',

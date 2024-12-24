@@ -11,7 +11,7 @@ class ApiPerusahaanCall {
   Future<dynamic> simpanProfilPerusahaan(
       String idPerusahaan, String token, dynamic data) {
     String apiPath =
-        '${Constants.host}${Constants.pathProfilPerusahaan}$idPerusahaan/$token';
+        '${Constants.host}${Constants.pathProfilPerusahaan}$idPerusahaan';
     log('path $apiPath');
     return ApiHelper(body: data, apiUrl: apiPath)
         .requestAuthenticatedDataPut(token);

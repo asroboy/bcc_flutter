@@ -206,8 +206,6 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
                         'founded': tahunPendiaranController.text,
                         'master_company_size_id':
                             selectedUkuranPerusahaan['id'],
-                        'master_company_size_name':
-                            selectedUkuranPerusahaan['name'],
                       };
 
                       _simpan(perusahaanUpdate);
@@ -225,7 +223,7 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
 
   _simpan(dynamic perusahaanUpdate) {
     String token = loginInfo['data']['token'];
-    String perusahaanId = widget.profilPerusahaan['unique_id'];
+    String perusahaanId = widget.profilPerusahaan['id'];
 
     //widget.profilPerusahaan;
 
@@ -240,6 +238,7 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
               context: context,
               onSuccess: (response) {
                 setState(() {
+                  Navigator.of(context).pop('OK');
                   // infoUkuranPerusahaan.addAll(response['data']);
                   // for (var ukuran in infoUkuranPerusahaan) {
                   //   infoUkuranPerusahaanString.add(ukuran['name']);

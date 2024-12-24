@@ -138,11 +138,19 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
                   width: 200,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
                         builder: (context) => UbahProfilPerusahaan(
                           profilPerusahaan: _profilPerusahaan,
                         ),
-                      ));
+                      ))
+                          .then(
+                        (value) {
+                          if (value == 'OK') {
+                            _getProfilPerusahaan();
+                          }
+                        },
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -165,11 +173,19 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
                     title: "Informasi Akun",
                     icon: Icons.info,
                     onPress: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
                         builder: (context) => InformasiAkunPerusahaan(
                           profilPerusahaan: _profilPerusahaan,
                         ),
-                      ));
+                      ))
+                          .then(
+                        (value) {
+                          if (value == 'OK') {
+                            _getProfilPerusahaan();
+                          }
+                        },
+                      );
                     }),
                 ProfileMenuWidget(
                     title: "Alamat Perusahaan",
