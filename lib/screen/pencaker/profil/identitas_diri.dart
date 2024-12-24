@@ -492,14 +492,15 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('${dataPengalaman['title']}'),
                                 Text(
-                                  '${dataPengalaman['company_name']}|${dataPengalaman['master_employment_type_name']}',
+                                    '${dataPengalaman['title']} (${dataPengalaman['master_employment_type_name']})'),
+                                Text(
+                                  '${dataPengalaman['company_name']} ',
                                   style: const TextStyle(
                                       fontStyle: FontStyle.italic),
                                 ),
                                 Text(
-                                  '${dataPengalaman['start_month']} ${dataPengalaman['start_year']} - ${dataPengalaman['end_month']} ${dataPengalaman['start_year']}',
+                                  '${dataPengalaman['start_month']} ${dataPengalaman['start_year']} - ${dataPengalaman['is_currently_working'] == '1' ? 'Sekarang' : ''} ${dataPengalaman['is_currently_working'] == '0' ? (dataPengalaman['end_month']) : ''} ${dataPengalaman['is_currently_working'] == '0' ? (dataPengalaman['end_year']) : ''}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),

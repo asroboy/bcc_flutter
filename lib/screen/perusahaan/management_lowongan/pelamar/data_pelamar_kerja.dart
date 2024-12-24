@@ -9,6 +9,7 @@ import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/jadwal_interview.dart';
+import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/terima_kerja.dart';
 import 'package:bcc/screen/perusahaan/management_lowongan/pelamar/ubah_jadwal_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -302,52 +303,68 @@ class _DataPelamarKerjaState extends State<DataPelamarKerja>
         : IconButton(
             padding: const EdgeInsets.all(3),
             onPressed: () {
-              showAlertDialogWithAction2(
-                  'Apakah Anda yakin merubah status Pelamar ini untuk masuk ke proses  ${_getStatusUpdateInfo()}',
-                  context, () {
-                Navigator.of(context).pop();
-              }, () {
-                Navigator.of(context).pop();
-                setState(() {
-                  _isLoading = true;
-                });
-                if (mlowongan['status'] == 'ACCEPTED') {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      String tglNow =
-                          DateFormat('yyyy-MM-dd').format(DateTime.now());
-                      // String tglNow2 = DateFormat(
-                      //         'yyyy-MM-dd HH:mm:ss')
-                      //     .format(DateTime.now());
-                      dynamic newJadwal = {
-                        'jobseeker_id': mlowongan['jobseeker_id'],
-                        'company_job_application_id': mlowongan['id'],
-                        'company_id': mlowongan['company_id'],
-                        'company_job_id': mlowongan['company_job_id'],
-                        'description': '',
-                        'schedule_date': tglNow,
-                        'created_by': mlowongan['company_id'],
-                      };
-                      return UbahJadwalDialog(
-                        title: 'Buat Jadwal Interview',
-                        jadwal: newJadwal,
-                        onSave: (data) {
-                          if (data != null) {
-                            Navigator.of(context).pop();
-                            setState(() {
-                              _isLoading = true;
-                              _simpanJadwal(data, mlowongan);
-                            });
-                          }
-                        },
-                      );
-                    },
-                  );
-                } else {
-                  _updateStatusLamaran(lamaran: mlowongan);
-                }
-              }, 'Batal', 'OK');
+              if (mlowongan['status'] == 'INTERVIEW') {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                  builder: (context) => TerimaKerja(
+                    lamaran: mlowongan,
+                  ),
+                ))
+                    .then(
+                  (value) {
+                    if (value == 'OK') {
+                      _updateStatusLamaran(lamaran: mlowongan);
+                    }
+                  },
+                );
+              } else {
+                showAlertDialogWithAction2(
+                    'Apakah Anda yakin merubah status Pelamar ini untuk masuk ke proses  ${_getStatusUpdateInfo()}',
+                    context, () {
+                  Navigator.of(context).pop();
+                }, () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  if (mlowongan['status'] == 'ACCEPTED') {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        String tglNow =
+                            DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        // String tglNow2 = DateFormat(
+                        //         'yyyy-MM-dd HH:mm:ss')
+                        //     .format(DateTime.now());
+                        dynamic newJadwal = {
+                          'jobseeker_id': mlowongan['jobseeker_id'],
+                          'company_job_application_id': mlowongan['id'],
+                          'company_id': mlowongan['company_id'],
+                          'company_job_id': mlowongan['company_job_id'],
+                          'description': '',
+                          'schedule_date': tglNow,
+                          'created_by': mlowongan['company_id'],
+                        };
+                        return UbahJadwalDialog(
+                          title: 'Buat Jadwal Interview',
+                          jadwal: newJadwal,
+                          onSave: (data) {
+                            if (data != null) {
+                              Navigator.of(context).pop();
+                              setState(() {
+                                _isLoading = true;
+                                _simpanJadwal(data, mlowongan);
+                              });
+                            }
+                          },
+                        );
+                      },
+                    );
+                  } else {
+                    _updateStatusLamaran(lamaran: mlowongan);
+                  }
+                }, 'Batal', 'OK');
+              }
             },
             icon: Container(
               padding: const EdgeInsets.all(10),

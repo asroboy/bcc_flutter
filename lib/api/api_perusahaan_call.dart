@@ -75,6 +75,14 @@ class ApiPerusahaanCall {
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
 
+  Future<dynamic> tambahkanUserExperienceTerimaKerja(
+      {required dynamic data, required String token}) {
+    String apiPath = '${Constants.host}${Constants.pathPengalamanBekerja}';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
   Future<dynamic> getPelamarByLowongan(
       String lowonganId, String token, String status) {
     String apiPath =
