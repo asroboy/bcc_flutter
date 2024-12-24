@@ -232,7 +232,9 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
                     icon: Icons.password,
                     onPress: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const UbahPassword(),
+                        builder: (context) => UbahPassword(
+                          profilPerusahaan: _profilPerusahaan,
+                        ),
                       ));
                     }),
                 ProfileMenuWidget(

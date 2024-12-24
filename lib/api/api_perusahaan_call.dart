@@ -17,6 +17,17 @@ class ApiPerusahaanCall {
         .requestAuthenticatedDataPut(token);
   }
 
+  Future<dynamic> updatePasswordPerusahaan(
+      {required String idPerusahaan,
+      required String token,
+      required dynamic data}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathUbahPasswordPerusahaan}$idPerusahaan';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
   Future<dynamic> updateJobInterview(
       String jobInterviewId, dynamic data, String token) {
     String apiPath =

@@ -36,6 +36,7 @@ class Constants {
 
 //PERUSAHAAN
   static String pathProfilPerusahaan = 'admin/company/';
+  static String pathUbahPasswordPerusahaan = 'admin/company/change_password/';
   static String pathAlamatPerusahaan =
       'admin/company_address'; // /api/admin/company_address/880
   static String pathCompanyJob =
