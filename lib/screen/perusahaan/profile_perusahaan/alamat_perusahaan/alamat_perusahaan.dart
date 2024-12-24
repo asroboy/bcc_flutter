@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/alamat_perusahaan/tambah_alamat_perusahaan.dart';
@@ -64,9 +65,19 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context)
+              .push(MaterialPageRoute(
             builder: (context) => const TambahAlamatPerusahaan(),
-          ));
+          ))
+              .then((value) {
+            if (value == 'OK') {
+              setState(() {
+                isLoading = true;
+                _alamats.clear();
+              });
+              _getAlamatPerusahaan();
+            }
+          });
         },
         child: const Icon(Icons.add),
       ),
@@ -78,6 +89,7 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
           : ListView.builder(
               itemCount: _alamats.length,
               itemBuilder: (context, index) {
+                dynamic alamat = _alamats[index];
                 return Padding(
                   padding: const EdgeInsets.all(5),
                   child: Card(
@@ -113,11 +125,78 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
                           children: [
                             (_alamats[index]['is_primary'] != '1')
                                 ? IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.check))
+                                    padding: const EdgeInsets.all(3),
+                                    onPressed: () {
+                                      // Navigator.of(context).push(MaterialPageRoute(
+                                      //   builder: (context) => JadwalInterview(
+                                      //     jobApplication: mlowongan,
+                                      //   ),
+                                      // ));
+                                    },
+                                    icon: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: const Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ))
                                 : const Center(),
                             IconButton(
-                                onPressed: () {}, icon: const Icon(Icons.edit))
+                                padding: const EdgeInsets.all(3),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        TambahAlamatPerusahaan(
+                                      alamat: alamat,
+                                    ),
+                                  ));
+                                },
+                                icon: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  ),
+                                )),
+                            IconButton(
+                                padding: const EdgeInsets.all(3),
+                                onPressed: () {
+                                  showAlertDialogWithAction2(
+                                      "Apakah kamu yakin menghapus data ini?",
+                                      context, () {
+                                    Navigator.of(context).pop();
+                                  }, () {
+                                    Navigator.of(context).pop();
+                                    String idAlamat = alamat['id'];
+
+                                    showLoaderDialog(
+                                        context: context,
+                                        message: 'Harap tunggu...');
+
+                                    _hapus(idAlamat);
+                                  }, 'Batal', 'OK');
+                                },
+                                icon: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                ))
                           ],
                         )
                       ],
@@ -126,6 +205,63 @@ class _AlamatPerusahaanState extends State<AlamatPerusahaan> {
                 );
               },
             ),
+    );
+  }
+
+  _hapus(String idAlamat) {
+    String token = loginInfo['data']['token'];
+    log('data $idAlamat');
+    _apiPerusahaanCall
+        .hapusAlamatPerusahaan(
+      idAlamat: idAlamat,
+      token: token,
+    )
+        .then(
+      (value) {
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                setState(() {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    isLoading = true;
+                    _alamats.clear();
+                  });
+                  _getAlamatPerusahaan();
+                });
+              });
+        }
+      },
+    );
+  }
+
+  showLoaderDialog({required BuildContext context, String? message}) {
+    AlertDialog alert = AlertDialog(
+      content: SizedBox(
+        height: 80,
+        width: MediaQuery.of(context).size.width * 0.75,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.50,
+                  margin: const EdgeInsets.only(left: 15),
+                  child: Text(message ?? 'Loading...')),
+            ],
+          ),
+        ),
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

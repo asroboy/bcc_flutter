@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
 import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
@@ -50,6 +51,8 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
   String? selectedDesaString;
   dynamic selectedKecamatan;
   dynamic selectedDesa;
+
+  bool? _alamatUtama = false;
 
   _getProvinsi() {
     // String idPerusahaan = loginInfo['data']['id'];
@@ -327,47 +330,97 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
                 },
               ),
               Row(
+                children: [
+                  Checkbox(
+                      value: _alamatUtama,
+                      onChanged: (value) {
+                        setState(() {
+                          _alamatUtama = value;
+                        });
+                      }),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Text('Alamat utama'),
+                  )
+                ],
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 15, right: 15),
                     child: ElevatedButton(
                         onPressed: () {
-                          dynamic perusahaanUpdate = {
-                            // 'id': widget.profilPerusahaan['id'],
-                            // 'name': namaController.text,
-                            // 'tagline': taglineController.text,
-                            // 'about_company': tentangController.text,
-                            // 'phone_number_company': teleponPerusahaan.text,
-                            // 'website': websitePerusahaan.text,
-                            // 'founded': tahunPendiaranController.text,
-                            // 'master_company_size_id':
-                            //     selectedUkuranPerusahaan['id'],
-                            // 'master_company_size_name':
-                            //     selectedUkuranPerusahaan['name'],
+                          if (_selectedJenisKantor == null) {
+                            showAlertDialog(
+                                'Harap pilih jenis kantor', context);
+                            return;
+                          }
+
+                          if (_selectedProvinsi == null) {
+                            showAlertDialog('Harap pilih provinsi', context);
+                            return;
+                          }
+                          if (_selectedKabko == null) {
+                            showAlertDialog(
+                                'Harap pilih kota/kabupaten', context);
+                            return;
+                          }
+                          if (selectedKecamatan == null) {
+                            showAlertDialog('Harap pilih kecamatan', context);
+                            return;
+                          }
+                          if (selectedDesa == null) {
+                            showAlertDialog('Harap pilih desa', context);
+                            return;
+                          }
+                          if (_alamatController.text == '') {
+                            showAlertDialog('Harap isi alamat', context);
+                            return;
+                          }
+
+                          showLoaderDialog(
+                              context: context, message: 'Harap tunggu..');
+                          String idPerusahaan = loginInfo['data']['id'];
+
+                          dynamic alamatPerusahaan = {
+                            'company_id': idPerusahaan,
+                            'title': _selectedJenisKantor,
+                            'master_province_id': _selectedProvinsi['id'],
+                            'master_city_id': _selectedKabko['id'],
+                            'master_district_id': selectedKecamatan['id'],
+                            'master_village_id': selectedDesa['id'],
+                            'address': _alamatController.text,
+                            'is_primary': _alamatUtama == true ? 1 : 0
                           };
 
-                          _simpan(perusahaanUpdate);
+                          _simpan(alamatPerusahaan);
                         },
                         child: const Row(
                           children: [Icon(Icons.save), Text('Simpan')],
                         )),
                   )
                 ],
-              )
+              ),
+              const Padding(padding: EdgeInsets.only(top: 20))
             ],
           ),
         ));
   }
 
-  _simpan(dynamic perusahaanUpdate) {
+  _simpan(dynamic dataAlamatPerusahaan) {
     String token = loginInfo['data']['token'];
-    // String perusahaanId = widget.profilPerusahaan['unique_id'];
+    String idPerusahaan = loginInfo['data']['id'];
 
     //widget.profilPerusahaan;
 
-    log('data $perusahaanUpdate');
-    _apiPerusahaanCall.simpanProfilPerusahaan('', token, perusahaanUpdate).then(
+    log('data $dataAlamatPerusahaan');
+    _apiPerusahaanCall
+        .simpanAlamatPerusahaan(
+            idPerusahaan: idPerusahaan,
+            token: token,
+            data: dataAlamatPerusahaan)
+        .then(
       (value) {
         if (mounted) {
           _apiHelper.apiCallResponseHandler(
@@ -375,18 +428,43 @@ class _TambahAlamatPerusahaanState extends State<TambahAlamatPerusahaan> {
               context: context,
               onSuccess: (response) {
                 setState(() {
-                  // infoUkuranPerusahaan.addAll(response['data']);
-                  // for (var ukuran in infoUkuranPerusahaan) {
-                  //   infoUkuranPerusahaanString.add(ukuran['name']);
-                  // }
-
-                  // _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
-                  // _dataPendidikanPencaker.addAll(biodataPencaker['education']);
-                  // _dataSertifikat.addAll(biodataPencaker['certificate']);
-                  // _dataSkill.addAll(biodataPencaker['skill']);
+                  Navigator.of(context).pop();
+                  showAlertDialogWithAction('Data Berhasil disimpan', context,
+                      () {
+                    Navigator.of(context).pop('OK');
+                    Navigator.of(context).pop('OK');
+                  }, 'OK');
                 });
               });
         }
+      },
+    );
+  }
+
+  showLoaderDialog({required BuildContext context, String? message}) {
+    AlertDialog alert = AlertDialog(
+      content: SizedBox(
+        height: 80,
+        width: MediaQuery.of(context).size.width * 0.75,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.50,
+                  margin: const EdgeInsets.only(left: 15),
+                  child: Text(message ?? 'Loading...')),
+            ],
+          ),
+        ),
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
       },
     );
   }

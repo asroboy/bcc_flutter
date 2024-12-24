@@ -1,6 +1,7 @@
 import 'package:bcc/screen/perusahaan/profile_perusahaan/header_label.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/row_data.dart';
+import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_pic_perusahaan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,11 @@ class _PicState extends State<Pic> {
     ProfilePerusahaanModel profile = context.watch<ProfilePerusahaanModel>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const UbahPICPerusahaan(),
+          ));
+        },
         child: const Icon(Icons.edit),
       ),
       appBar: AppBar(

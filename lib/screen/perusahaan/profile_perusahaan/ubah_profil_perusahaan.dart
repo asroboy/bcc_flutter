@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
 import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
@@ -53,11 +54,6 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
                           widget.profilPerusahaan['master_company_size_id'],
                     );
                   }
-
-                  // _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
-                  // _dataPendidikanPencaker.addAll(biodataPencaker['education']);
-                  // _dataSertifikat.addAll(biodataPencaker['certificate']);
-                  // _dataSkill.addAll(biodataPencaker['skill']);
                 });
               });
         }
@@ -207,7 +203,8 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
                         'master_company_size_id':
                             selectedUkuranPerusahaan['id'],
                       };
-
+                      showLoaderDialog(
+                          context: context, message: 'Harap tunggu...');
                       _simpan(perusahaanUpdate);
                     },
                     child: const Row(
@@ -233,24 +230,69 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
         .then(
       (value) {
         if (mounted) {
+          Navigator.of(context).pop();
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                showAlertDialogWithAction(
+                    'Profil Perusahan berhasil disimpan', context, () {
+                  _getProfilPerusahaan();
+                }, 'OK');
+              });
+        }
+      },
+    );
+  }
+
+  _getProfilPerusahaan() {
+    String idPerusahaan = loginInfo['data']['id'];
+    String token = loginInfo['data']['token'];
+    _apiPerusahaanCall.getProfilPerusahaan(idPerusahaan, token).then(
+      (value) {
+        if (mounted) {
+          Navigator.of(context).pop();
           _apiHelper.apiCallResponseHandler(
               response: value,
               context: context,
               onSuccess: (response) {
                 setState(() {
-                  Navigator.of(context).pop('OK');
-                  // infoUkuranPerusahaan.addAll(response['data']);
-                  // for (var ukuran in infoUkuranPerusahaan) {
-                  //   infoUkuranPerusahaanString.add(ukuran['name']);
-                  // }
+                  dynamic profilPerusahaan = response['data'];
+                  Provider.of<ProfilePerusahaanModel>(context, listen: false)
+                      .set(profilPerusahaan);
 
-                  // _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
-                  // _dataPendidikanPencaker.addAll(biodataPencaker['education']);
-                  // _dataSertifikat.addAll(biodataPencaker['certificate']);
-                  // _dataSkill.addAll(biodataPencaker['skill']);
+                  Navigator.of(context).pop();
                 });
               });
         }
+      },
+    );
+  }
+
+  showLoaderDialog({required BuildContext context, String? message}) {
+    AlertDialog alert = AlertDialog(
+      content: SizedBox(
+        height: 80,
+        width: MediaQuery.of(context).size.width * 0.75,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.50,
+                  margin: const EdgeInsets.only(left: 15),
+                  child: Text(message ?? 'Loading...')),
+            ],
+          ),
+        ),
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
       },
     );
   }

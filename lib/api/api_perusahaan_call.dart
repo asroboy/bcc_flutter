@@ -66,6 +66,23 @@ class ApiPerusahaanCall {
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
 
+  Future<dynamic> simpanAlamatPerusahaan(
+      {dynamic data, required String idPerusahaan, required String token}) {
+    String apiPath = '${Constants.host}${Constants.pathAlamatPerusahaan}';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> hapusAlamatPerusahaan(
+      {required String idAlamat, required String token}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathAlamatPerusahaan}/$idAlamat';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath)
+        .requestAuthenticatedDataDelete(token);
+  }
+
   Future<dynamic> getUkuranPerusahaan(String token) {
     String apiPath = '${Constants.host}${Constants.pathMasterCompanySize}';
     log('path $apiPath');
