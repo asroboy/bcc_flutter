@@ -46,7 +46,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
         idPencaker = widget.pencakerId.toString();
       }
     } else {
-      idPencaker = loginInfo['data']['id'];
+      idPencaker = loginInfo['data']['unique_id'];
     }
 
     _apiCall

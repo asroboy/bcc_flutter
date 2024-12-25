@@ -62,4 +62,8 @@ class Constants {
   static String loginInfo = 'login-info';
   static String userPencaker = 'pencaker';
   static String userPerusahaan = 'perusahaan';
+  static String infoEmailNotVerified =
+      'Email Kamu belum diverifikasi, silahkan verifikasi email Kamu untuk menggunakan semua fitur';
+  static String infoEmailNotVerified2 =
+      'silahkan verifikasi email Kamu untuk menggunakan semua fitur';
 }

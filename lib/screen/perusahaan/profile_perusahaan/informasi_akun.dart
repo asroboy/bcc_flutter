@@ -1,7 +1,7 @@
 import 'package:bcc/screen/perusahaan/profile_perusahaan/header_label.dart';
-import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/row_data.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_profil_perusahaan.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,13 +18,13 @@ class InformasiAkunPerusahaan extends StatefulWidget {
 class _InformasiAkunPerusahaanState extends State<InformasiAkunPerusahaan> {
   @override
   Widget build(BuildContext context) {
-    ProfilePerusahaanModel profile = context.watch<ProfilePerusahaanModel>();
+    UserLoginModel profile = context.watch<UserLoginModel>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Future<dynamic> req = Navigator.of(context).push(MaterialPageRoute(
             builder: (context_) => UbahProfilPerusahaan(
-              profilPerusahaan: profile.profil,
+              profilPerusahaan: profile.profilePerusahaan,
             ),
           ));
 
@@ -49,64 +49,65 @@ class _InformasiAkunPerusahaanState extends State<InformasiAkunPerusahaan> {
           const HeaderLabel(label: 'Informasi Umum'),
           RowData(
             label: 'Username',
-            value: profile.profil['username'] ?? '',
+            value: profile.profilePerusahaan['username'] ?? '',
           ),
           RowData(
             label: 'Email',
-            value: profile.profil['email'] ?? "",
+            value: profile.profilePerusahaan['email'] ?? "",
           ),
           const HeaderLabel(label: 'Info Perusahaan'),
           RowData(
             label: 'Nama',
-            value: profile.profil['name'] ?? '',
+            value: profile.profilePerusahaan['name'] ?? '',
           ),
           RowData(
             label: 'Tentang',
-            value: profile.profil['about_company'] ?? '',
+            value: profile.profilePerusahaan['about_company'] ?? '',
           ),
           RowData(
             label: 'Tagline',
-            value: profile.profil['tagline'] ?? '',
+            value: profile.profilePerusahaan['tagline'] ?? '',
           ),
           RowData(
             label: 'Telepon',
-            value: profile.profil['phone_number_company'] ?? '',
+            value: profile.profilePerusahaan['phone_number_company'] ?? '',
           ),
           RowData(
             label: 'Website',
-            value: profile.profil['website'] ?? '',
+            value: profile.profilePerusahaan['website'] ?? '',
           ),
           RowData(
             label: 'Ukuran Perusahaan',
-            value: profile.profil['master_company_size_name'] ?? '',
+            value: profile.profilePerusahaan['master_company_size_name'] ?? '',
           ),
           RowData(
             label: 'Tahun Pendirian',
-            value: profile.profil['founded'] ?? '',
+            value: profile.profilePerusahaan['founded'] ?? '',
           ),
           RowData(
             label: 'Klasifikasi',
-            value: profile.profil['grade'] ?? '',
+            value: profile.profilePerusahaan['grade'] ?? '',
           ),
           RowData(
             label: 'Industri',
-            value: profile.profil['master_industry_name'] ?? '',
+            value: profile.profilePerusahaan['master_industry_name'] ?? '',
           ),
           RowData(
             label: 'TK Perempuan',
-            value: profile.profil['permanent'] ?? '',
+            value: profile.profilePerusahaan['permanent'] ?? '',
           ),
           RowData(
             label: 'TK Laki-laki',
-            value: profile.profil['pkwt'] ?? '',
+            value: profile.profilePerusahaan['pkwt'] ?? '',
           ),
           RowData(
             label: 'TKA Perempuan',
-            value: profile.profil['internship'] ?? '0',
+            value: profile.profilePerusahaan['internship'] ?? '0',
           ),
           RowData(
             label: 'TKA Laki-laki',
-            value: profile.profil['termination_of_employment'] ?? '0',
+            value:
+                profile.profilePerusahaan['termination_of_employment'] ?? '0',
           ),
         ],
       ),

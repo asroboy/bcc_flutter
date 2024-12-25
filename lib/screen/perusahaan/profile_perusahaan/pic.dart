@@ -1,7 +1,7 @@
 import 'package:bcc/screen/perusahaan/profile_perusahaan/header_label.dart';
-import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/row_data.dart';
 import 'package:bcc/screen/perusahaan/profile_perusahaan/ubah_pic_perusahaan.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class Pic extends StatefulWidget {
 class _PicState extends State<Pic> {
   @override
   Widget build(BuildContext context) {
-    ProfilePerusahaanModel profile = context.watch<ProfilePerusahaanModel>();
+    UserLoginModel profile = context.watch<UserLoginModel>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -82,15 +82,15 @@ class _PicState extends State<Pic> {
           const Padding(padding: EdgeInsets.only(bottom: 20)),
           RowData(
             label: 'No. KTP Direktur/HRD',
-            value: profile.profil['director_ktp'] ?? '',
+            value: profile.profilPerusahaan['director_ktp'] ?? '',
           ),
           RowData(
             label: 'Nama Direktur/HRD',
-            value: profile.profil['director_name'] ?? '',
+            value: profile.profilPerusahaan['director_name'] ?? '',
           ),
           RowData(
             label: 'Telepon Direktur',
-            value: profile.profil['director_phone_number'] ?? '',
+            value: profile.profilPerusahaan['director_phone_number'] ?? '',
           ),
         ],
       ),

@@ -5,8 +5,8 @@ import 'package:bcc/contants.dart';
 import 'package:bcc/providers/bcc_provider.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/pencaker/dashboard_tab_pencaker.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:bcc/screen/perusahaan/dashboard_tab_perusahaan.dart';
-import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,19 +18,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   if (Platform.isAndroid) {
-    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+    await InAppWebViewController.setWebContentsDebuggingEnabled(true);
 
-    var swAvailable = await AndroidWebViewFeature.isFeatureSupported(
-        AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
-    var swInterceptAvailable = await AndroidWebViewFeature.isFeatureSupported(
-        AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+    var swAvailable = await WebViewFeature.isFeatureSupported(
+        WebViewFeature.SERVICE_WORKER_BASIC_USAGE);
+    var swInterceptAvailable = await WebViewFeature.isFeatureSupported(
+        WebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
 
     if (swAvailable && swInterceptAvailable) {
-      AndroidServiceWorkerController serviceWorkerController =
-          AndroidServiceWorkerController.instance();
+      ServiceWorkerController serviceWorkerController =
+          ServiceWorkerController.instance();
 
-      await serviceWorkerController
-          .setServiceWorkerClient(AndroidServiceWorkerClient(
+      await serviceWorkerController.setServiceWorkerClient(ServiceWorkerClient(
         shouldInterceptRequest: (request) async {
           log('$request');
           return null;
@@ -43,7 +42,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BccProvider()),
-        ChangeNotifierProvider(create: (_) => ProfilePerusahaanModel()),
+        ChangeNotifierProvider(create: (_) => UserLoginModel()),
       ],
       child: const MyApp(),
     ),

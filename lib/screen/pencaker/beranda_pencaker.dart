@@ -1,3 +1,4 @@
+// import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/landing_grid_pencaker.dart';
 import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
@@ -27,12 +28,18 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
             userInfo['photo'] == '' ||
             isErrorImageProfile)
         ? const AssetImage('assets/images/male.png')
-        : Image.network(
-            userInfo['photo'],
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset('assets/images/male.png');
-            },
-          ));
+        : NetworkImage(userInfo['photo']));
+
+    // ((userInfo['photo'] == null ||
+    //         userInfo['photo'] == '' ||
+    //         isErrorImageProfile)
+    //     ? const AssetImage('assets/images/male.png')
+    //     : Image.network(
+    //         userInfo['photo'],
+    //         errorBuilder: (context, error, stackTrace) {
+    //           return Image.asset('assets/images/male.png');
+    //         },
+    //       ));
   }
 
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
@@ -49,7 +56,7 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard Pencari Kerja'),
+        title: const Text(''),
       ),
       body: ListView(children: [
         Stack(
@@ -138,20 +145,31 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                     fontSize: 19,
                     color: Theme.of(context).colorScheme.primary),
               ),
-              // Text(
-              //   '${userInfo['headline']}',
-              // ),
+
+              //  Text(
+              //     '${userInfo['headline']}',
+              //   ),
               Text(
                 '${userInfo['address']}',
                 textAlign: TextAlign.center,
               ),
+              userInfo['verified_email'] == '1'
+                  ? const Center()
+                  : Text(
+                      Constants.infoEmailNotVerified,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 255, 60, 0)),
+                    ),
               Container(
                 margin: const EdgeInsets.only(bottom: 10, top: 10),
                 height: 0.5,
                 color: Colors.white,
               ),
             ])),
-        const LandingGridPencaker(),
+        LandingGridPencaker(
+          userInfo: userInfo,
+        ),
       ]),
     );
   }

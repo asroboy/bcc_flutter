@@ -6,7 +6,7 @@ import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
-import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
@@ -32,8 +32,8 @@ class _UbahPICPerusahaanState extends State<UbahPICPerusahaan> {
 
   @override
   Widget build(BuildContext context) {
-    ProfilePerusahaanModel profile = context.watch<ProfilePerusahaanModel>();
-    dynamic profilPerusahaan = profile.profil;
+    UserLoginModel profile = context.watch<UserLoginModel>();
+    dynamic profilPerusahaan = profile.profilPerusahaan;
     _namaDirecturHRDController.text = profilPerusahaan['director_name'] ?? '';
     _ktpDirecturHRDController.text = profilPerusahaan['director_ktp'] ?? '';
     _telpDirecturHRDController.text =
@@ -143,8 +143,8 @@ class _UbahPICPerusahaanState extends State<UbahPICPerusahaan> {
               onSuccess: (response) {
                 setState(() {
                   dynamic profilPerusahaan = response['data'];
-                  Provider.of<ProfilePerusahaanModel>(context, listen: false)
-                      .set(profilPerusahaan);
+                  Provider.of<UserLoginModel>(context, listen: false)
+                      .setProfilePerusahaan(profilPerusahaan);
 
                   Navigator.of(context).pop('OK');
                 });

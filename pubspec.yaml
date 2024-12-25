@@ -86,6 +86,7 @@ flutter:
   assets:
     - assets/images/ICON_8.png
     - assets/images/
+    - assets/images/male.png
     - assets/icons/
   #   - images/a_dot_ham.jpeg
 

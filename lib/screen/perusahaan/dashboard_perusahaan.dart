@@ -3,7 +3,7 @@ import 'package:bcc/api/api_perusahaan_call.dart';
 import 'package:bcc/bccwidgets/bcc_loading_indicator.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/perusahaan/dashboard_perusahaan_grid.dart';
-import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
@@ -37,8 +37,8 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
               onSuccess: (response) {
                 setState(() {
                   _profilPerusahaan = response['data'];
-                  Provider.of<ProfilePerusahaanModel>(context, listen: false)
-                      .set(_profilPerusahaan);
+                  Provider.of<UserLoginModel>(context, listen: false)
+                      .setProfilePerusahaan(_profilPerusahaan);
                   // log('profil perusahaan result $_profilPerusahaan');
                   // _dataPengalamanBekerja.addAll(biodataPencaker['experience']);
                   // _dataPendidikanPencaker.addAll(biodataPencaker['education']);
@@ -64,7 +64,7 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
     double bodyHeight = MediaQuery.of(context).size.height - headerHeight;
 
     return Consumer(
-        builder: (context, ProfilePerusahaanModel model, _) => Scaffold(
+        builder: (context, UserLoginModel model, _) => Scaffold(
                 body: Scaffold(
                     body: Stack(children: [
               _isLoading
@@ -90,9 +90,10 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
                                     borderRadius: BorderRadius.circular(100),
                                     color: const Color.fromARGB(
                                         255, 209, 208, 208)),
-                                child: (model.profil == null ||
-                                        model.profil['logo'] == null ||
-                                        model.profil['logo'] == '')
+                                child: (model.profilPerusahaan == null ||
+                                        model.profilPerusahaan['logo'] ==
+                                            null ||
+                                        model.profilPerusahaan['logo'] == '')
                                     ? ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(100),
@@ -104,7 +105,7 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
                                         borderRadius:
                                             BorderRadius.circular(100),
                                         child: Image.network(
-                                          model.profil['logo'] ?? "",
+                                          model.profilPerusahaan['logo'] ?? "",
                                           fit: BoxFit.fill,
                                         )),
                               ),
@@ -119,9 +120,9 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
                                       style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
-                                      model.profil == null
+                                      model.profilPerusahaan == null
                                           ? "..."
-                                          : model.profil['name'],
+                                          : model.profilPerusahaan['name'],
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,

@@ -30,7 +30,7 @@ class BccBigMenuButton extends StatelessWidget {
               Icon(
                 iconData,
                 color: Colors.white,
-                size: 45,
+                size: 40,
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
               Text(

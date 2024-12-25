@@ -198,4 +198,13 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath)
         .requestAuthenticatedDataDelete(token);
   }
+
+  Future<dynamic> getDataPencakerByUniqueId(
+      {required dynamic pencakerUniqueId, required String token}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathDataPencaker}/$pencakerUniqueId/$token';
+    ' + pencakerUniqueId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
 }

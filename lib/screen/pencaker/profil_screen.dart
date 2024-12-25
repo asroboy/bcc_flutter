@@ -82,12 +82,7 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
             userInfo['photo'] == '' ||
             isErrorImageProfile)
         ? const AssetImage('assets/images/male.png')
-        : Image.network(
-            userInfo['photo'],
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset('assets/images/male.png');
-            },
-          ));
+        : NetworkImage(userInfo['photo']));
   }
 
   @override

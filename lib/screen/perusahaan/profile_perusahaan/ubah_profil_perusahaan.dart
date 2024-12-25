@@ -7,7 +7,7 @@ import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
 import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
-import 'package:bcc/screen/perusahaan/profile_perusahaan/profile_perusahaan_model.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
@@ -70,28 +70,28 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
 
   @override
   Widget build(BuildContext context) {
-    ProfilePerusahaanModel profModel = context.watch<ProfilePerusahaanModel>();
+    UserLoginModel profModel = context.watch<UserLoginModel>();
     TextEditingController usernameController =
-        TextEditingController(text: profModel.profil['username']);
+        TextEditingController(text: profModel.profilPerusahaan['username']);
     TextEditingController emailController =
-        TextEditingController(text: profModel.profil['email']);
+        TextEditingController(text: profModel.profilPerusahaan['email']);
     TextEditingController namaController =
-        TextEditingController(text: profModel.profil['name']);
+        TextEditingController(text: profModel.profilPerusahaan['name']);
 
     TextEditingController taglineController = TextEditingController(
-        text: profModel.profil['tagline'] == null ||
-                profModel.profil['tagline'] == 'null'
+        text: profModel.profilPerusahaan['tagline'] == null ||
+                profModel.profilPerusahaan['tagline'] == 'null'
             ? ''
-            : profModel.profil['tagline']);
-    TextEditingController tentangController =
-        TextEditingController(text: profModel.profil['about_company']);
-    TextEditingController teleponPerusahaan =
-        TextEditingController(text: profModel.profil['phone_number_company']);
+            : profModel.profilPerusahaan['tagline']);
+    TextEditingController tentangController = TextEditingController(
+        text: profModel.profilPerusahaan['about_company']);
+    TextEditingController teleponPerusahaan = TextEditingController(
+        text: profModel.profilPerusahaan['phone_number_company']);
 
     TextEditingController websitePerusahaan =
-        TextEditingController(text: profModel.profil['website']);
+        TextEditingController(text: profModel.profilPerusahaan['website']);
     TextEditingController tahunPendiaranController =
-        TextEditingController(text: profModel.profil['founded']);
+        TextEditingController(text: profModel.profilPerusahaan['founded']);
 
     return Scaffold(
       appBar: AppBar(
@@ -174,7 +174,7 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
                 const EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 10),
             data: infoUkuranPerusahaanString,
             value: selectedUkuranPerusahaanName == ''
-                ? profModel.profil['master_company_size_name']
+                ? profModel.profilPerusahaan['master_company_size_name']
                 : '',
             onChanged: (value) {
               setState(() {
@@ -258,8 +258,8 @@ class _UbahProfilPerusahaanState extends State<UbahProfilPerusahaan> {
               onSuccess: (response) {
                 setState(() {
                   dynamic profilPerusahaan = response['data'];
-                  Provider.of<ProfilePerusahaanModel>(context, listen: false)
-                      .set(profilPerusahaan);
+                  Provider.of<UserLoginModel>(context, listen: false)
+                      .setProfilePerusahaan(profilPerusahaan);
 
                   Navigator.of(context).pop();
                 });
