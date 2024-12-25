@@ -1,6 +1,5 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
-import 'package:bcc/bccwidgets/bcc_label.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_row_info2.dart';
 import 'package:bcc/contants.dart';

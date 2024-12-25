@@ -199,7 +199,6 @@ class _PerusahaanListScreenState extends State<PerusahaanListScreen> {
                                     setState(() {
                                       _isLoadingMoreData = true;
                                     });
-
                                     _fetchPerusahaanTerbaru();
                                   },
                                   child: const Text('Muat data selanjutnya')),

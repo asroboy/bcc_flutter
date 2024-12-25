@@ -27,6 +27,7 @@ class Constants {
   static String pathDataPelatihan = 'admin/schedule_blk';
   static String pathDataRiwayatPelatihan = 'admin/participant_blk';
   static String pathDataPelatihan2 = 'jobseeker/training';
+  static String pathDataPelatihanProof = '$serverDev/jobseeker/training/proof';
 
   static String pathLandingCompany = 'Comp';
   static String pathComp = 'jobseeker/Comp';
