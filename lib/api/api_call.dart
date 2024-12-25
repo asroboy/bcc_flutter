@@ -207,4 +207,12 @@ class ApiCall {
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
+
+  Future<dynamic> getJobInterview(
+      String idLamaran, String pelamarId, String token) {
+    String apiPath =
+        '${Constants.host}${Constants.pathJobInterview}?company_job_application_id=$idLamaran&jobseeker_id=$pelamarId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
 }

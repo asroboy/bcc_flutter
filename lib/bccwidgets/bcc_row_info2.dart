@@ -14,15 +14,19 @@ class BccRowInfo2 extends StatelessWidget {
         icon ?? const Center(),
         const Padding(padding: EdgeInsets.only(right: 10)),
         Flexible(
-            child: Text(
-          info,
-          textAlign: TextAlign.justify,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 12,
-            fontFamily: 'Jost',
-            fontWeight: FontWeight.normal,
-            letterSpacing: -0.10,
+            child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.65,
+          child: Text(
+            info,
+            textAlign: TextAlign.justify,
+            softWrap: true,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 12,
+              fontFamily: 'Jost',
+              fontWeight: FontWeight.normal,
+              letterSpacing: -0.10,
+            ),
           ),
         )),
       ],

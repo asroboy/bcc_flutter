@@ -8,6 +8,8 @@ class UserLoginModel extends ChangeNotifier {
   /// Internal, private state of the cart.
   dynamic profilePencaker;
 
+  bool isLoading = true;
+
   final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
   final ApiCall _apiCall = ApiCall();
   // final ApiHelper _apiHelper = ApiHelper();
@@ -27,6 +29,12 @@ class UserLoginModel extends ChangeNotifier {
   }
 
   reloadDataPencaker() {
+    isLoading = true;
+    notifyListeners();
+    _getProfilPencaker();
+  }
+
+  loadDataPencaker() {
     _getProfilPencaker();
   }
 
@@ -41,6 +49,7 @@ class UserLoginModel extends ChangeNotifier {
         .then(
       (response) {
         profilePencaker = response['data'];
+        isLoading = false;
         notifyListeners();
       },
     );
@@ -64,6 +73,12 @@ class UserLoginModel extends ChangeNotifier {
   }
 
   reloadDataCompany() {
+    isLoading = true;
+    notifyListeners();
+    _getCompanyProfile();
+  }
+
+  loadDataCompany() {
     _getCompanyProfile();
   }
 
@@ -75,6 +90,7 @@ class UserLoginModel extends ChangeNotifier {
     _apiPerusahaanCall.getProfilPerusahaan(uniqueIdCompany, token).then(
       (response) {
         profilePerusahaan = response['data'];
+        isLoading = false;
         notifyListeners();
       },
     );

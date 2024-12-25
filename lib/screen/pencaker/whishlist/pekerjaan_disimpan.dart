@@ -84,11 +84,9 @@ class _PekerjaanDisimpanState extends State<PekerjaanDisimpan> {
         ),
         body: ListView(children: [
           Card(
-              margin: const EdgeInsets.only(
-                  left: 15, right: 15, top: 10, bottom: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 5, bottom: 5, left: 15, right: 15),
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +96,7 @@ class _PekerjaanDisimpanState extends State<PekerjaanDisimpan> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: 20),
+                          padding: const EdgeInsets.only(right: 15),
                           child: widget.jobWhish != null
                               ? Image.asset(
                                   'assets/images/dummy_logo_pt.png',

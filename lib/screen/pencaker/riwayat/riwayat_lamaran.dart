@@ -86,6 +86,7 @@ class _RiwayatLamaranState extends State<RiwayatLamaran> {
                     return CardListPekerjaan(
                       whishedJob: whishedJob,
                       showAjukanLamaran: false,
+                      isWhishList: false,
                     );
                   },
                 ),

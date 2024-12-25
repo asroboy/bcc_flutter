@@ -91,6 +91,7 @@ class _ListPekerjaanDisimpanState extends State<ListPekerjaanDisimpan> {
                     return CardListPekerjaan(
                       whishedJob: whishedJob,
                       showAjukanLamaran: true,
+                      isWhishList: true,
                     );
                   },
                 ),
