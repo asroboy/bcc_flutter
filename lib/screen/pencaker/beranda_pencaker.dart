@@ -1,5 +1,7 @@
 // import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/contants.dart';
+import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/pencaker/landing_grid_pencaker.dart';
 import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
 import 'package:bcc/state_management/user_login_model.dart';
@@ -59,7 +61,31 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
   void initState() {
     super.initState();
     userInfo = loginInfo['data'];
-    Provider.of<UserLoginModel>(context, listen: false).loadDataPencaker();
+    Provider.of<UserLoginModel>(context, listen: false).loadDataPencaker(
+      (response) {
+        if (response['message'] ==
+            'Token Akses Sudah Kedaluarsa, Silahkan Login Kembali.') {
+          showAlertDialogWithAction(response['message'], context, () {
+            _logout(context);
+          }, 'Ok');
+        } else {
+          showAlertDialog(
+              response['message'] ??
+                  'Terjadi kendala silahkan coba lagi setelah beberapa saat',
+              context);
+        }
+      },
+    );
+  }
+
+  _logout(BuildContext context) {
+    GetStorage().remove(Constants.loginInfo);
+    GetStorage().remove(Constants.userType);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LandingTab()),
+      (Route<dynamic> route) => true,
+    );
   }
 
   @override

@@ -68,39 +68,6 @@ class _PelamarTabState extends State<PelamarTab> {
           ),
           title: const Text('Data Pelamar'),
         ),
-        // bottomNavigationBar: BottomNavigationBar(
-        //   landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-        //   backgroundColor: Colors.transparent,
-        //   elevation: 0,
-        //   useLegacyColorScheme: false,
-        //   type: BottomNavigationBarType.shifting,
-        //   selectedItemColor: Constants.colorBiruGelap,
-        //   unselectedItemColor: Constants.colorGrey,
-        //   currentIndex: _selectedIndex, //New
-        //   onTap: _onItemTapped,
-        //   items: const <BottomNavigationBarItem>[
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.list_alt),
-        //       label: 'Pelamar',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.groups_2),
-        //       label: 'Lolos Adm.',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.chat),
-        //       label: 'Interview',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.work),
-        //       label: 'Diterima',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.work_off),
-        //       label: 'Ditolak',
-        //     ),
-        //   ],
-        // ),
         body: TabBarView(children: pages),
       ),
     );

@@ -894,7 +894,7 @@ class _RegisterPencariKerjaNextScreenState
                           barrierDismissible: false,
                           context: context,
                           builder: (_) {
-                            return Dialog(
+                            return const Dialog(
                               // The background color
                               backgroundColor: Colors.white,
                               child: Padding(

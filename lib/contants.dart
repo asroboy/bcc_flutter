@@ -24,6 +24,9 @@ class Constants {
   static String pathDataPencaker = 'admin/jobseeker';
   static String pathDataMasterSkill = 'admin/master_skill';
   static String pathDataJobseekerSkill = 'admin/jobseeker_skill';
+  static String pathDataPelatihan = 'admin/schedule_blk';
+  static String pathDataRiwayatPelatihan = 'admin/participant_blk';
+  static String pathDataPelatihan2 = 'jobseeker/training';
 
   static String pathLandingCompany = 'Comp';
   static String pathComp = 'jobseeker/Comp';

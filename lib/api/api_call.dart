@@ -215,4 +215,31 @@ class ApiCall {
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
+
+  Future<dynamic> getPelatihanKerja(
+      {required int page,
+      required int limit,
+      String? cari,
+      required String jobseekerId}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathDataPelatihan2}?sort=desc&orderBy=id&page=$page&limit=$limit&jobseeker_id=$jobseekerId';
+
+    if (cari != null) {
+      apiPath += '&training_name=$cari';
+    }
+    log('path $apiPath');
+
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getRiwayatPelatihanKerja(
+      {required int page,
+      required int limit,
+      String? cari,
+      required String jobseekerId}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathDataRiwayatPelatihan}?sort=desc&orderBy=id&page=$page&limit=$limit&jobseeker_id=$jobseekerId';
+
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
 }

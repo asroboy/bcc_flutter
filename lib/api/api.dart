@@ -325,7 +325,7 @@ class ApiHelper {
 
   apiCallResponseHandler(
       {required dynamic response,
-      required BuildContext? context,
+      BuildContext? context,
       required Function onSuccess,
       Function? onFailedCallback}) {
     // log('response $response');

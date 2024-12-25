@@ -12,7 +12,6 @@ class UserLoginModel extends ChangeNotifier {
 
   final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
   final ApiCall _apiCall = ApiCall();
-  // final ApiHelper _apiHelper = ApiHelper();
 
   /// An unmodifiable view of the items in the cart.
   dynamic get profilPencaker => profilePencaker;
@@ -31,14 +30,14 @@ class UserLoginModel extends ChangeNotifier {
   reloadDataPencaker() {
     isLoading = true;
     notifyListeners();
-    _getProfilPencaker();
+    _getProfilPencaker(null);
   }
 
-  loadDataPencaker() {
-    _getProfilPencaker();
+  loadDataPencaker(Function(dynamic response)? onFailed) {
+    _getProfilPencaker(onFailed);
   }
 
-  _getProfilPencaker() {
+  _getProfilPencaker(Function(dynamic response)? onFailed) {
     dynamic loginInfo = GetStorage().read(Constants.loginInfo);
     // String idPencaker = loginInfo['data']['id'];
     String uniqueIdPencaker = loginInfo['data']['unique_id'];
@@ -48,9 +47,13 @@ class UserLoginModel extends ChangeNotifier {
             pencakerUniqueId: uniqueIdPencaker, token: token)
         .then(
       (response) {
-        profilePencaker = response['data'];
-        isLoading = false;
-        notifyListeners();
+        if (response['code'] == 200 && response['success'] == true) {
+          profilePencaker = response['data'];
+          isLoading = false;
+          notifyListeners();
+        } else {
+          onFailed!(response);
+        }
       },
     );
   }

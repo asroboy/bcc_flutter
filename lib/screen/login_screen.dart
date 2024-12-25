@@ -86,11 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final box = GetStorage();
     box.write(Constants.loginInfo, loginResult);
     box.write(Constants.userType, userType);
-    if (userType == Constants.userPencaker) {
-      Provider.of<UserLoginModel>(context, listen: false).reloadDataPencaker();
-    } else {
-      Provider.of<UserLoginModel>(context, listen: false).reloadDataCompany();
-    }
   }
 
   _redirectToMainPagePencaker() {
