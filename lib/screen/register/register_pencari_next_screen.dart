@@ -29,7 +29,7 @@ class RegisterPencariKerjaNextScreen extends StatefulWidget {
 class _RegisterPencariKerjaNextScreenState
     extends State<RegisterPencariKerjaNextScreen> {
   final ApiCall _apiCall = ApiCall();
-  final ApiHelper _apiHelper = ApiHelper();
+  late ApiHelper _apiHelper;
 
   String? jenisKelamin;
   String? wargaNegara;
@@ -100,7 +100,6 @@ class _RegisterPencariKerjaNextScreenState
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -149,7 +148,6 @@ class _RegisterPencariKerjaNextScreenState
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -169,7 +167,6 @@ class _RegisterPencariKerjaNextScreenState
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -189,7 +186,6 @@ class _RegisterPencariKerjaNextScreenState
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -213,7 +209,6 @@ class _RegisterPencariKerjaNextScreenState
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -233,7 +228,6 @@ class _RegisterPencariKerjaNextScreenState
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -257,7 +251,6 @@ class _RegisterPencariKerjaNextScreenState
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -271,36 +264,32 @@ class _RegisterPencariKerjaNextScreenState
     });
   }
 
-  Future<List<dynamic>> _fetchDataSekolahByName(String name) {
-    var completer = Completer<List<dynamic>>();
-
+  _fetchDataSekolahByName(String name) {
     Future<dynamic> req =
         _apiCall.getDataPendukung(Constants.pathSekolah + ('?name=') + name);
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
-            completer.complete(response['data']);
+            setState(() {
+              sekolahObj.addAll(response['data']);
+            });
           });
     });
-
-    return completer.future;
   }
 
   _fetchDataJurusanSekolahByName(String filter) {
-    var completer = Completer<List<dynamic>>();
     Future<dynamic> req = _apiCall
         .getDataPendukung(Constants.pathJurusanSekolah + ('?name=') + filter);
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
-            completer.complete(response['data']);
+            setState(() {
+              jurusanObj.addAll(response['data']);
+            });
           });
     });
-    return completer.future;
   }
 
   List<dynamic> jurusanObj = [];
@@ -314,7 +303,6 @@ class _RegisterPencariKerjaNextScreenState
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -330,6 +318,7 @@ class _RegisterPencariKerjaNextScreenState
 
   @override
   void initState() {
+    _apiHelper = ApiHelper(buildContext: context);
     _fetchDataProvinsi();
     _fetchDisabilitas();
 
@@ -439,26 +428,31 @@ class _RegisterPencariKerjaNextScreenState
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.15,
-                        child: BccButton(
-                            padding: const EdgeInsets.only(top: 15),
-                            size: const Size(40, 45),
-                            onPressed: () {
-                              showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(1970),
-                                      lastDate: DateTime.now())
-                                  .then((value) {
-                                setState(() {
-                                  tanggalLahir = value;
+                        child: Center(
+                          child: BccButton(
+                              padding: const EdgeInsets.only(top: 15),
+                              size: const Size(40, 45),
+                              onPressed: () {
+                                showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(1970),
+                                        lastDate: DateTime.now())
+                                    .then((value) {
+                                  setState(() {
+                                    if (value != null) {
+                                      tanggalLahir = value;
 
-                                  DateFormat df = DateFormat('dd MMMM yyyy');
-                                  _textEditingControllerTanggalLahir.text =
-                                      df.format(tanggalLahir!);
+                                      DateFormat df =
+                                          DateFormat('dd MMMM yyyy');
+                                      _textEditingControllerTanggalLahir.text =
+                                          df.format(tanggalLahir!);
+                                    }
+                                  });
                                 });
-                              });
-                            },
-                            child: const Icon(Icons.calendar_today)),
+                              },
+                              child: const Icon(Icons.calendar_today)),
+                        ),
                       ),
                     ],
                   ),
@@ -583,22 +577,22 @@ class _RegisterPencariKerjaNextScreenState
                   ),
                   const BccRowLabel(label: 'Sekolah/Perguruan Tinggi*'),
                   BccDropdownSearch(
+                      items: sekolahObj,
+                      getData: _fetchDataSekolahByName,
                       hint: "Sekolah/Perguruan Tinggi*",
                       itemAsString: (dynamic u) => u['name'],
-                      asyncItems: (String filter) =>
-                          _fetchDataSekolahByName(filter),
                       onChange: (dynamic data) {
                         setState(() {
                           selectedSekolahString = data['name'];
                           selectedSekolahObj = data;
                         });
                       }),
-                  const BccRowLabel(label: 'Proram Kejurusan*'),
+                  const BccRowLabel(label: 'Proram/Jurusan*'),
                   BccDropdownSearch(
-                      hint: "Program Kejuruan*",
+                      items: jurusanObj,
+                      getData: _fetchDataJurusanSekolahByName,
+                      hint: "Program/Jurusan*",
                       itemAsString: (dynamic u) => u['name'],
-                      asyncItems: (String filter) =>
-                          _fetchDataJurusanSekolahByName(filter),
                       onChange: (dynamic data) {
                         setState(() {
                           selectedJurusan = data['name'];

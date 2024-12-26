@@ -15,7 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 class TambahKeterampilan extends StatefulWidget {
-  const TambahKeterampilan({super.key});
+  const TambahKeterampilan({super.key, this.ketetarampilanEdit});
+
+  final dynamic ketetarampilanEdit;
 
   @override
   State<TambahKeterampilan> createState() => _TambahKeterampilanState();
@@ -23,7 +25,7 @@ class TambahKeterampilan extends StatefulWidget {
 
 class _TambahKeterampilanState extends State<TambahKeterampilan> {
   final ApiCall _apiCall = ApiCall();
-  final ApiHelper _apiHelper = ApiHelper();
+  late ApiHelper _apiHelper;
 
   final List<dynamic> masterSkillObj = [];
   dynamic selectedMasterSkillObj;
@@ -38,12 +40,64 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             completer.complete(response['data']);
           });
     });
     return completer.future;
+  }
+
+  List<dynamic> dataSkill = [];
+
+  _fetchMasterSkill(String filter) {
+    Future<dynamic> req = _apiCall
+        .getDataPendukung(Constants.pathDataMasterSkill + ('?name=') + filter);
+    req.then((value) {
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          onSuccess: (response) {
+            setState(() {
+              dataSkill = response['data'];
+            });
+          });
+    });
+  }
+
+  _fetchMasterSkillInit(String filter) {
+    Future<dynamic> req = _apiCall
+        .getDataPendukung(Constants.pathDataMasterSkill + ('?name=') + filter);
+    req.then((value) {
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          onSuccess: (response) {
+            setState(() {
+              dataSkill = response['data'];
+              if (widget.ketetarampilanEdit != null) {
+                selectedMasterSkillObj = dataSkill.firstWhere((element) =>
+                    element['id'] ==
+                    widget.ketetarampilanEdit['master_skill_id']);
+                ;
+              }
+            });
+          });
+    });
+  }
+
+  @override
+  void initState() {
+    _apiHelper = ApiHelper(buildContext: context);
+
+    if (widget.ketetarampilanEdit != null) {
+      selectedMasterSkillString =
+          widget.ketetarampilanEdit['master_skill_name'];
+      _fetchMasterSkillInit(selectedMasterSkillString!);
+      _prosentaseController.text =
+          widget.ketetarampilanEdit['percentage'].toString();
+    } else {
+      _fetchMasterSkill('');
+    }
+
+    super.initState();
   }
 
   @override
@@ -65,10 +119,10 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
                 ),
                 const BccRowLabel(label: 'Keterampilan'),
                 BccDropdownSearch(
+                    items: dataSkill,
+                    getData: _fetchMasterSkill,
                     hint: "Cari keterampilan yang sesuai",
                     itemAsString: (dynamic u) => u['name'],
-                    asyncItems: (String filter) =>
-                        _fetchMasterSkillByName(filter),
                     selectedItem: selectedMasterSkillObj,
                     onChange: (dynamic data) {
                       setState(() {
@@ -77,7 +131,6 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
                       });
                     }),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     BccNormalButton(
@@ -88,9 +141,12 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
                           selectedMasterSkillString = null;
                         });
                       },
-                      size: const Size(100, 40),
-                      child: Row(
-                          children: const [Icon(Icons.refresh), Text('Reset')]),
+                      size: const Size(120, 40),
+                      child: const Row(children: [
+                        Icon(Icons.refresh),
+                        Padding(padding: EdgeInsets.only(right: 5)),
+                        Text('Reset')
+                      ]),
                     )
                   ],
                 ),
@@ -120,7 +176,7 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
                     log('token $token');
                     String jobseekerId = loginData['data']['id'];
 
-                    var dataKetrampilanPekerja = {
+                    dynamic dataKetrampilanPekerja = {
                       'master_skill_id': selectedMasterSkillObj['id'],
                       'percentage': _prosentaseController.text,
                       'jobseeker_id': jobseekerId,
@@ -131,7 +187,7 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
                         barrierDismissible: false,
                         context: context,
                         builder: (_) {
-                          return Dialog(
+                          return const Dialog(
                             // The background color
                             backgroundColor: Colors.white,
                             child: Padding(
@@ -151,20 +207,42 @@ class _TambahKeterampilanState extends State<TambahKeterampilan> {
                             ),
                           );
                         });
-
-                    _apiCall
-                        .simpanSkillPencaker(dataKetrampilanPekerja, token)
-                        .then((value) {
-                      if (!mounted) return;
-                      Navigator.of(context).pop();
-
-                      _apiHelper.apiCallResponseHandler(
-                          response: value,
-                          context: context,
-                          onSuccess: (response) {
-                            Navigator.of(context).pop(response);
-                          });
-                    });
+                    if (widget.ketetarampilanEdit != null) {
+                      String id = widget.ketetarampilanEdit['id'];
+                      dataKetrampilanPekerja['id'] = id;
+                      _apiCall
+                          .updateSkillPencaker(
+                              dataKetrampilanPekerja, token, id)
+                          .then((value) {
+                        if (!mounted) return;
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            onSuccess: (response) {
+                              Navigator.of(context).pop();
+                              showAlertDialogWithAction(
+                                  'Data berhasil disimpan', context, () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(response);
+                              }, 'OK');
+                            });
+                      });
+                    } else {
+                      _apiCall
+                          .simpanSkillPencaker(dataKetrampilanPekerja, token)
+                          .then((value) {
+                        if (!mounted) return;
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            onSuccess: (response) {
+                              Navigator.of(context).pop();
+                              showAlertDialogWithAction(
+                                  'Data berhasil disimpan', context, () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(response);
+                              }, 'OK');
+                            });
+                      });
+                    }
                   },
                   padding: const EdgeInsets.only(top: 20),
                   child: const Text('Simpan'),

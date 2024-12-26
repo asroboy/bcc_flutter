@@ -50,26 +50,28 @@ class _BccCardJobSimpleState extends State<BccCardJobSimple> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
-                            child: widget.dataLowongan != null
-                                ? Image.asset(
+                            child: widget.dataLowongan['company_logo'] !=
+                                        null &&
+                                    widget.dataLowongan['company_logo'] != ''
+                                ? Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey, width: 0.5),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(45)),
+                                      image: DecorationImage(
+                                          image: NetworkImage(widget
+                                              .dataLowongan['company_logo']),
+                                          fit: BoxFit.fill),
+                                    ),
+                                  )
+                                : Image.asset(
                                     'assets/images/dummy_logo_pt.png',
                                     width: 50,
                                     height: 50,
-                                  )
-                                : (widget.dataLowongan['company_logo'] !=
-                                            null &&
-                                        widget.dataLowongan['company_logo'] !=
-                                            ''
-                                    ? Image.network(
-                                        widget.dataLowongan['company_logo'],
-                                        height: 90,
-                                        width: 90,
-                                      )
-                                    : Image.asset(
-                                        'assets/images/dummy_logo_pt.png',
-                                        height: 90,
-                                        width: 90,
-                                      )),
+                                  ),
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,

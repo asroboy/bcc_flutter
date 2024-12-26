@@ -65,24 +65,27 @@ class _LowonganDetailState extends State<LowonganDetail> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 20),
-                        child: widget.job != null
-                            ? Image.asset(
+                        child: widget.job['company_logo'] != null &&
+                                widget.job['company_logo'] != ''
+                            ? Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey, width: 0.5),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(45)),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          widget.job['company_logo']),
+                                      fit: BoxFit.fill),
+                                ),
+                              )
+                            : Image.asset(
                                 'assets/images/dummy_logo_pt.png',
                                 width: 50,
                                 height: 50,
-                              )
-                            : (widget.job['company_logo'] != null &&
-                                    widget.job['company_logo'] != ''
-                                ? Image.network(
-                                    widget.job['company_logo'],
-                                    height: 50,
-                                    width: 50,
-                                  )
-                                : Image.asset(
-                                    'assets/images/dummy_logo_pt.png',
-                                    height: 50,
-                                    width: 50,
-                                  )),
+                              ),
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.65,

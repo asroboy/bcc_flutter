@@ -69,23 +69,32 @@ class _CardListPekerjaanState extends State<CardListPekerjaan> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 15),
-                    child: widget.whishedJob != null
+                    child: widget.whishedJob == null
                         ? Image.asset(
                             'assets/images/dummy_logo_pt.png',
-                            width: 70,
-                            height: 70,
+                            width: 50,
+                            height: 50,
                           )
                         : (widget.whishedJob['company_logo'] != null &&
                                 widget.whishedJob['company_logo'] != ''
-                            ? Image.network(
-                                widget.whishedJob['company_logo'],
-                                height: 70,
-                                width: 70,
+                            ? Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey, width: 0.5),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(45)),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          widget.whishedJob['company_logo']),
+                                      fit: BoxFit.fill),
+                                ),
                               )
                             : Image.asset(
                                 'assets/images/dummy_logo_pt.png',
-                                height: 70,
-                                width: 70,
+                                height: 50,
+                                width: 50,
                               )),
                   ),
                   SizedBox(

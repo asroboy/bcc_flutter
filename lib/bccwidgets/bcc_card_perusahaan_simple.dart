@@ -29,11 +29,27 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
-                            child: Image.asset(
-                              'assets/images/dummy_logo_pt.png',
-                              width: 50,
-                              height: 50,
-                            ),
+                            child: perusahaan['company_logo'] != null &&
+                                    perusahaan['company_logo'] != ''
+                                ? Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey, width: 0.5),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(45)),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              perusahaan['company_logo']),
+                                          fit: BoxFit.fill),
+                                    ),
+                                  )
+                                : Image.asset(
+                                    'assets/images/dummy_logo_pt.png',
+                                    width: 50,
+                                    height: 50,
+                                  ),
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,

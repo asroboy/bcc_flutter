@@ -24,42 +24,36 @@ class BccCardJob extends StatelessWidget {
               child: SizedBox(
                 width: 160,
                 height: 30,
-                child: Text(
-                  dataLowongan == null
-                      ? 'PT Dummy Data'
-                      : (dataLowongan['company_name'].toString().length > 20
-                          ? dataLowongan['company_name']
-                                  .toString()
-                                  .substring(0, 20) +
-                              ('...')
-                          : dataLowongan['company_name'].toString()),
+                child: Flexible(
+                    child: Text(
+                  dataLowongan['company_name'],
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 11),
-                ),
+                )),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: dataLowongan == null
-                  ? Image.asset(
-                      'assets/images/dummy_logo_pt.png',
-                      height: 90,
-                      width: 90,
-                    )
-                  : (dataLowongan['company_logo'] != null &&
-                          dataLowongan['company_logo'] != ''
-                      ? Image.network(
-                          dataLowongan['company_logo'],
-                          height: 90,
-                          width: 90,
-                        )
-                      : Image.asset(
-                          'assets/images/dummy_logo_pt.png',
-                          height: 90,
-                          width: 90,
-                        )),
-            ),
+                padding: const EdgeInsets.only(top: 5, bottom: 10),
+                child: dataLowongan['company_logo'] != null &&
+                        dataLowongan['company_logo'] != ''
+                    ? Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 0.5),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(45)),
+                          image: DecorationImage(
+                              image: NetworkImage(dataLowongan['company_logo']),
+                              fit: BoxFit.fill),
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/images/dummy_logo_pt.png',
+                        height: 50,
+                        width: 50,
+                      )),
             ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: 70,
@@ -82,14 +76,12 @@ class BccCardJob extends StatelessWidget {
                       ),
                       Flexible(
                         child: Text(
-                          dataLowongan == null
-                              ? 'Job Title'
-                              : (dataLowongan['title'].toString().length > 20
-                                  ? (dataLowongan['title']
-                                          .toString()
-                                          .substring(0, 20) +
-                                      ('...'))
-                                  : dataLowongan['title'].toString()),
+                          (dataLowongan['title'].toString().length > 20
+                              ? (dataLowongan['title']
+                                      .toString()
+                                      .substring(0, 20) +
+                                  ('...'))
+                              : dataLowongan['title'].toString()),
                           overflow: TextOverflow.clip,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),

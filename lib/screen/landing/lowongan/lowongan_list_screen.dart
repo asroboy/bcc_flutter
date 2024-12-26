@@ -38,7 +38,7 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
   final TextEditingController _searchTextController = TextEditingController();
 
   _fetchLowonganPopuler() {
-    String? jobseekerId = loginInfo['data']['id'];
+    String? jobseekerId = loginInfo != null ? loginInfo['data']['id'] : null;
     Future<dynamic> reqLowonganPopuler = _apiCall.getLowonganPaged(
         Constants.pathJobboard,
         _page,

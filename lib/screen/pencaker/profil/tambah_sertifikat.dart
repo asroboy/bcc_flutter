@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 class TambahSertifikat extends StatefulWidget {
-  const TambahSertifikat({super.key});
+  const TambahSertifikat({super.key, this.sertifikatEdit});
 
+  final dynamic sertifikatEdit;
   @override
   State<TambahSertifikat> createState() => _TambahSertifikatState();
 }

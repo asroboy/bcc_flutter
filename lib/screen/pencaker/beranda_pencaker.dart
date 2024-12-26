@@ -162,7 +162,8 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                               color: Constants.colorBiruGelap,
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const UbahBiodata(),
+                                  builder: (context) =>
+                                      UbahBiodata(biodataPencaker: userInfo),
                                 ));
                               },
                               icon: const Icon(Icons.edit),

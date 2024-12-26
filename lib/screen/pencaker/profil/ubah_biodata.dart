@@ -9,6 +9,7 @@ import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class UbahBiodata extends StatefulWidget {
   const UbahBiodata({super.key, this.biodataPencaker});
@@ -22,11 +23,20 @@ class UbahBiodata extends StatefulWidget {
 class _UbahBiodataState extends State<UbahBiodata> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _namaLengkapController = TextEditingController();
   final TextEditingController _ktpController = TextEditingController();
   final TextEditingController _notelpController = TextEditingController();
   final TextEditingController _tempatLahirController = TextEditingController();
   final TextEditingController _tanggalLahirController = TextEditingController();
   final TextEditingController _tahunLulusController = TextEditingController();
+  final TextEditingController _tinggiBadanController = TextEditingController();
+  final TextEditingController _beratBadanController = TextEditingController();
+  final TextEditingController _noBpjsController = TextEditingController();
+  final TextEditingController _noBpjsTenagaKerjaController =
+      TextEditingController();
+
+  String? tanggalLahirString;
+  DateTime? tanggalLahir;
 
   String? jenisKelamin;
   String? agama;
@@ -40,7 +50,7 @@ class _UbahBiodataState extends State<UbahBiodata> {
   String? selectedPendidikanTerakhirString;
 
   final ApiCall _apiCall = ApiCall();
-  final ApiHelper _apiHelper = ApiHelper();
+  late ApiHelper _apiHelper;
 
   _fetchPendidikanTerakhir() {
     Future<dynamic> req =
@@ -48,7 +58,6 @@ class _UbahBiodataState extends State<UbahBiodata> {
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -64,17 +73,28 @@ class _UbahBiodataState extends State<UbahBiodata> {
 
   @override
   void initState() {
+    _apiHelper = ApiHelper(buildContext: context);
     _fetchPendidikanTerakhir();
 
     if (widget.biodataPencaker != null) {
       log('${widget.biodataPencaker}');
       _usernameController.text = widget.biodataPencaker['username'];
       _emailController.text = widget.biodataPencaker['email'];
+      _namaLengkapController.text = widget.biodataPencaker['name'];
       _ktpController.text = widget.biodataPencaker['ktp_number'];
       _notelpController.text = widget.biodataPencaker['phone_number'];
       _tempatLahirController.text = widget.biodataPencaker['place_of_birth'];
       _tanggalLahirController.text = widget.biodataPencaker['date_of_birth'];
+      tanggalLahirString = widget.biodataPencaker['date_of_birth'];
+      tanggalLahir = tanggalLahirString == null
+          ? DateTime.now()
+          : DateFormat('yyyy-MM-dd').parse(tanggalLahirString!);
+
       _tahunLulusController.text = widget.biodataPencaker['graduation_year'];
+      _noBpjsTenagaKerjaController.text = widget.biodataPencaker['bpjs_number'];
+      _noBpjsController.text = widget.biodataPencaker['bpjs_health_number'];
+      _tinggiBadanController.text = widget.biodataPencaker['height'];
+      _beratBadanController.text = widget.biodataPencaker['weight'];
 
       jenisKelamin = widget.biodataPencaker['gender'];
       agama = widget.biodataPencaker['religion'];
@@ -90,6 +110,8 @@ class _UbahBiodataState extends State<UbahBiodata> {
         'id': widget.biodataPencaker['master_degree_id'],
         'name': widget.biodataPencaker['master_degree_name']
       };
+    } else {
+      tanggalLahir = DateTime.now();
     }
     super.initState();
   }
@@ -114,21 +136,24 @@ class _UbahBiodataState extends State<UbahBiodata> {
                   ),
                   BccTextFormFieldInput(
                     hint: 'Username',
+                    readOnly: true,
                     controller: _usernameController,
                     padding: const EdgeInsets.only(top: 10),
                   ),
                   BccTextFormFieldInput(
                     hint: 'Email',
+                    readOnly: true,
                     controller: _emailController,
                     padding: const EdgeInsets.only(top: 15),
                   ),
                   BccTextFormFieldInput(
                     hint: 'Nama lengkap',
-                    controller: _emailController,
+                    controller: _namaLengkapController,
                     padding: const EdgeInsets.only(top: 15),
                   ),
                   BccTextFormFieldInput(
                     hint: 'KTP',
+                    readOnly: true,
                     controller: _ktpController,
                     padding: const EdgeInsets.only(top: 15),
                   ),
@@ -142,10 +167,58 @@ class _UbahBiodataState extends State<UbahBiodata> {
                     controller: _tempatLahirController,
                     padding: const EdgeInsets.only(top: 15),
                   ),
-                  BccTextFormFieldInput(
-                    hint: 'Tanggal Lahir',
-                    controller: _tanggalLahirController,
-                    padding: const EdgeInsets.only(top: 15),
+                  SizedBox(
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: BccTextFormFieldInput(
+                            readOnly: true,
+                            hint: 'Tanggal Lahir',
+                            controller: _tanggalLahirController,
+                            padding: const EdgeInsets.only(top: 5),
+                          ),
+                        ),
+                        SizedBox(
+                          child: IconButton(
+                            onPressed: () {
+                              showDatePicker(
+                                      context: context,
+                                      initialDate: tanggalLahir,
+                                      firstDate: DateTime(DateTime(1940).year),
+                                      lastDate:
+                                          DateTime(DateTime.now().year + 5))
+                                  .then((value) {
+                                setState(() {
+                                  if (value == null) return;
+                                  tanggalLahir = value;
+                                  tanggalLahirString =
+                                      DateFormat('yyyy-MM-dd').format(value);
+
+                                  _tanggalLahirController.text =
+                                      tanggalLahirString ?? '';
+                                });
+                              });
+                            },
+                            icon: Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 12),
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: const Icon(
+                                Icons.calendar_month,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const BccRowLabel(label: 'Jenis Kelamin'),
                   BccDropDownString(
@@ -238,25 +311,25 @@ class _UbahBiodataState extends State<UbahBiodata> {
                     controller: _tahunLulusController,
                     padding: const EdgeInsets.only(top: 15),
                   ),
-                  const BccTextFormFieldInput(
+                  BccTextFormFieldInput(
                     hint: 'Tinggi Badan',
-                    // controller: _tahunLulusController,
-                    padding: EdgeInsets.only(top: 15),
+                    controller: _tinggiBadanController,
+                    padding: const EdgeInsets.only(top: 15),
                   ),
-                  const BccTextFormFieldInput(
+                  BccTextFormFieldInput(
                     hint: 'Berat Badan',
-                    // controller: _tahunLulusController,
-                    padding: EdgeInsets.only(top: 15),
+                    controller: _beratBadanController,
+                    padding: const EdgeInsets.only(top: 15),
                   ),
-                  const BccTextFormFieldInput(
+                  BccTextFormFieldInput(
                     hint: 'No BPJS Kesehatan',
-                    // controller: _tahunLulusController,
-                    padding: EdgeInsets.only(top: 15),
+                    controller: _noBpjsController,
+                    padding: const EdgeInsets.only(top: 15),
                   ),
-                  const BccTextFormFieldInput(
+                  BccTextFormFieldInput(
                     hint: 'No BPJS Ketenaga Kerjaan',
-                    // controller: _tahunLulusController,
-                    padding: EdgeInsets.only(top: 15),
+                    controller: _noBpjsTenagaKerjaController,
+                    padding: const EdgeInsets.only(top: 15),
                   ),
                   BccButton(
                     onPressed: () {},

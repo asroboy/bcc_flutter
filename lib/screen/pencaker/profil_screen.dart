@@ -13,6 +13,7 @@ import 'package:bcc/screen/pencaker/profil/tambah_keterampilan.dart';
 import 'package:bcc/screen/pencaker/profil/tambah_pendidikan.dart';
 import 'package:bcc/screen/pencaker/profil/tambah_sertifikat.dart';
 import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
+import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -308,16 +309,30 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${dataPendidikan['master_degree_name']}'),
-                                  Text(
-                                    '${dataPendidikan['master_major_name']}',
-                                    style: const TextStyle(
-                                        fontStyle: FontStyle.italic),
+                                    '${dataPendidikan['master_degree_name']}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
                                   ),
-                                  Text(
-                                    '${dataPendidikan['master_school_name']}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
+                                  const BccLineSparator(
+                                    margin: EdgeInsets.symmetric(vertical: 5),
+                                  ),
+                                  RowDataInfo(
+                                    label: 'Jurusan',
+                                    info:
+                                        '${dataPendidikan['master_major_name']}',
+                                  ),
+                                  RowDataInfo(
+                                    label: 'Tahun',
+                                    info:
+                                        '${dataPendidikan['start_year']}-${dataPendidikan['end_year']}',
+                                  ),
+                                  RowDataInfo(
+                                    label: '',
+                                    info:
+                                        '${dataPendidikan['master_school_name']}',
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -331,55 +346,35 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                                                 dataPendidikan['id'],
                                                 '${dataPendidikan['master_degree_name']} ${dataPendidikan['master_school_name']}');
                                           },
-                                          icon: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 10),
-                                            decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .error,
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            child: const Icon(
-                                              Icons.delete,
-                                              color: Colors.white,
-                                            ),
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Colors.grey,
                                           )),
                                       const Padding(
                                           padding: EdgeInsets.only(right: 5)),
                                       IconButton(
-                                          padding: const EdgeInsets.all(3),
-                                          onPressed: () {
-                                            Future<dynamic> tambahPendidikan =
-                                                Navigator.of(context)
-                                                    .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TambahPendidikan(
-                                                riwayatPendidikanEdit:
-                                                    dataPendidikan,
-                                              ),
-                                            ));
-
-                                            tambahPendidikan.then((value) {
-                                              if (value != null) {
-                                                _reloadData();
-                                              }
-                                            });
-                                          },
-                                          icon: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 10),
-                                            decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            child: const Icon(
-                                              Icons.edit,
-                                              color: Colors.white,
+                                        padding: const EdgeInsets.all(3),
+                                        onPressed: () {
+                                          Future<dynamic> tambahPendidikan =
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                TambahPendidikan(
+                                              riwayatPendidikanEdit:
+                                                  dataPendidikan,
                                             ),
-                                          )),
+                                          ));
+
+                                          tambahPendidikan.then((value) {
+                                            if (value != null) {
+                                              _reloadData();
+                                            }
+                                          });
+                                        },
+                                        icon: const Icon(
+                                          Icons.edit,
+                                        ),
+                                      ),
                                     ],
                                   )
                                 ],
@@ -421,43 +416,63 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('${dataPengalaman['title']}'),
                                   Text(
-                                    '${dataPengalaman['company_name']}|${dataPengalaman['master_employment_type_name']}',
-                                    style: const TextStyle(
-                                        fontStyle: FontStyle.italic),
+                                    '${dataPengalaman['title']} (${dataPengalaman['master_employment_type_name']})',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
                                   ),
-                                  Text(
-                                    '${dataPengalaman['start_month']} ${dataPengalaman['start_year']} - ${dataPengalaman['end_month']} ${dataPengalaman['start_year']}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
+                                  const BccLineSparator(
+                                    margin: EdgeInsets.symmetric(vertical: 5),
+                                  ),
+                                  RowDataInfo(
+                                    label: 'Di Perusahaan',
+                                    info: '${dataPengalaman['company_name']} ',
+                                  ),
+                                  RowDataInfo(
+                                    label: 'Periode',
+                                    info:
+                                        '${dataPengalaman['start_month']} ${dataPengalaman['start_year']} - ${dataPengalaman['is_currently_working'] == '1' ? 'Sekarang' : ''} ${dataPengalaman['is_currently_working'] == '0' ? (dataPengalaman['end_month']) : ''} ${dataPengalaman['is_currently_working'] == '0' ? (dataPengalaman['end_year']) : ''}',
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      BccNormalButton(
+                                      IconButton(
+                                        padding: const EdgeInsets.all(3),
                                         onPressed: () {
                                           _hapus(
                                               Constants.pathPengalamanBekerja,
                                               dataPengalaman['id'],
                                               '${dataPengalaman['title']}');
                                         },
-                                        size: const Size(50, 40),
-                                        backgroundColor: Colors.red,
-                                        child: const Icon(
+                                        icon: const Icon(
                                           Icons.delete,
-                                          size: 16,
+                                          color: Colors.grey,
                                         ),
                                       ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(right: 5)),
-                                      BccNormalButton(
-                                        onPressed: () {},
-                                        size: const Size(50, 40),
-                                        child: const Icon(
+                                      IconButton(
+                                        padding: const EdgeInsets.all(3),
+                                        onPressed: () {
+                                          Future<dynamic> tambahPendidikan =
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                PengalamanBekerja(
+                                                    pengalamanEdit:
+                                                        dataPengalaman),
+                                          ));
+
+                                          tambahPendidikan.then((value) {
+                                            if (value != null) {
+                                              _reloadData();
+                                            }
+                                          });
+                                        },
+                                        icon: const Icon(
                                           Icons.edit,
-                                          size: 16,
                                         ),
                                       ),
                                     ],
@@ -500,38 +515,71 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('${lisensi['name']}'),
                                   Text(
-                                    '${lisensi['issuing_organization']}',
-                                    style: const TextStyle(
-                                        fontStyle: FontStyle.italic),
+                                    '${lisensi['name']}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
+                                  ),
+                                  Text('${lisensi['issuing_organization']}',
+                                      style: const TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                      )),
+                                  const BccLineSparator(
+                                    margin: EdgeInsets.symmetric(vertical: 5),
+                                  ),
+                                  RowDataInfo(
+                                    label: 'Penerbit',
+                                    info: '${lisensi['issuing_organization']}',
+                                  ),
+                                  RowDataInfo(
+                                    label: 'Berlaku mulai',
+                                    info:
+                                        '${lisensi['start_month']} ${lisensi['start_year']}',
+                                  ),
+                                  RowDataInfo(
+                                    label: 'Sampai',
+                                    info: lisensi['is_not_expire'] == '0'
+                                        ? 'Sekarang'
+                                        : '${lisensi['end_month']} ${lisensi['end_year']}',
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      BccNormalButton(
+                                      IconButton(
+                                        padding: const EdgeInsets.all(3),
                                         onPressed: () {
                                           _hapus(
                                               Constants.pathSertifikatPencker,
                                               lisensi['id'],
                                               '${lisensi['name']}');
                                         },
-                                        size: const Size(50, 40),
-                                        backgroundColor: Colors.red,
-                                        child: const Icon(
+                                        icon: const Icon(
                                           Icons.delete,
-                                          size: 16,
+                                          color: Colors.grey,
                                         ),
                                       ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(right: 5)),
-                                      BccNormalButton(
-                                        onPressed: () {},
-                                        size: const Size(50, 40),
-                                        child: const Icon(
+                                      IconButton(
+                                        padding: const EdgeInsets.all(3),
+                                        onPressed: () {
+                                          Future<dynamic> tambahSert =
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                const TambahSertifikat(),
+                                          ));
+
+                                          tambahSert.then((value) {
+                                            if (value != null) {
+                                              _reloadData();
+                                            }
+                                          });
+                                        },
+                                        icon: const Icon(
                                           Icons.edit,
-                                          size: 16,
                                         ),
                                       ),
                                     ],
@@ -552,7 +600,9 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                           ));
 
                           tambahKetrampilan.then((value) {
-                            _reloadData();
+                            if (value != null) {
+                              _reloadData();
+                            }
                           });
                         },
                       ),
@@ -578,30 +628,40 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      BccNormalButton(
+                                      IconButton(
+                                        padding: const EdgeInsets.all(3),
                                         onPressed: () {
                                           _hapus(
                                               Constants.pathDataJobseekerSkill,
                                               skill['id'],
                                               '${skill['master_skill_name']}');
                                         },
-                                        size: const Size(50, 40),
-                                        backgroundColor: Colors.red,
-                                        child: const Icon(
+                                        icon: const Icon(
                                           Icons.delete,
-                                          size: 16,
+                                          color: Colors.grey,
                                         ),
                                       ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(right: 5)),
-                                      BccNormalButton(
-                                        onPressed: () {},
-                                        size: const Size(50, 40),
-                                        child: const Icon(
-                                          Icons.edit,
-                                          size: 16,
-                                        ),
-                                      ),
+                                      IconButton(
+                                          padding: const EdgeInsets.all(3),
+                                          onPressed: () {
+                                            Future<dynamic> tambahKetrampilan =
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TambahKeterampilan(
+                                                ketetarampilanEdit: skill,
+                                              ),
+                                            ));
+
+                                            tambahKetrampilan.then((value) {
+                                              if (value != null) {
+                                                _reloadData();
+                                              }
+                                            });
+                                          },
+                                          icon: const Icon(
+                                            Icons.edit,
+                                          )),
                                     ],
                                   )
                                 ],

@@ -31,30 +31,37 @@ class BccCardPerusahaan extends StatelessWidget {
                     maxHeight: 35.0,
                     maxWidth: 160,
                   ),
-                  child: Text(
-                    dataPerusahaan['name'].toString().length > 20
-                        ? dataPerusahaan['name'].toString().substring(0, 20) +
-                            ('...')
-                        : '${dataPerusahaan['name'] ?? '-'}',
+                  child: Flexible(
+                      child: Text(
+                    dataPerusahaan['name'],
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.clip,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 11),
-                  ),
+                  )),
                 ),
               ),
               Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: dataPerusahaan['logo'] == ''
-                      ? Image.asset(
-                          'assets/images/dummy_logo_pt.png',
-                          height: 90,
-                          width: 90,
+                  child: dataPerusahaan['company_logo'] != null &&
+                          dataPerusahaan['company_logo'] != ''
+                      ? Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 0.5),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(45)),
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    dataPerusahaan['company_logo']),
+                                fit: BoxFit.fill),
+                          ),
                         )
-                      : Image.network(
-                          dataPerusahaan['logo'],
-                          height: 90,
-                          width: 90,
+                      : Image.asset(
+                          'assets/images/dummy_logo_pt.png',
+                          height: 50,
+                          width: 50,
                         )),
               ConstrainedBox(
                 constraints: BoxConstraints(
@@ -90,7 +97,7 @@ class BccCardPerusahaan extends StatelessWidget {
                                         .toString()
                                         .substring(0, 37) +
                                     ('...')
-                                : '${dataPerusahaan['master_industry_name']}',
+                                : '${dataPerusahaan['master_industry_name'] ?? '-'}',
                             overflow: TextOverflow.clip,
                             style: const TextStyle(
                                 fontSize: 11, fontWeight: FontWeight.bold),
@@ -123,7 +130,7 @@ class BccCardPerusahaan extends StatelessWidget {
                                         .substring(0, 30)
                                         .toLowerCase() +
                                     ('...')
-                                : '${dataPerusahaan['master_city_name']}, ${dataPerusahaan['master_province_name']}',
+                                : '${dataPerusahaan['master_city_name'] ?? '-'}, ${dataPerusahaan['master_province_name'] ?? '-'}',
                             overflow: TextOverflow.clip,
                             style: const TextStyle(fontSize: 11),
                           ),

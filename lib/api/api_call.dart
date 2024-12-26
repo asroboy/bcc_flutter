@@ -185,6 +185,14 @@ class ApiCall {
         .requestAuthenticatedDataPost(token);
   }
 
+  Future<dynamic> updatePengalamanBekerja(
+      dynamic body, String token, String id) {
+    String apiPath = '${Constants.host}${Constants.pathPengalamanBekerja}/$id';
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
+  }
+
   Future<dynamic> simpanSertifikatPencaker(dynamic body, String token) {
     String apiPath = Constants.host + Constants.pathSertifikatPencker;
     log('path $apiPath');
@@ -195,8 +203,15 @@ class ApiCall {
   Future<dynamic> simpanSkillPencaker(dynamic body, String token) {
     String apiPath = Constants.host + Constants.pathDataJobseekerSkill;
     log('path $apiPath');
-    return ApiHelper(body: [body], apiUrl: apiPath)
+    return ApiHelper(body: body, apiUrl: apiPath)
         .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> updateSkillPencaker(dynamic body, String token, String id) {
+    String apiPath = '${Constants.host}${Constants.pathDataJobseekerSkill}/$id';
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
   }
 
   Future<dynamic> getDataPendukung(String path) {

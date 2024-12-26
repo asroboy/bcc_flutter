@@ -126,7 +126,7 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
         const Padding(padding: EdgeInsets.only(top: 20)),
         SizedBox(
-            height: 330,
+            height: 280,
             child: _isLoadingLowongan
                 ? const Center(
                     child: Center(
@@ -160,7 +160,7 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
         const Padding(padding: EdgeInsets.only(top: 20)),
         SizedBox(
-          height: 320,
+          height: 280,
           child: _isLoadingPerusahaan
               ? const Center(
                   child: Center(

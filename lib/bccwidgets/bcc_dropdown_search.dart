@@ -5,15 +5,17 @@ class BccDropdownSearch extends StatelessWidget {
   const BccDropdownSearch(
       {super.key,
       this.items,
-      this.asyncItems,
+      // this.asyncItems,
       required this.onChange,
+      this.getData,
       this.onSaved,
       this.itemAsString,
       this.selectedItem,
       this.keyName,
       this.hint});
   final List<dynamic>? items;
-  final Future<List<dynamic>> Function(String)? asyncItems;
+  // final DropdownSearchOnFind<dynamic>? asyncItems;
+  final Function(String)? getData;
   final Function(dynamic) onChange;
   final Function(dynamic)? onSaved;
   final String Function(dynamic)? itemAsString;
@@ -43,7 +45,7 @@ class BccDropdownSearch extends StatelessWidget {
           ),
         ),
       ),
-      items: (f, cs) => items ?? [],
+      items: (f, cs) => getData!(f) ?? items ?? [],
       compareFn: (item1, item2) {
         return item1 == item2;
       },

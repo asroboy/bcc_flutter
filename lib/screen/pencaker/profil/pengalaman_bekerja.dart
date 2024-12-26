@@ -14,7 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 class PengalamanBekerja extends StatefulWidget {
-  const PengalamanBekerja({super.key});
+  const PengalamanBekerja({super.key, this.pengalamanEdit});
+
+  final dynamic pengalamanEdit;
 
   @override
   State<PengalamanBekerja> createState() => _PengalamanBekerjaState();
@@ -31,7 +33,7 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
   dynamic selectedPerusahaan;
 
   final ApiCall _apiCall = ApiCall();
-  final ApiHelper _apiHelper = ApiHelper();
+  late ApiHelper _apiHelper;
 
   String? bulanMulai;
   String? bulanSampai;
@@ -50,6 +52,7 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
     'Desember',
   ];
 
+  List<dynamic> perusahaan = [];
   List<String> tipePekerjaan = [];
   List<dynamic> tipePekerjaanObj = [];
   String? selectedTipePekerjaan;
@@ -61,7 +64,6 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
@@ -76,28 +78,63 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
     });
   }
 
-  _fetchDataPerusahaanByName(String filter) {
+  _getDataPerusahaanSearch(String name) {
     String token = loginData['data']['token'];
-    var completer = Completer<List<dynamic>>();
     Future<dynamic> req = _apiCall.getDataPendukung(Constants.pathCompany +
-        ('?name=') +
-        filter +
-        ('&limit=20') +
+        ('?page=1&limit=20&name=$name') +
         ('&token=$token'));
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
-            completer.complete(response['data']);
+            perusahaan.addAll(response['data']);
           });
     });
-    return completer.future;
+  }
+
+  _getDataPerusahaanInit(String name) {
+    String token = loginData['data']['token'];
+    Future<dynamic> req = _apiCall.getDataPendukung(Constants.pathCompany +
+        ('?page=1&limit=20&name=$name') +
+        ('&token=$token'));
+    req.then((value) {
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          onSuccess: (response) {
+            perusahaan.addAll(response['data']);
+            if (widget.pengalamanEdit != null) {
+              setState(() {
+                selectedPerusahaan = perusahaan.singleWhere((element) =>
+                    element['id'] == widget.pengalamanEdit['company_id']);
+              });
+            }
+          });
+    });
   }
 
   @override
   void initState() {
+    _apiHelper = ApiHelper(buildContext: context);
     _fetchTipePegawai();
+
+    if (widget.pengalamanEdit != null) {
+      _titleController.text = widget.pengalamanEdit['title'];
+      _getDataPerusahaanInit(widget.pengalamanEdit['company_name']);
+      _namaPerusahaan.text = widget.pengalamanEdit['company_name'];
+
+      selectedTipePekerjaan =
+          widget.pengalamanEdit['master_employment_type_name'];
+      bulanMulai = widget.pengalamanEdit['start_month'];
+      _tahunMulaiController.text = widget.pengalamanEdit['start_year'];
+      masihBekerjaSampaiSekarang =
+          widget.pengalamanEdit['is_currently_working'] == '1' ? 'Ya' : 'Tidak';
+      bulanSampai = widget.pengalamanEdit['end_month'];
+      _tahunSampaiController.text = widget.pengalamanEdit['end_year'];
+      _descriptionController.text = widget.pengalamanEdit['description'];
+    } else {
+      _getDataPerusahaanInit('');
+    }
+
     super.initState();
   }
 
@@ -127,10 +164,11 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                 ),
                 const BccRowLabel(label: 'Perusahaan *'),
                 BccDropdownSearch(
+                    items: perusahaan,
+                    selectedItem: selectedPerusahaan,
+                    getData: _getDataPerusahaanSearch,
                     hint: "Cari Perusahaan",
                     itemAsString: (dynamic u) => u['name'],
-                    asyncItems: (String filter) =>
-                        _fetchDataPerusahaanByName(filter),
                     onChange: (dynamic data) {
                       setState(() {
                         _namaPerusahaan.text = data['name'];
@@ -152,15 +190,6 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                         selectedTipePekerjaan = value;
                       });
                     }),
-                const BccRowLabel(label: 'Masih bekerja sampai sekarang?'),
-                BccDropDownString(
-                    value: masihBekerjaSampaiSekarang,
-                    data: const ['Ya', 'Tidak'],
-                    onChanged: (value) {
-                      setState(() {
-                        masihBekerjaSampaiSekarang = value;
-                      });
-                    }),
                 const BccRowLabel(label: 'Bulan mulai'),
                 BccDropDownString(
                     value: bulanMulai,
@@ -175,20 +204,39 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                   padding: const EdgeInsets.only(top: 10),
                   controller: _tahunMulaiController,
                 ),
-                const BccRowLabel(label: 'Bulan sampai'),
+                const BccRowLabel(label: 'Masih bekerja sampai sekarang?'),
                 BccDropDownString(
-                    value: bulanSampai,
-                    data: bulans,
+                    value: masihBekerjaSampaiSekarang,
+                    data: const ['Ya', 'Tidak'],
                     onChanged: (value) {
                       setState(() {
-                        bulanSampai = value;
+                        masihBekerjaSampaiSekarang = value;
+                        if (value == 'Ya') {
+                          bulanSampai = null;
+                          _tahunSampaiController.text = '';
+                        }
                       });
                     }),
-                BccTextFormFieldInput(
-                  hint: 'Tahun sampai',
-                  padding: const EdgeInsets.only(bottom: 10, top: 10),
-                  controller: _tahunSampaiController,
-                ),
+                masihBekerjaSampaiSekarang != 'Ya'
+                    ? const BccRowLabel(label: 'Bulan sampai')
+                    : const Center(),
+                masihBekerjaSampaiSekarang != 'Ya'
+                    ? BccDropDownString(
+                        value: bulanSampai,
+                        data: bulans,
+                        onChanged: (value) {
+                          setState(() {
+                            bulanSampai = value;
+                          });
+                        })
+                    : const Center(),
+                masihBekerjaSampaiSekarang != 'Ya'
+                    ? BccTextFormFieldInput(
+                        hint: 'Tahun sampai',
+                        padding: const EdgeInsets.only(bottom: 10, top: 10),
+                        controller: _tahunSampaiController,
+                      )
+                    : const Padding(padding: EdgeInsets.only(bottom: 15)),
                 BccTextFormFieldInput(
                   hint: 'Deskripsi',
                   padding: EdgeInsets.zero,
@@ -236,11 +284,13 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                       return;
                     }
 
-                    if (bulanSampai == null) {
-                      showAlertDialog('Pilih bulan samapi', context);
+                    if (masihBekerjaSampaiSekarang == 'Tidak' &&
+                        bulanSampai == null) {
+                      showAlertDialog('Pilih bulan samapai', context);
                       return;
                     }
-                    if (tahunSampai == '') {
+                    if (masihBekerjaSampaiSekarang == 'Tidak' &&
+                        tahunSampai == '') {
                       showAlertDialog('Pilih tahun sampai', context);
                       return;
                     }
@@ -295,26 +345,41 @@ class _PengalamanBekerjaState extends State<PengalamanBekerja> {
                             ),
                           );
                         });
-
-                    _apiCall
-                        .simpanPengalamanBekerja(dataPengalamanBekerta, token)
-                        .then((value) {
-                      if (!mounted) return;
-                      Navigator.of(context).pop();
-
-                      _apiHelper.apiCallResponseHandler(
-                          response: value,
-                          context: context,
-                          onSuccess: (response) {
-                            Navigator.of(context).pop(response);
-                            // Navigator.pushAndRemoveUntil(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => const RegisterComplete()),
-                            //   (Route<dynamic> route) => false,
-                            // );
-                          });
-                    });
+                    if (widget.pengalamanEdit != null) {
+                      dataPengalamanBekerta['id'] = widget.pengalamanEdit['id'];
+                      _apiCall
+                          .updatePengalamanBekerja(dataPengalamanBekerta, token,
+                              dataPengalamanBekerta['id'])
+                          .then((value) {
+                        if (!mounted) return;
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            onSuccess: (response) {
+                              Navigator.of(context).pop();
+                              showAlertDialogWithAction(
+                                  'Data berhasil disimpan', context, () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(response);
+                              }, 'OK');
+                            });
+                      });
+                    } else {
+                      _apiCall
+                          .simpanPengalamanBekerja(dataPengalamanBekerta, token)
+                          .then((value) {
+                        if (!mounted) return;
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            onSuccess: (response) {
+                              Navigator.of(context).pop();
+                              showAlertDialogWithAction(
+                                  'Data berhasil disimpan', context, () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(response);
+                              }, 'OK');
+                            });
+                      });
+                    }
                   },
                   padding: const EdgeInsets.only(top: 20),
                   child: const Text('Simpan'),

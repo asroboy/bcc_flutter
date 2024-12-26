@@ -41,7 +41,9 @@ class BccTextFormFieldInput extends StatelessWidget {
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           alignLabelWithHint: true,
           floatingLabelAlignment: FloatingLabelAlignment.start,
-          fillColor: Colors.white,
+          fillColor: readOnly
+              ? const Color.fromARGB(255, 229, 238, 243)
+              : Colors.white,
           contentPadding: const EdgeInsets.all(10.0),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(radius ?? 10.0),
