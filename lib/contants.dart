@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 
+enum UserType { jobseeker, company }
+
 class Constants {
   static String serverDev = 'http://bogorcareercenter.indoaksesmedia.my.id';
   static String serverProd = 'https://bogorcareercenter.bogorkab.go.id/';
+  static String server = serverDev;
 
-  static String host = '$serverDev/api/';
+  static String host = '$server/api/';
+  static String pathDataPelatihanProof = '$server/jobseeker/training/proof';
   static String pathLoginPencaker = 'jobseeker/auth';
   static String pathLoginPerusahaan = 'company/auth';
   static String pathProvinsi = 'admin/master_province';
+  static String pathMasterQueue = 'admin/master_queue';
+  static String pathKuotaAntrian = 'admin/queue_quota';
+  static String pathQueue = 'admin/queue';
+  static String pathMasterRole = 'admin/master_role';
   static String pathKota = 'admin/master_city';
   static String pathKecamatan = 'admin/master_district';
   static String pathDesa = 'admin//master_village';
@@ -27,12 +35,16 @@ class Constants {
   static String pathDataPelatihan = 'admin/schedule_blk';
   static String pathDataRiwayatPelatihan = 'admin/participant_blk';
   static String pathDataPelatihan2 = 'jobseeker/training';
-  static String pathDataPelatihanProof = '$serverDev/jobseeker/training/proof';
+
+  //antrian generate code
+  static String pathGenerateCodePencaker = 'jobseeker/profile/queue';
+  static String pathGenerateCodeCompany = 'company/profile/queue';
 
   static String pathLandingCompany = 'Comp';
   static String pathComp = 'jobseeker/Comp';
   static String pathJobboard = 'jobseeker/jobboard';
   static String pathWishList = 'jobseeker/wishlist';
+  static String pathWishListAdmin = 'admin/jobseeker_wishlist';
   static String pathRiwayatLamaran = 'jobseeker/application';
   static String pathAjukanLamaran = 'admin/company_job_application';
   static String pathPersonalia = 'company/candidate/employee';

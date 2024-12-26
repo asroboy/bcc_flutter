@@ -178,17 +178,24 @@ class _LowonganDetailState extends State<LowonganDetail> {
                               const Padding(
                                 padding: EdgeInsets.only(top: 10),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        _ajukanLamaran(widget.job['id']);
-                                      },
-                                      child: const Text('Ajukan lamaran'))
-                                ],
-                              )
+                              widget.job['status'] == 'inactive'
+                                  ? const Text(
+                                      'Lowongan tidak aktif',
+                                      style: TextStyle(color: Colors.red),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              _ajukanLamaran(widget.job['id']);
+                                            },
+                                            child: const Text('Ajukan lamaran'))
+                                      ],
+                                    )
                             ]),
                       ),
                     ],

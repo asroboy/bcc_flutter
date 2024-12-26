@@ -2,7 +2,7 @@ import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_big_menu_button.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/lowongan/lowongan_page_with_appbar.dart';
-import 'package:bcc/screen/pencaker/antrian_online.dart';
+import 'package:bcc/screen/pencaker/antrian_online/antrian_online.dart';
 import 'package:bcc/screen/pencaker/balai_latihan_kerja/balai_latihan_kerja.dart';
 import 'package:bcc/screen/pencaker/whishlist/list_pekerjaan_disimpan.dart';
 import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';

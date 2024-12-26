@@ -214,6 +214,39 @@ class ApiPerusahaanCall {
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
 
+  Future<dynamic> getQueue(
+      {required String token,
+      required String userId,
+      required UserType userType}) {
+    String type = 'COMPANY';
+    if (userType == UserType.jobseeker) {
+      type = 'JOBSEEKER';
+    }
+    String apiPath =
+        '${Constants.host}${Constants.pathQueue}?type=$type&user_id=$userId&orderBy=id&sort=desc';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getKuotaAntrian(String token, String tanggal) {
+    String apiPath =
+        '${Constants.host}${Constants.pathKuotaAntrian}?date=$tanggal';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getMasterQueue(String token) {
+    String apiPath = '${Constants.host}${Constants.pathMasterQueue}';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> getMasterRole(String token) {
+    String apiPath = '${Constants.host}${Constants.pathMasterRole}';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
   Future<dynamic> getMasterKabkoByProvinsi(String provinsiId, String token) {
     String apiPath =
         '${Constants.host}${Constants.pathKota}?master_province_id=$provinsiId';
@@ -247,5 +280,52 @@ class ApiPerusahaanCall {
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath)
         .requestAuthenticatedDataDelete(token);
+  }
+
+  Future<dynamic> simpanWishListLowongan(
+      {required dynamic requestBody, required String token}) {
+    String apiPath = '${Constants.host}${Constants.pathWishListAdmin}';
+    log('path $apiPath');
+    return ApiHelper(body: requestBody, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> hapusnWishListLowongan(
+      {required String id, required String token}) {
+    String apiPath = '${Constants.host}${Constants.pathWishListAdmin}/$id';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath)
+        .requestAuthenticatedDataDelete(token);
+  }
+
+  Future<dynamic> getWishListLowongan(
+      {required String jobseekerId, required String companyJobId}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathWishListAdmin}?jobseeker_id=$jobseekerId&company_job_id=$companyJobId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> generatedCode(
+      {required String token,
+      required UserType userType,
+      required String userId}) {
+    String path = Constants.pathGenerateCodePencaker;
+    if (userType == UserType.jobseeker) {
+      path = Constants.pathGenerateCodePencaker;
+    }
+    String apiPath = '${Constants.host}$path/$userId';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
+  Future<dynamic> simpanAntrian(
+      {required dynamic requestBody,
+      required String token,
+      required UserType userType}) {
+    String apiPath = '${Constants.host}${Constants.pathQueue}';
+    log('path $apiPath');
+    return ApiHelper(body: requestBody, apiUrl: apiPath)
+        .requestAuthenticatedDataPost(token);
   }
 }

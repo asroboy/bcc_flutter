@@ -92,6 +92,13 @@ class _ListPekerjaanDisimpanState extends State<ListPekerjaanDisimpan> {
                       whishedJob: whishedJob,
                       showAjukanLamaran: true,
                       isWhishList: true,
+                      onRemove: () {
+                        setState(() {
+                          _dataLowonganDiharapkan.clear();
+                          _isLoadingLowongan = true;
+                          _fetchPekerjaanDisimpan();
+                        });
+                      },
                     );
                   },
                 ),

@@ -30,6 +30,13 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
   }
 
+  Future<dynamic> getLowongan({required int page, required int max}) {
+    String apiPath =
+        '${Constants.host}${Constants.pathLowongan}?page=$page&limit=$max&orderBy=id&sort=desc';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
   Future<dynamic> getLowonganPopuler(String path) {
     String apiPath = Constants.host + path;
     var body = {
@@ -71,14 +78,19 @@ class ApiCall {
   }
 
   Future<dynamic> getLowonganPaged(String path, int page, int max,
-      String? title, int? companyId, int? cityId) {
-    String apiPath = Constants.host + path;
+      String? title, int? companyId, int? cityId, String? jobseekerId) {
+    String apiPath = '${Constants.host}$path';
     var body = {
       "page": 1,
       "limit": 10,
       "orderBy": "id",
       "sort": "desc",
+      "is_hide_job_expired": true //untuk hide job yang sudah expired
     };
+
+    if (jobseekerId != null) {
+      body['jobseeker_id'] = jobseekerId;
+    }
 
     if (title != null) {
       body['title'] = title;

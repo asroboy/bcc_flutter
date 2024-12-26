@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
+import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_row_info2.dart';
 import 'package:bcc/contants.dart';
@@ -15,11 +19,13 @@ class CardListPekerjaan extends StatefulWidget {
       {super.key,
       this.whishedJob,
       required this.showAjukanLamaran,
+      this.onRemove,
       required this.isWhishList});
 
   final dynamic whishedJob;
   final bool showAjukanLamaran;
   final bool isWhishList;
+  final Function? onRemove;
 
   @override
   State<CardListPekerjaan> createState() => _CardListPekerjaanState();
@@ -27,6 +33,7 @@ class CardListPekerjaan extends StatefulWidget {
 
 class _CardListPekerjaanState extends State<CardListPekerjaan> {
   final ApiCall _apiCall = ApiCall();
+  final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
   final ApiHelper _apiHelper = ApiHelper();
   dynamic loginInfo = GetStorage().read(Constants.loginInfo);
 
@@ -186,11 +193,15 @@ class _CardListPekerjaanState extends State<CardListPekerjaan> {
                             widget.isWhishList
                                 ? ElevatedButton.icon(
                                     onPressed: () {
-                                      // Navigator.of(context).push(MaterialPageRoute(
-                                      //     builder: (context) => PekerjaanDisimpan(
-                                      //           jobWhish: whishedJob,
-                                      //           showAjukanLamaran: showAjukanLamaran,
-                                      //         )));
+                                      showAlertDialogWithAction2(
+                                          'Yakin hapus Perkerjaan ini dari daftar?',
+                                          context, () {
+                                        Navigator.of(context).pop();
+                                      }, () {
+                                        Navigator.of(context).pop();
+                                        _hapusBookmark(
+                                            dataLowongan: widget.whishedJob);
+                                      }, 'Batal', 'OK');
                                     },
                                     icon: const Icon(Icons.bookmark_border),
                                     label: const Text('Hapus'),
@@ -262,7 +273,7 @@ class _CardListPekerjaanState extends State<CardListPekerjaan> {
                     info: widget.whishedJob['company_job_application_status'] ==
                             'PENDING'
                         ? 'Status Lamaran Terkirim'
-                        : 'Status ${widget.whishedJob['company_job_application_status']}'),
+                        : '${widget.whishedJob['company_job_application_status']}'),
                 const Text(
                   'Jadwal Interview',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -276,6 +287,29 @@ class _CardListPekerjaanState extends State<CardListPekerjaan> {
               ],
             ),
           );
+  }
+
+  _hapusBookmark({required dynamic dataLowongan}) {
+    // String idPerusahaan = loginInfo['data']['id'];
+    String token = loginInfo['data']['token'];
+
+    _apiPerusahaanCall
+        .hapusnWishListLowongan(
+            id: dataLowongan['jobseeker_wishlist_id'], token: token)
+        .then(
+      (value) {
+        if (mounted) {
+          _apiHelper.apiCallResponseHandler(
+              response: value,
+              context: context,
+              onSuccess: (response) {
+                log('response: $response');
+                widget.onRemove!();
+                // _getBookmark(dataLowongan: dataLowongan);
+              });
+        }
+      },
+    );
   }
 
   Color _getColorStatus(dynamic mlowongan) {

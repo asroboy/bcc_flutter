@@ -38,8 +38,15 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
   final TextEditingController _searchTextController = TextEditingController();
 
   _fetchLowonganPopuler() {
+    String? jobseekerId = loginInfo['data']['id'];
     Future<dynamic> reqLowonganPopuler = _apiCall.getLowonganPaged(
-        Constants.pathJobboard, _page, _max, search, companyId, cityId);
+        Constants.pathJobboard,
+        _page,
+        _max,
+        search,
+        companyId,
+        cityId,
+        jobseekerId);
     reqLowonganPopuler.then((value) {
       // log('result $value');
       if (mounted) {
