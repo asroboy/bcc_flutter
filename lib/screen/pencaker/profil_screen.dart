@@ -321,48 +321,65 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      BccNormalButton(
-                                        onPressed: () {
-                                          _hapus(
-                                              Constants.pathPendidiksnPencaker,
-                                              dataPendidikan['id'],
-                                              '${dataPendidikan['master_degree_name']} ${dataPendidikan['master_school_name']}');
-                                        },
-                                        size: const Size(50, 40),
-                                        backgroundColor: Colors.red,
-                                        child: const Icon(
-                                          Icons.delete,
-                                          size: 16,
-                                        ),
-                                      ),
+                                      IconButton(
+                                          padding: const EdgeInsets.all(3),
+                                          onPressed: () {
+                                            _hapus(
+                                                Constants
+                                                    .pathPendidiksnPencaker,
+                                                dataPendidikan['id'],
+                                                '${dataPendidikan['master_degree_name']} ${dataPendidikan['master_school_name']}');
+                                          },
+                                          icon: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 10),
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .error,
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            child: const Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                          )),
                                       const Padding(
                                           padding: EdgeInsets.only(right: 5)),
-                                      BccNormalButton(
-                                        onPressed: () {
-                                          Future<dynamic> tambahPendidikan =
-                                              Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                            builder: (context) =>
-                                                TambahPendidikan(
-                                              riwayatPendidikanEdit:
-                                                  dataPendidikan,
-                                            ),
-                                          ));
+                                      IconButton(
+                                          padding: const EdgeInsets.all(3),
+                                          onPressed: () {
+                                            Future<dynamic> tambahPendidikan =
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TambahPendidikan(
+                                                riwayatPendidikanEdit:
+                                                    dataPendidikan,
+                                              ),
+                                            ));
 
-                                          tambahPendidikan.then((value) {
-                                            if (value != null) {
-                                              _reloadData();
-                                            }
-                                          });
-                                        },
-                                        size: const Size(50, 40),
-                                        child: const Icon(
-                                          Icons.edit,
-                                          size: 16,
-                                        ),
-                                      ),
+                                            tambahPendidikan.then((value) {
+                                              if (value != null) {
+                                                _reloadData();
+                                              }
+                                            });
+                                          },
+                                          icon: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 10),
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            child: const Icon(
+                                              Icons.edit,
+                                              color: Colors.white,
+                                            ),
+                                          )),
                                     ],
                                   )
                                 ],

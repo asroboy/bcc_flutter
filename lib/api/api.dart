@@ -13,11 +13,9 @@ class ApiHelper {
   String apiUrlGlobalLogin = 'https://bogorcareercenter.bogorkab.go.id/';
 
   final dynamic body;
+  final BuildContext? buildContext;
 
-  ApiHelper({
-    this.body,
-    this.apiUrl,
-  });
+  ApiHelper({this.body, this.apiUrl, this.buildContext});
 
   setApiUrl(String mApiUrl) {
     apiUrl = mApiUrl;
@@ -329,7 +327,11 @@ class ApiHelper {
       required Function onSuccess,
       Function? onFailedCallback}) {
     // log('response $response');
-    if (context == null) {
+    if (context == null && buildContext == null) {
+      return;
+    }
+    BuildContext mBuildContext = context ?? buildContext!;
+    if (!mBuildContext.mounted) {
       return;
     }
     if (response['code'] == 200 && response['success'] == true) {
@@ -337,22 +339,22 @@ class ApiHelper {
     } else {
       if (response['message'] ==
           'Token Akses Sudah Kedaluarsa, Silahkan Login Kembali.') {
-        showAlertDialogWithAction(response['message'], context, () {
-          _logout(context);
+        showAlertDialogWithAction(response['message'], mBuildContext, () {
+          _logout(mBuildContext);
         }, 'Ok');
       } else {
         if (onFailedCallback != null) {
           showAlertDialogWithAction(
               response['message'] ??
                   'Terjadi kendala silahkan coba lagi setelah beberapa saat',
-              context,
+              mBuildContext,
               onFailedCallback,
               'OK');
         } else {
           showAlertDialog(
               response['message'] ??
                   'Terjadi kendala silahkan coba lagi setelah beberapa saat',
-              context);
+              mBuildContext);
         }
       }
     }

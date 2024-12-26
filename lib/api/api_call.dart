@@ -171,6 +171,13 @@ class ApiCall {
         .requestAuthenticatedDataPost(token);
   }
 
+  Future<dynamic> updatePendidikan(dynamic body, String token, String id) {
+    String apiPath = '${Constants.host}${Constants.pathPendidiksnPencaker}/$id';
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
+  }
+
   Future<dynamic> simpanPengalamanBekerja(dynamic body, String token) {
     String apiPath = Constants.host + Constants.pathPengalamanBekerja;
     log('path $apiPath');

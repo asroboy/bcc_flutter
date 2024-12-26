@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
@@ -24,12 +25,13 @@ class TambahPendidikan extends StatefulWidget {
 
 class _TambahPendidikanState extends State<TambahPendidikan> {
   final ApiCall _apiCall = ApiCall();
-  final ApiHelper _apiHelper = ApiHelper();
+  late ApiHelper _apiHelper;
 
   TextEditingController _tahunMulaiController = TextEditingController();
   TextEditingController _tahunSampaiController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
+  final List<dynamic> _sekolah = [];
   List<dynamic> pendidikanTerakhirObj = [];
   List<String> pendidikanTerakhirListString = [];
   dynamic selectedPendidikanTerakhir;
@@ -41,13 +43,21 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
             if (mounted) {
               setState(() {
                 pendidikanTerakhirObj.addAll(response['data']);
                 for (dynamic d in pendidikanTerakhirObj) {
                   pendidikanTerakhirListString.add(d['name']);
+                }
+
+                if (widget.riwayatPendidikanEdit != null) {
+                  selectedPendidikanTerakhir =
+                      pendidikanTerakhirObj.singleWhere((element) =>
+                          element['id'] ==
+                          widget.riwayatPendidikanEdit['master_degree_id']);
+                  selectedPendidikanTerakhirString =
+                      selectedPendidikanTerakhir['name'];
                 }
               });
             }
@@ -58,37 +68,62 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
   dynamic selectedSekolahObj;
   String? selectedSekolahString;
 
-  Future<List<dynamic>> _fetchDataSekolahByName(String name) {
-    var completer = Completer<List<dynamic>>();
-
+  _fetchDataJurusanhByName() {
     Future<dynamic> req =
-        _apiCall.getDataPendukung(Constants.pathSekolah + ('?name=') + name);
+        _apiCall.getDataPendukung(Constants.pathJurusanSekolah);
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
-            completer.complete(response['data']);
+            // log('response $response');
+            setState(() {
+              jurusanObj.addAll(response['data']);
+              if (widget.riwayatPendidikanEdit != null) {
+                selectedJurusanObj = jurusanObj.singleWhere((element) =>
+                    element['id'] ==
+                    widget.riwayatPendidikanEdit['master_major_id']);
+                selectedJurusan = selectedJurusanObj['name'];
+              }
+            });
           });
     });
-
-    return completer.future;
   }
 
-  _fetchDataJurusanSekolahByName(String filter) {
-    var completer = Completer<List<dynamic>>();
-    Future<dynamic> req = _apiCall
-        .getDataPendukung(Constants.pathJurusanSekolah + ('?name=') + filter);
+  _fetchDataSekolah(String name) {
+    Future<dynamic> req = _apiCall.getDataPendukung(Constants.pathSekolah);
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
-          context: context,
           onSuccess: (response) {
-            completer.complete(response['data']);
+            // log('response $response');
+            setState(() {
+              _sekolah.addAll(response['data']);
+
+              if (widget.riwayatPendidikanEdit != null) {
+                selectedSekolahObj = _sekolah.singleWhere((element) =>
+                    element['id'] ==
+                    widget.riwayatPendidikanEdit['master_school_id']);
+                log('sekolah $selectedSekolahObj');
+                selectedSekolahString = selectedSekolahObj['name'];
+              }
+            });
           });
     });
-    return completer.future;
   }
+
+  // _fetchDataJurusanSekolahByName(String filter) {
+  //   var completer = Completer<List<dynamic>>();
+  //   Future<dynamic> req = _apiCall
+  //       .getDataPendukung(Constants.pathJurusanSekolah + ('?name=') + filter);
+  //   req.then((value) {
+  //     _apiHelper.apiCallResponseHandler(
+  //         response: value,
+  //         onSuccess: (response) {
+  //           completer.complete(response['data']);
+  //         });
+  //   });
+  //   return completer.future;
+  // }
 
   List<dynamic> jurusanObj = [];
   List<String> jurusanListString = [];
@@ -114,13 +149,20 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
 
   @override
   void initState() {
+    _apiHelper = ApiHelper(buildContext: context);
     _fetchPendidikanTerakhir();
+    _fetchDataSekolah('');
+    _fetchDataJurusanhByName();
 
     if (widget.riwayatPendidikanEdit != null) {
+      bulanMulai = widget.riwayatPendidikanEdit['start_month'];
+      bulanSampai = widget.riwayatPendidikanEdit['end_month'];
       _tahunMulaiController = TextEditingController(
           text: widget.riwayatPendidikanEdit['start_year']);
       _tahunSampaiController =
           TextEditingController(text: widget.riwayatPendidikanEdit['end_year']);
+
+      _descriptionController.text = widget.riwayatPendidikanEdit['description'];
     }
     super.initState();
   }
@@ -146,36 +188,41 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                 ),
                 const BccRowLabel(label: 'Sekolah/Perguruan Tinggi *'),
                 BccDropdownSearch(
+                    items: _sekolah,
+                    keyName: 'name',
                     hint: "Sekolah/Perguruan Tinggi *",
+                    selectedItem: selectedSekolahObj,
                     itemAsString: (dynamic u) => u['name'],
-                    asyncItems: (String filter) =>
-                        _fetchDataSekolahByName(filter),
-                    onChange: (dynamic data) {
+                    onChange: (data) {
+                      log('selected data $data');
                       setState(() {
                         selectedSekolahString = data['name'];
                         selectedSekolahObj = data;
                       });
                     }),
                 const BccRowLabel(label: 'Tingkat Pendidikan *'),
-                BccDropDownString(
-                  value: selectedPendidikanTerakhirString,
-                  hint: const Text('Tingkat Pendidikan *'),
-                  data: pendidikanTerakhirListString,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPendidikanTerakhirString = value;
-                      selectedPendidikanTerakhir = pendidikanTerakhirObj
-                          .singleWhere((element) => element['name'] == value);
-                    });
-                  },
-                ),
+                BccDropdownSearch(
+                    items: pendidikanTerakhirObj,
+                    keyName: 'name',
+                    hint: "Tingkat Pendidikan *",
+                    selectedItem: selectedPendidikanTerakhir,
+                    itemAsString: (dynamic u) => u['name'],
+                    onChange: (data) {
+                      log('data $data');
+                      setState(() {
+                        selectedPendidikanTerakhirString = data['name'];
+                        selectedPendidikanTerakhir = data;
+                      });
+                    }),
                 const BccRowLabel(label: 'Jurusan *'),
                 BccDropdownSearch(
+                    items: jurusanObj,
+                    keyName: 'name',
                     hint: "Jurusan *",
+                    selectedItem: selectedJurusanObj,
                     itemAsString: (dynamic u) => u['name'],
-                    asyncItems: (String filter) =>
-                        _fetchDataJurusanSekolahByName(filter),
-                    onChange: (dynamic data) {
+                    onChange: (data) {
+                      log('data $data');
                       setState(() {
                         selectedJurusan = data['name'];
                         selectedJurusanObj = data;
@@ -296,26 +343,30 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                             ),
                           );
                         });
-
-                    _apiCall
-                        .simpanPendidikan(dataPendidikanSimpan, token)
-                        .then((value) {
-                      if (!mounted) return;
-                      Navigator.of(context).pop();
-
-                      _apiHelper.apiCallResponseHandler(
-                          response: value,
-                          context: context,
-                          onSuccess: (response) {
-                            Navigator.of(context).pop(response);
-                            // Navigator.pushAndRemoveUntil(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => const RegisterComplete()),
-                            //   (Route<dynamic> route) => false,
-                            // );
-                          });
-                    });
+                    if (widget.riwayatPendidikanEdit != null) {
+                      _apiCall
+                          .updatePendidikan(dataPendidikanSimpan, token,
+                              widget.riwayatPendidikanEdit['id'])
+                          .then((value) {
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            onSuccess: (response) {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(response);
+                            });
+                      });
+                    } else {
+                      _apiCall
+                          .simpanPendidikan(dataPendidikanSimpan, token)
+                          .then((value) {
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            onSuccess: (response) {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(response);
+                            });
+                      });
+                    }
                   },
                   padding: const EdgeInsets.only(top: 20),
                   child: const Text('Simpan'),
