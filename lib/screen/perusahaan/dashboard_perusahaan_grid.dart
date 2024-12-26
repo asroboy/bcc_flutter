@@ -1,4 +1,5 @@
 import 'package:bcc/bccwidgets/bcc_big_menu_button.dart';
+import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/careercanter/career_center_screen.dart';
 import 'package:bcc/screen/landing/disnaker/disnaker_screen.dart';
 import 'package:bcc/screen/landing/info/informasi_publik.dart';
@@ -6,7 +7,8 @@ import 'package:bcc/screen/landing/info/informasi_publik.dart';
 // import 'package:bcc/screen/landing/lowongan/lowongan_page_with_appbar.dart';
 import 'package:bcc/screen/landing/pelayanan/pelayanan_screen.dart';
 import 'package:bcc/screen/landing/preneur/preneur_screen.dart';
-import 'package:bcc/screen/perusahaan/management_lowongan/management_lowongan.dart';
+import 'package:bcc/screen/pencaker/antrian_online/antrian_online.dart';
+// import 'package:bcc/screen/perusahaan/management_lowongan/management_lowongan.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPerusahaanGrid extends StatelessWidget {
@@ -36,14 +38,27 @@ class DashboardPerusahaanGrid extends StatelessWidget {
           },
         ),
         BccBigMenuButton(
-          iconData: Icons.work_outline_sharp,
-          label: "Lowongan Kerja",
+          iconData: Icons.confirmation_num_outlined,
+          label: "Antrian Online",
           onTap: () {
+            // if (_checkEmailSudahDiverifikasi(context)) {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const ManagementLowongan(),
+              builder: (context) => const AntrianOnline(
+                userType: UserType.company,
+              ),
             ));
+            // }
           },
         ),
+        // BccBigMenuButton(
+        //   iconData: Icons.work_outline_sharp,
+        //   label: "Lowongan Kerja",
+        //   onTap: () {
+        //     Navigator.of(context).push(MaterialPageRoute(
+        //       builder: (context) => const ManagementLowongan(),
+        //     ));
+        //   },
+        // ),
         BccBigMenuButton(
           iconData: Icons.filter_center_focus_rounded,
           label: "Career Center",

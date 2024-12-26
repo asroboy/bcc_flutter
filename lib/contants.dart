@@ -12,6 +12,7 @@ class Constants {
   static String pathLoginPencaker = 'jobseeker/auth';
   static String pathLoginPerusahaan = 'company/auth';
   static String pathProvinsi = 'admin/master_province';
+  static String pathContentSettng = 'content/settings';
   static String pathMasterQueue = 'admin/master_queue';
   static String pathKuotaAntrian = 'admin/queue_quota';
   static String pathQueue = 'admin/queue';

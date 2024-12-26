@@ -50,7 +50,7 @@ class _RegisterPencariKerjaScreenState
             const Padding(
               padding: EdgeInsets.only(top: 15),
             ),
-            const InformasiPendaftaran(),
+            const InformasiPendaftaran(registerType: RegisterType.pencaker),
             const Padding(
               padding: EdgeInsets.only(top: 40),
             ),

@@ -55,6 +55,7 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
   @override
   void initState() {
     _getProfilPerusahaan();
+
     super.initState();
   }
 
@@ -90,23 +91,33 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
                                     borderRadius: BorderRadius.circular(100),
                                     color: const Color.fromARGB(
                                         255, 209, 208, 208)),
-                                child: (model.profilPerusahaan == null ||
-                                        model.profilPerusahaan['logo'] ==
-                                            null ||
-                                        model.profilPerusahaan['logo'] == '')
+                                child: (model.profilPerusahaan != null &&
+                                        model.profilPerusahaan['logo'] !=
+                                            null &&
+                                        model.profilPerusahaan['logo'] != '')
                                     ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        child: const Icon(
-                                          Icons.assured_workload,
-                                          size: 45,
-                                        ))
-                                    : ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(100),
                                         child: Image.network(
                                           model.profilPerusahaan['logo'] ?? "",
                                           fit: BoxFit.fill,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                child: const Icon(
+                                                  Icons.assured_workload,
+                                                  size: 45,
+                                                ));
+                                          },
+                                        ))
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: const Icon(
+                                          Icons.assured_workload,
+                                          size: 45,
                                         )),
                               ),
                               Padding(
@@ -143,7 +154,7 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
                 child: ListView(
                   children: const [DashboardPerusahaanGrid()],
                 ),
-              )
+              ),
             ]))));
   }
 }

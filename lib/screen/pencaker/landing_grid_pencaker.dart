@@ -73,7 +73,9 @@ class LandingGridPencaker extends StatelessWidget {
           onTap: () {
             if (_checkEmailSudahDiverifikasi(context)) {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AntrianOnline(),
+                builder: (context) => const AntrianOnline(
+                  userType: UserType.jobseeker,
+                ),
               ));
             }
           },

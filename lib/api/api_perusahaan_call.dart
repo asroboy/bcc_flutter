@@ -109,6 +109,12 @@ class ApiPerusahaanCall {
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
 
+  Future<dynamic> getMasterIndustri() {
+    String apiPath = '${Constants.host}${Constants.pathMasterIndustry}';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
   Future<dynamic> getLegalitasHukum(String companyId, String token) {
     String apiPath =
         '${Constants.host}${Constants.pathCompanyLegality}?company_id=$companyId';

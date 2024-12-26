@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/bccwidgets/bcc_card_job.dart';
@@ -23,6 +25,19 @@ class _LandingScreenState extends State<LandingScreen> {
 
   final List<dynamic> _dataLowonganPopuler = [];
   final List<dynamic> _dataPerusahaanTerbaru = [];
+
+  dynamic contentSetting;
+  // bool _isLoadSetting = true;
+
+  _getContentSetting() {
+    _apiCall.getSetting().then((value) {
+      setState(() {
+        contentSetting = value['data'];
+        log('contentSetting $contentSetting');
+        // _isLoadSetting = false;
+      });
+    });
+  }
 
   _fetchLowonganPopuler() {
     Future<dynamic> reqLowonganPopuler =
@@ -67,6 +82,8 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     _isLoadingPerusahaan = true;
     _isLoadingLowongan = true;
+
+    _getContentSetting();
     _fetchPerusahaanTerbaru();
     _fetchLowonganPopuler();
     super.initState();
@@ -75,10 +92,57 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+      ),
       body: ListView(children: [
         SizedBox(
-          child: Image.asset('assets/images/bg_header_landing.png',
-              fit: BoxFit.fill),
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            children: [
+              (contentSetting != null)
+                  ? SizedBox(
+                      child: Image.network(
+                        contentSetting['background_bupati'],
+                        fit: BoxFit.fill,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                              'assets/images/bg_header_landing.png',
+                              fit: BoxFit.fill);
+                        },
+                      ),
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(0)),
+                      ),
+                      height: 180,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1,
+                          color: Colors.white,
+                        ),
+                      )),
+              (contentSetting != null)
+                  ? SizedBox(
+                      height: 180,
+                      child: Center(
+                        child: Image.network(
+                          contentSetting['bupati'],
+                          fit: BoxFit.fill,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center();
+                          },
+                        ),
+                      ),
+                    )
+                  : const Center()
+            ],
+          ),
         ),
         Text(
           'Bogor Career Center',
@@ -91,26 +155,6 @@ class _LandingScreenState extends State<LandingScreen> {
             letterSpacing: -0.24,
           ),
         ),
-        // const Padding(padding: EdgeInsets.only(top: 15)),
-        // const CariJobs(),
-        // const Padding(padding: EdgeInsets.only(top: 5)),
-        // const CariLokasi(),
-        // const Padding(padding: EdgeInsets.only(top: 5)),
-        // const CariPerusahaan(),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 10),
-        //   child: Text(
-        //     'Pencarian Terpopuler : Designer, Developer, Web, IOS, PHP',
-        //     textAlign: TextAlign.center,
-        //     style: TextStyle(
-        //       color: Constants.colorBiruGelap,
-        //       fontSize: 12,
-        //       fontFamily: 'Jost',
-        //       fontWeight: FontWeight.w500,
-        //       letterSpacing: -0.24,
-        //     ),
-        //   ),
-        // ),
         const LandingGrid(),
         const Center(
           child: Text(
@@ -185,51 +229,6 @@ class _LandingScreenState extends State<LandingScreen> {
                 ),
         ),
         const Padding(padding: EdgeInsets.only(top: 20)),
-
-        // const Padding(padding: EdgeInsets.only(top: 20)),
-        // _isLoadingLowongan
-        //     ? const BccCircleLoadingIndicator()
-        //     : SizedBox(
-        //         height: 310,
-        //         child: ListView.builder(
-        //           scrollDirection: Axis.horizontal,
-        //           itemCount: dataLowonganPopuler.length,
-        //           itemBuilder: (context, index) {
-        //             dynamic dataLowongan = dataLowonganPopuler[index];
-        //             return BccCardJob(
-        //               dataLowongan: dataLowongan,
-        //             );
-        //           },
-        //         ),
-        //       ),
-        // // const Padding(padding: EdgeInsets.only(top: 20)),
-        // const Padding(padding: EdgeInsets.only(top: 20)),
-        // const Center(
-        //   child: Text(
-        //     'Perusahaan Terbaru',
-        //     style: TextStyle(
-        //       color: Colors.black,
-        //       fontSize: 18,
-        //       fontFamily: 'Jost',
-        //       fontWeight: FontWeight.w500,
-        //       letterSpacing: -0.14,
-        //     ),
-        //   ),
-        // ),
-        // const Padding(padding: EdgeInsets.only(top: 20)),
-        // _isLoadingPerusahaan
-        //     ? const BccCircleLoadingIndicator()
-        //     : SizedBox(
-        //         height: 310,
-        //         child: ListView.builder(
-        //           scrollDirection: Axis.horizontal,
-        //           itemCount: dataPerusahaanTerbaru.length,
-        //           itemBuilder: (context, index) {
-        //             dynamic dataPerusahaan = dataPerusahaanTerbaru[index];
-        //             return BccCardPerusahaan(dataPerusahaan: dataPerusahaan);
-        //           },
-        //         )),
-        // const Padding(padding: EdgeInsets.only(top: 20)),
       ]),
     );
   }

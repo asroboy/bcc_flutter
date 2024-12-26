@@ -85,7 +85,8 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
                           color: const Color.fromARGB(255, 209, 208, 208)),
-                      child: model.profilPerusahaan['logo'] == ''
+                      child: model.profilPerusahaan['logo'] == '' ||
+                              model.profilPerusahaan['logo'] == null
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(100),
                               child: const Icon(
@@ -97,6 +98,14 @@ class _ProfilePerusahaanState extends State<ProfilePerusahaan> {
                               child: Image.network(
                                 model.profilPerusahaan['logo'],
                                 fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: const Icon(
+                                        Icons.assured_workload,
+                                        size: 45,
+                                      ));
+                                },
                               )),
                     ),
                     Positioned(

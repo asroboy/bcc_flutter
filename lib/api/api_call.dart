@@ -37,6 +37,12 @@ class ApiCall {
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
 
+  Future<dynamic> getSetting() {
+    String apiPath = '${Constants.host}${Constants.pathContentSettng}';
+    log('path $apiPath');
+    return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
+  }
+
   Future<dynamic> getLowonganPopuler(String path) {
     String apiPath = Constants.host + path;
     var body = {

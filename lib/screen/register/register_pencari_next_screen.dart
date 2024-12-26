@@ -354,7 +354,9 @@ class _RegisterPencariKerjaNextScreenState
             const Padding(
               padding: EdgeInsets.only(top: 15),
             ),
-            const InformasiPendaftaran(),
+            const InformasiPendaftaran(
+              registerType: RegisterType.pencaker,
+            ),
             const Padding(
               padding: EdgeInsets.only(top: 40),
             ),
@@ -892,8 +894,7 @@ class _RegisterPencariKerjaNextScreenState
                               // The background color
                               backgroundColor: Colors.white,
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
+                                padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: const [
@@ -912,12 +913,12 @@ class _RegisterPencariKerjaNextScreenState
 
                       _apiCall.daftar(dataCalonUser).then((value) {
                         if (!mounted) return;
-                        Navigator.of(context).pop();
 
                         _apiHelper.apiCallResponseHandler(
                             response: value,
-                            context: context,
                             onSuccess: (response) {
+                              Navigator.of(context).pop();
+
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(

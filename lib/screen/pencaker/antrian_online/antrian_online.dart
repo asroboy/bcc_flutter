@@ -9,7 +9,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 class AntrianOnline extends StatefulWidget {
-  const AntrianOnline({super.key});
+  const AntrianOnline({super.key, required this.userType});
+
+  final UserType userType;
 
   @override
   State<AntrianOnline> createState() => _AntrianOnlineState();
@@ -64,8 +66,8 @@ class _AntrianOnlineState extends State<AntrianOnline> {
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(
-            builder: (context) => const TambahAntrianOnlie(
-              userType: UserType.jobseeker,
+            builder: (context) => TambahAntrianOnlie(
+              userType: widget.userType,
             ),
           ))
               .then(
