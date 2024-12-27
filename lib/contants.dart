@@ -25,6 +25,7 @@ class Constants {
   static String pathPendidikanTerakhir = 'admin/master_degree';
   static String pathJurusanSekolah = 'admin/master_major';
   static String pathDaftarPencaker = 'jobseeker/auth/registration';
+  static String pathDaftarCompany = 'company/auth/registration';
   static String pathPendidiksnPencaker = 'admin/jobseeker_education';
   static String pathPengalamanBekerja = 'admin/jobseeker_experience';
   static String pathSertifikatPencker = 'admin/jobseeker_certificate';

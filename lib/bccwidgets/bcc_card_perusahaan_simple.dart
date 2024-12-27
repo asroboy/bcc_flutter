@@ -29,8 +29,8 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
-                            child: perusahaan['company_logo'] != null &&
-                                    perusahaan['company_logo'] != ''
+                            child: perusahaan['logo'] != null &&
+                                    perusahaan['logo'] != ''
                                 ? Container(
                                     height: 50,
                                     width: 50,
@@ -40,8 +40,8 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(45)),
                                       image: DecorationImage(
-                                          image: NetworkImage(
-                                              perusahaan['company_logo']),
+                                          image:
+                                              NetworkImage(perusahaan['logo']),
                                           fit: BoxFit.fill),
                                     ),
                                   )
@@ -77,29 +77,15 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                                   )
                                 ],
                               ),
-                              perusahaan['master_company_size_name'] == null
+                              perusahaan['email_company'] == null
                                   ? const Center()
-                                  : Text(
-                                      perusahaan['master_company_size_name'] ??
-                                          '-'),
-                              perusahaan['master_city_name'] == null
-                                  ? const Center()
-                                  : Text(perusahaan['master_city_name'] ?? '-'),
+                                  : Text(perusahaan['email_company'] ?? '-'),
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 10))
                             ],
                           )
                         ]),
                   ),
-                  // Positioned(
-                  //     top: -15,
-                  //     right: 5,
-                  //     child: IconButton(
-                  //         onPressed: () {},
-                  //         icon: const Icon(
-                  //           Icons.bookmark,
-                  //           color: Colors.green,
-                  //         ))),
                   Positioned(
                       bottom: 0,
                       right: 0,
@@ -110,9 +96,10 @@ class BccCardPerusahaanSimple extends StatelessWidget {
                                 topLeft: Radius.circular(10))),
                         padding: const EdgeInsets.only(
                             left: 15, right: 15, bottom: 5, top: 5),
-                        child: const Text(
-                          '5 Hari yang lalu',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        child: Text(
+                          perusahaan['founded'],
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 12),
                         ),
                       ))
                 ],

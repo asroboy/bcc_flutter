@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/api/helper.dart';
 import 'package:bcc/contants.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -204,6 +205,11 @@ class _BccCardJobSimpleState extends State<BccCardJobSimple> {
   }
 
   _bookmark({required dynamic dataLowongan}) {
+    if (loginInfo == null) {
+      showAlertDialog(
+          'Silahkan login untuk dapat mengakses fitur ini', context);
+      return;
+    }
     String jobSeekerId = loginInfo['data']['id'];
     String token = loginInfo['data']['token'];
 

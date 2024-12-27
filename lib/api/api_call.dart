@@ -163,6 +163,12 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
   }
 
+  Future<dynamic> registrasiPerusahaan(dynamic body) {
+    String apiPath = Constants.host + Constants.pathDaftarCompany;
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
+  }
+
   Future<dynamic> ajukanLamaran(dynamic body, String token) {
     String apiPath = Constants.host + Constants.pathAjukanLamaran;
     log('path $apiPath');

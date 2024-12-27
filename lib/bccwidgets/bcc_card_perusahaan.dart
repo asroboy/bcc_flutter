@@ -23,22 +23,15 @@ class BccCardPerusahaan extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minHeight: 35,
-                    minWidth: 160,
-                    maxHeight: 35.0,
-                    maxWidth: 160,
-                  ),
-                  child: Flexible(
-                      child: Text(
-                    dataPerusahaan['name'],
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.clip,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 11),
-                  )),
+              SizedBox(
+                width: 150,
+                height: 35,
+                child: Text(
+                  dataPerusahaan['name'],
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 12),
                 ),
               ),
               Padding(

@@ -152,7 +152,36 @@ class _DashboardPerusahaanState extends State<DashboardPerusahaan> {
                     top: (headerHeight - 20), bottom: 10, left: 10, right: 10),
                 height: bodyHeight,
                 child: ListView(
-                  children: const [DashboardPerusahaanGrid()],
+                  children: [
+                    model.profilPerusahaan['verified_disnaker'] == '0'
+                        ? Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 218, 84, 74),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            child: const Center(
+                                child: Column(
+                              children: [
+                                Text(
+                                  'Akun Anda belum diverifikasi',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text(
+                                  'Untuk dapat menggunakan fitur BCC akun Anda harus diverifikasi oleh Admin',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 11),
+                                ),
+                              ],
+                            )),
+                          )
+                        : const Center(),
+                    const DashboardPerusahaanGrid()
+                  ],
                 ),
               ),
             ]))));

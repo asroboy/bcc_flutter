@@ -109,8 +109,11 @@ class ApiPerusahaanCall {
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }
 
-  Future<dynamic> getMasterIndustri() {
+  Future<dynamic> getMasterIndustri({String? cari}) {
     String apiPath = '${Constants.host}${Constants.pathMasterIndustry}';
+    if (cari != null) {
+      apiPath += '?name=$cari';
+    }
     log('path $apiPath');
     return ApiHelper(body: {}, apiUrl: apiPath).requestDataGet();
   }

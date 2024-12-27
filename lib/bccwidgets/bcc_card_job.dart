@@ -20,19 +20,12 @@ class BccCardJob extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
-              child: SizedBox(
-                width: 160,
-                height: 30,
-                child: Flexible(
-                    child: Text(
-                  dataLowongan['company_name'],
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 11),
-                )),
-              ),
-            ),
+            Flexible(
+                child: Text(
+              dataLowongan['company_name'],
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+            )),
             Padding(
                 padding: const EdgeInsets.only(top: 5, bottom: 10),
                 child: dataLowongan['company_logo'] != null &&
@@ -130,7 +123,7 @@ class BccCardJob extends StatelessWidget {
                           overflow: TextOverflow.clip,
                           style: const TextStyle(fontSize: 12),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ],

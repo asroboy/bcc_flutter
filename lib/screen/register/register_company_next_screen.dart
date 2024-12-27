@@ -6,6 +6,7 @@ import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_button.dart';
+import 'package:bcc/bccwidgets/bcc_dropdown_search.dart';
 import 'package:bcc/bccwidgets/bcc_dropdown_string.dart';
 import 'package:bcc/bccwidgets/bcc_row_label.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
@@ -24,6 +25,8 @@ class RegisterCompnayNextScreen extends StatefulWidget {
 }
 
 class _RegisterCompnayNextScreenState extends State<RegisterCompnayNextScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final ApiCall _apiCall = ApiCall();
   final ApiPerusahaanCall _apiPerusahaanCall = ApiPerusahaanCall();
   late ApiHelper _apiHelper;
@@ -32,20 +35,6 @@ class _RegisterCompnayNextScreenState extends State<RegisterCompnayNextScreen> {
   List<dynamic> kotaObj = [];
   List<dynamic> kecamatanObj = [];
   List<dynamic> desaObj = [];
-
-  final TextEditingController _namaLengkapController = TextEditingController();
-  final TextEditingController _noKTPController = TextEditingController();
-  final TextEditingController _noTelpController = TextEditingController();
-  final TextEditingController _tempatLahirController = TextEditingController();
-  final TextEditingController _tahunBerdiriController = TextEditingController();
-  final TextEditingController _sekilasPerusahaanController =
-      TextEditingController();
-
-  final TextEditingController _tahunLulusController = TextEditingController();
-  final TextEditingController _tahunMulaiPendidikan = TextEditingController();
-  final TextEditingController _tahunSelesaiPendidikan = TextEditingController();
-  final TextEditingController _alamatLengkapController =
-      TextEditingController();
 
   List<String> provinsiListString = [];
   List<String> kotaListString = [];
@@ -61,11 +50,6 @@ class _RegisterCompnayNextScreenState extends State<RegisterCompnayNextScreen> {
   dynamic selectedKota;
   dynamic selectedKecamatan;
   dynamic selectedDesa;
-
-  List<dynamic> pendidikanTerakhirObj = [];
-  List<String> pendidikanTerakhirListString = [];
-  dynamic selectedPendidikanTerakhir;
-  String? selectedPendidikanTerakhirString;
 
   _fetchDataProvinsi() {
     Future<dynamic> req = _apiCall.getDataPendukung(Constants.pathProvinsi);
@@ -186,7 +170,7 @@ class _RegisterCompnayNextScreenState extends State<RegisterCompnayNextScreen> {
   List<dynamic> infoUkuranPerusahaan = [];
   List<String> infoUkuranPerusahaanString = [];
   dynamic selectedUkuranPerusahaan;
-  String selectedUkuranPerusahaanName = '';
+  String? selectedUkuranPerusahaanName;
 
   _getUkuranPerusahaanInfo() {
     // String token = loginInfo['data']['token'];
@@ -214,9 +198,9 @@ class _RegisterCompnayNextScreenState extends State<RegisterCompnayNextScreen> {
   dynamic selectedMasterIndustri;
   String? selectedMasterIndustriName;
 
-  _getMasterIndustri() {
+  _getMasterIndustri(String? cari) {
     // String token = loginInfo['data']['token'];
-    _apiPerusahaanCall.getMasterIndustri().then(
+    _apiPerusahaanCall.getMasterIndustri(cari: cari).then(
       (value) {
         if (mounted) {
           _apiHelper.apiCallResponseHandler(
@@ -240,7 +224,7 @@ class _RegisterCompnayNextScreenState extends State<RegisterCompnayNextScreen> {
     _apiHelper = ApiHelper(buildContext: context);
     _fetchDataProvinsi();
     _getUkuranPerusahaanInfo();
-    _getMasterIndustri();
+    _getMasterIndustri(null);
     super.initState();
   }
 
@@ -274,314 +258,449 @@ class _RegisterCompnayNextScreenState extends State<RegisterCompnayNextScreen> {
               padding: EdgeInsets.only(top: 40),
             ),
             Container(
-              padding: const EdgeInsets.all(15),
-              decoration: ShapeDecoration(
-                color: Constants.boxColorBlueTrans,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                padding: const EdgeInsets.all(15),
+                decoration: ShapeDecoration(
+                  color: Constants.boxColorBlueTrans,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: Text(
-                      'INFORMASI DASAR PERUSAHAAN',
-                      style: TextStyle(
-                        color: Constants.colorBiruGelap,
-                        fontSize: 14,
-                        fontFamily: 'Jost',
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.14,
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Text(
+                          'INFORMASI DASAR PERUSAHAAN',
+                          style: TextStyle(
+                            color: Constants.colorBiruGelap,
+                            fontSize: 14,
+                            fontFamily: 'Jost',
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.14,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  BccTextFormFieldInput(
-                    hint: 'Nama Perusahaan*',
-                    controller: _namaLengkapController,
-                    padding: const EdgeInsets.only(top: 5),
-                  ),
-                  BccTextFormFieldInput(
-                    hint: 'Email Perusahaan*',
-                    textInputType: TextInputType.number,
-                    controller: _noKTPController,
-                    padding: const EdgeInsets.only(top: 15),
-                  ),
-                  BccTextFormFieldInput(
-                    hint: 'Telepon Perusahaan*',
-                    textInputType: TextInputType.phone,
-                    controller: _noTelpController,
-                    padding: const EdgeInsets.only(top: 15),
-                  ),
-                  BccTextFormFieldInput(
-                    hint: 'Website*',
-                    controller: _tempatLahirController,
-                    padding: const EdgeInsets.only(top: 10),
-                  ),
-                  const BccRowLabel(label: 'Klasifikasi'),
-                  BccDropDownString(
-                    value: _selectedKlasifikasi,
-                    hint: const Text('Klasifikasi*'),
-                    data: klasifikasi,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedKlasifikasi = value;
-                        _selectedSimpanKlasifikasi =
-                            simpanKlasifikasi[klasifikasi.indexOf(value!)];
-                      });
-                    },
-                  ),
-                  const BccRowLabel(label: 'Jumlah Pekerja'),
-                  BccDropDownString(
-                    value: selectedUkuranPerusahaanName,
-                    hint: const Text('Jumlah Pekerja*'),
-                    data: infoUkuranPerusahaanString,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != null) {
-                          selectedUkuranPerusahaanName = value;
-                          selectedUkuranPerusahaan =
-                              infoUkuranPerusahaan.singleWhere(
-                            (element) =>
-                                element['name'] == selectedUkuranPerusahaanName,
-                          );
-                        }
-                      });
-                    },
-                  ),
-                  const BccRowLabel(label: 'Industri'),
-                  BccDropDownString(
-                    value: selectedMasterIndustriName,
-                    hint: const Text('Industri*'),
-                    data: masterIndustriString,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedMasterIndustriName = value;
-                        if (value != null) {
-                          selectedMasterIndustri = masterIndustri.singleWhere(
-                            (element) =>
-                                element['name'] == selectedUkuranPerusahaanName,
-                          );
-                        }
-                      });
-                    },
-                  ),
-                  BccTextFormFieldInput(
-                    hint: 'Tahun Berdiri*',
-                    controller: _tahunBerdiriController,
-                    textInputType: TextInputType.number,
-                    padding: const EdgeInsets.only(top: 10),
-                  ),
-                  BccTextFormFieldInput(
-                    hint: 'Sekilas Tentang Perusahaan',
-                    controller: _sekilasPerusahaanController,
-                    textInputType: TextInputType.multiline,
-                    padding: const EdgeInsets.only(top: 10),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'ALAMAT PERUSAHAAN',
-                      style: TextStyle(
-                        color: Constants.colorBiruGelap,
-                        fontSize: 14,
-                        fontFamily: 'Jost',
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.14,
+                      BccTextFormFieldInput(
+                        hint: 'Nama Perusahaan*',
+                        autofocus: true,
+                        controller: _namaPerusahaanController,
+                        validator: _namaPerusahaanErrorType,
+                        onChanged: _validateNamaPerusahaan,
+                        padding: const EdgeInsets.only(top: 5),
                       ),
-                    ),
-                  ),
-                  const BccRowLabel(label: 'Procinsi*'),
-                  BccDropDownString(
-                    value: selectedProvinsiString,
-                    hint: const Text('Provinsi'),
-                    data: provinsiListString,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedProvinsiString = value;
-                        selectedProvinsi = provinsisObj
-                            .singleWhere((element) => element['name'] == value);
-                        if (selectedProvinsi != null) {
-                          _resetKota();
-                          _fetchDataKota(selectedProvinsi['id']);
-                        }
-                      });
-                    },
-                  ),
-                  const BccRowLabel(label: 'Kota/Kabupaten*'),
-                  BccDropDownString(
-                    value: selectedKotaString,
-                    hint: const Text('Kota/Kabupaten'),
-                    data: kotaListString,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedKotaString = value;
-                        selectedKota = kotaObj
-                            .singleWhere((element) => element['name'] == value);
-
-                        if (selectedKota != null) {
-                          _resetKecamatan();
-                          _fetchDataKecamatan(selectedKota['id']);
-                        }
-                      });
-                    },
-                  ),
-                  const BccRowLabel(label: 'Kecamatan*'),
-                  BccDropDownString(
-                    value: selectedKecamatanString,
-                    hint: const Text('Kecamatan'),
-                    data: kecamatanListString,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedKecamatanString = value;
-                        selectedKecamatan = kecamatanObj
-                            .singleWhere((element) => element['name'] == value);
-
-                        if (selectedKecamatan != null) {
-                          _resetDesa();
-                          _fetchDataDesa(selectedKecamatan['id']);
-                        }
-                      });
-                    },
-                  ),
-                  const BccRowLabel(label: 'Desa/Keluarahan*'),
-                  BccDropDownString(
-                    value: selectedDesaString,
-                    hint: const Text('Desa/Keluarahan'),
-                    data: desaListString,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedDesaString = value;
-                        selectedDesa = desaObj
-                            .singleWhere((element) => element['name'] == value);
-                      });
-                    },
-                  ),
-                  BccTextFormFieldInput(
-                    hint: 'Jl. Raya Bogor No ....',
-                    label: 'Alamat lengkap',
-                    textInputType: TextInputType.multiline,
-                    padding: const EdgeInsets.only(top: 10),
-                    controller: _alamatLengkapController,
-                  ),
-                  BccButton(
-                    onPressed: () {
-                      String namaLengkap = _namaLengkapController.text;
-                      String noKtp = _noKTPController.text;
-
-                      String tahunBerdiri = _tahunBerdiriController.text;
-                      String tahunLulus = _tahunLulusController.text;
-                      String tahunMulaiPendidikan = _tahunMulaiPendidikan.text;
-                      String alamatLengkap = _alamatLengkapController.text;
-                      String tahunSelesaiPendidikan =
-                          _tahunSelesaiPendidikan.text;
-
-                      if (namaLengkap == '') {
-                        showAlertDialog('Harap isi nama lengkap Kamu', context);
-                        return;
-                      }
-                      if (noKtp == '') {
-                        showAlertDialog('Harap isi no KTP Kamu', context);
-                        return;
-                      }
-                      if (noKtp.length != 16) {
-                        showAlertDialog('No KTP harus 16 digit', context);
-                        return;
-                      }
-
-                      if (tahunBerdiri == '') {
-                        showAlertDialog(
-                            'Harap isi tahun pendirian perusahaan', context);
-                        return;
-                      }
-
-                      if (selectedPendidikanTerakhir == null) {
-                        showAlertDialog(
-                            'Harap pilih pendidikan terakhir Kamu', context);
-                        return;
-                      }
-
-                      if (tahunLulus == '') {
-                        showAlertDialog('Harap isi tahun lulus Kamu', context);
-                        return;
-                      }
-
-                      if (selectedDesa == null || alamatLengkap == '') {
-                        showAlertDialog(
-                            'Harap lengkapi alamat tinggal / domisili',
-                            context);
-                        return;
-                      }
-
-                      var dataCalonUser = widget.registerData;
-
-                      dataCalonUser['tahun_'] = tahunBerdiri;
-
-                      //alamat
-                      dataCalonUser['master_province_id'] =
-                          selectedProvinsi['id'];
-                      dataCalonUser['master_city_id'] = selectedKota['id'];
-                      dataCalonUser['master_district_id'] =
-                          selectedKecamatan['id'];
-                      dataCalonUser['master_village_id'] = selectedDesa['id'];
-                      dataCalonUser['address'] = alamatLengkap;
-
-                      log('data calon user $dataCalonUser');
-
-                      showDialog(
-                          // The user CANNOT close this dialog  by pressing outsite it
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (_) {
-                            return const Dialog(
-                              // The background color
-                              backgroundColor: Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    // The loading indicator
-                                    CircularProgressIndicator(),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    // Some text
-                                    Text('Loading...')
-                                  ],
-                                ),
-                              ),
-                            );
+                      BccTextFormFieldInput(
+                        hint: 'Email Perusahaan*',
+                        textInputType: TextInputType.emailAddress,
+                        validator: _emailErrorType,
+                        onChanged: _validateEmail,
+                        controller: _emailPerusahaanController,
+                        padding: const EdgeInsets.only(top: 15),
+                      ),
+                      BccTextFormFieldInput(
+                        hint: 'Telepon Perusahaan*',
+                        textInputType: TextInputType.phone,
+                        controller: _telpPerusahaanController,
+                        validator: _telpPerusahaanErrorType,
+                        onChanged: _validateNoTelp,
+                        padding: const EdgeInsets.only(top: 15),
+                      ),
+                      BccTextFormFieldInput(
+                        hint: 'Website',
+                        controller: _websiteController,
+                        padding: const EdgeInsets.only(top: 10),
+                      ),
+                      const BccRowLabel(label: 'Klasifikasi'),
+                      BccDropDownString(
+                        value: _selectedKlasifikasi,
+                        hint: const Text('Klasifikasi*'),
+                        data: klasifikasi,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedKlasifikasi = value;
+                            _selectedSimpanKlasifikasi =
+                                simpanKlasifikasi[klasifikasi.indexOf(value!)];
                           });
-
-                      _apiCall.daftar(dataCalonUser).then((value) {
-                        if (!mounted) return;
-
-                        _apiHelper.apiCallResponseHandler(
-                            response: value,
-                            onSuccess: (response) {
-                              Navigator.of(context).pop();
-
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegisterComplete()),
-                                (Route<dynamic> route) => false,
+                        },
+                      ),
+                      const BccRowLabel(label: 'Jumlah Pekerja'),
+                      BccDropDownString(
+                        value: selectedUkuranPerusahaanName,
+                        hint: const Text('Jumlah Pekerja*'),
+                        data: infoUkuranPerusahaanString,
+                        onChanged: (value) {
+                          setState(() {
+                            if (value != null) {
+                              selectedUkuranPerusahaanName = value;
+                              selectedUkuranPerusahaan =
+                                  infoUkuranPerusahaan.singleWhere(
+                                (element) =>
+                                    element['name'] ==
+                                    selectedUkuranPerusahaanName,
                               );
+                            }
+                          });
+                        },
+                      ),
+                      const BccRowLabel(label: 'Industri*'),
+                      BccDropdownSearch(
+                          getData: _getMasterIndustri,
+                          items: masterIndustri,
+                          keyName: 'name',
+                          hint: "Industri",
+                          selectedItem: selectedMasterIndustri,
+                          itemAsString: (dynamic u) => u['name'],
+                          onChange: (data) {
+                            log('data $data');
+                            setState(() {
+                              selectedMasterIndustriName = data['name'];
+                              selectedMasterIndustri = data;
                             });
-                      });
-                    },
-                    padding: const EdgeInsets.only(
-                        left: 0, right: 0, top: 10, bottom: 30),
-                    child: const Text('Daftar'),
+                          }),
+                      // BccDropDownString(
+                      //   value: selectedMasterIndustriName,
+                      //   hint: const Text('Industri*'),
+                      //   data: masterIndustriString,
+                      //   onChanged: (value) {
+                      //     setState(() {
+                      //       selectedMasterIndustriName = value;
+                      //       if (value != null) {
+                      //         selectedMasterIndustri = masterIndustri.singleWhere(
+                      //           (element) =>
+                      //               element['name'] == selectedUkuranPerusahaanName,
+                      //         );
+                      //       }
+                      //     });
+                      //   },
+                      // ),
+                      BccTextFormFieldInput(
+                        hint: 'Tahun Berdiri*',
+                        controller: _tahunBerdiriController,
+                        validator: _tahunBerdiriErrorType,
+                        onChanged: _validateTahunBerdiri,
+                        textInputType: TextInputType.number,
+                        padding: const EdgeInsets.only(top: 10),
+                      ),
+                      BccTextFormFieldInput(
+                        hint: 'Sekilas Tentang Perusahaan',
+                        controller: _sekilasPerusahaanController,
+                        textInputType: TextInputType.multiline,
+                        padding: const EdgeInsets.only(top: 10),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text(
+                          'ALAMAT PERUSAHAAN',
+                          style: TextStyle(
+                            color: Constants.colorBiruGelap,
+                            fontSize: 14,
+                            fontFamily: 'Jost',
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.14,
+                          ),
+                        ),
+                      ),
+                      const BccRowLabel(label: 'Procinsi*'),
+                      BccDropDownString(
+                        value: selectedProvinsiString,
+                        hint: const Text('Provinsi'),
+                        data: provinsiListString,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedProvinsiString = value;
+                            selectedProvinsi = provinsisObj.singleWhere(
+                                (element) => element['name'] == value);
+                            if (selectedProvinsi != null) {
+                              _resetKota();
+                              _fetchDataKota(selectedProvinsi['id']);
+                            }
+                          });
+                        },
+                      ),
+                      const BccRowLabel(label: 'Kota/Kabupaten*'),
+                      BccDropDownString(
+                        value: selectedKotaString,
+                        hint: const Text('Kota/Kabupaten'),
+                        data: kotaListString,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedKotaString = value;
+                            selectedKota = kotaObj.singleWhere(
+                                (element) => element['name'] == value);
+
+                            if (selectedKota != null) {
+                              _resetKecamatan();
+                              _fetchDataKecamatan(selectedKota['id']);
+                            }
+                          });
+                        },
+                      ),
+                      const BccRowLabel(label: 'Kecamatan*'),
+                      BccDropDownString(
+                        value: selectedKecamatanString,
+                        hint: const Text('Kecamatan'),
+                        data: kecamatanListString,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedKecamatanString = value;
+                            selectedKecamatan = kecamatanObj.singleWhere(
+                                (element) => element['name'] == value);
+
+                            if (selectedKecamatan != null) {
+                              _resetDesa();
+                              _fetchDataDesa(selectedKecamatan['id']);
+                            }
+                          });
+                        },
+                      ),
+                      const BccRowLabel(label: 'Desa/Keluarahan*'),
+                      BccDropDownString(
+                        value: selectedDesaString,
+                        hint: const Text('Desa/Keluarahan'),
+                        data: desaListString,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedDesaString = value;
+                            selectedDesa = desaObj.singleWhere(
+                                (element) => element['name'] == value);
+                          });
+                        },
+                      ),
+                      BccTextFormFieldInput(
+                        hint: 'Jl. Raya Bogor No ....',
+                        label: 'Alamat lengkap',
+                        textInputType: TextInputType.multiline,
+                        padding: const EdgeInsets.only(top: 10),
+                        controller: _alamatLengkapController,
+                        onChanged: _validateAlamatLengkap,
+                        validator: _alamatLengkapErrorType,
+                      ),
+                      BccButton(
+                        onPressed: () {
+                          _submitForm();
+                        },
+                        padding: const EdgeInsets.only(
+                            left: 0, right: 0, top: 10, bottom: 30),
+                        child: const Text('Daftar'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )
+                ))
           ],
         ),
       ),
     );
+  }
+
+  final TextEditingController _namaPerusahaanController =
+      TextEditingController();
+  final TextEditingController _emailPerusahaanController =
+      TextEditingController();
+  final TextEditingController _telpPerusahaanController =
+      TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _tahunBerdiriController = TextEditingController();
+  final TextEditingController _alamatLengkapController =
+      TextEditingController();
+  final TextEditingController _sekilasPerusahaanController =
+      TextEditingController();
+  String? _namaPerusahaanErrorType;
+  String? _emailErrorType;
+  String? _telpPerusahaanErrorType;
+  String? _tahunBerdiriErrorType;
+  String? _alamatLengkapErrorType;
+
+  bool _isValidAllInput() {
+    return (_namaPerusahaanErrorType == null ||
+            _namaPerusahaanErrorType == '') &&
+        (_emailErrorType == null || _emailErrorType == '') &&
+        (_telpPerusahaanErrorType == null || _telpPerusahaanErrorType == '') &&
+        (_tahunBerdiriErrorType == null || _tahunBerdiriErrorType == '');
+  }
+
+  void _validateNamaPerusahaan(String? value) {
+    if (value == null || value.isEmpty) {
+      setState(() {
+        _namaPerusahaanErrorType = 'Nama Perusahaan wajib diisi';
+      });
+    } else {
+      setState(() {
+        _namaPerusahaanErrorType = null;
+      });
+    }
+  }
+
+  void _validateEmail(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        _emailErrorType = 'Email wajib diisi';
+      });
+    } else if (!isEmailValid(value)) {
+      setState(() {
+        _emailErrorType = 'Masukkan alamat email yang valid';
+      });
+    } else {
+      setState(() {
+        _emailErrorType = null;
+      });
+    }
+  }
+
+  void _validateNoTelp(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        _telpPerusahaanErrorType = 'No. Telepon perusahaan wajib diisi';
+      });
+    } else {
+      setState(() {
+        _telpPerusahaanErrorType = null;
+      });
+    }
+  }
+
+  void _validateAlamatLengkap(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        _alamatLengkapErrorType = 'Alamat lengkap perusahaan wajib diisi';
+      });
+    } else {
+      setState(() {
+        _alamatLengkapErrorType = null;
+      });
+    }
+  }
+
+  void _validateTahunBerdiri(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        _tahunBerdiriErrorType = 'Tahun pendirian wajib diisi';
+      });
+    }
+    if (value.length != 4) {
+      setState(() {
+        _tahunBerdiriErrorType = 'Tahun terdiri dari 4 digit';
+      });
+    } else {
+      setState(() {
+        _tahunBerdiriErrorType = null;
+      });
+    }
+  }
+
+  bool isEmailValid(String email) {
+    // Basic email validation using regex
+    // You can implement more complex validation if needed
+    return RegExp(r'^[\w-\.]+@[a-zA-Z]+\.[a-zA-Z]{2,}$').hasMatch(email);
+  }
+
+  void _submitForm() {
+    _validateNamaPerusahaan(_namaPerusahaanController.text);
+    _validateEmail(_emailPerusahaanController.text);
+    _validateNoTelp(_telpPerusahaanController.text);
+    _validateTahunBerdiri(_tahunBerdiriController.text);
+    _validateAlamatLengkap(_alamatLengkapController.text);
+
+    if (_isValidAllInput()) {
+      if (_formKey.currentState!.validate()) {
+        // Form is valid, proceed with your logic here
+        // For this example, we will simply print the email
+
+        if (selectedProvinsi == null) {
+          showAlertDialog('Harap pilih provinsi', context);
+          return;
+        }
+        if (selectedKota == null) {
+          showAlertDialog('Harap pilih kota/kabupaten', context);
+          return;
+        }
+
+        if (selectedKecamatan == null) {
+          showAlertDialog('Harap pilih kecamatan', context);
+          return;
+        }
+
+        if (selectedDesa == null) {
+          showAlertDialog('Harap pilih desa/kelurahan', context);
+          return;
+        }
+
+        _showLoadingDialog();
+        _registerPerusahaan();
+      }
+    }
+  }
+
+  _registerPerusahaan() {
+    var akunPerusahaan = widget
+        .registerData; //sudah ada data username dan password dari halaman sebelumnya
+
+    String alamatLengkap = _alamatLengkapController.text;
+
+    akunPerusahaan['name'] = _namaPerusahaanController.text;
+    akunPerusahaan['email_company'] = _emailPerusahaanController.text;
+    akunPerusahaan['website'] = _websiteController.text;
+    akunPerusahaan['phone_number_company'] = _telpPerusahaanController.text;
+    akunPerusahaan['founded'] = _tahunBerdiriController.text;
+    akunPerusahaan['about_company'] = _sekilasPerusahaanController.text;
+    akunPerusahaan['master_industry_id'] = selectedMasterIndustri['id'];
+    akunPerusahaan['master_company_size_id'] = selectedUkuranPerusahaan['id'];
+    akunPerusahaan['grade'] = _selectedSimpanKlasifikasi;
+    akunPerusahaan['domicile'] =
+        selectedKota['name'].contains('Bogor') ? 'INSIDE' : 'OUTSIDE';
+    akunPerusahaan['master_province_id'] = selectedProvinsi['id'];
+    akunPerusahaan['master_city_id'] = selectedKota['id'];
+    akunPerusahaan['master_district_id'] = selectedKecamatan['id'];
+    akunPerusahaan['master_village_id'] = selectedDesa['id'];
+    akunPerusahaan['address'] = alamatLengkap;
+    akunPerusahaan['title'] = 'KANTOR PUSAT';
+
+    log('data calon user $akunPerusahaan');
+
+    _apiCall.registrasiPerusahaan(akunPerusahaan).then((value) {
+      _apiHelper.apiCallResponseHandler(
+          response: value,
+          onSuccess: (response) {
+            _dismissLoadingDialog();
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const RegisterComplete()),
+              (Route<dynamic> route) => false,
+            );
+          });
+    });
+  }
+
+  _dismissLoadingDialog() {
+    Navigator.of(context).pop();
+  }
+
+  _showLoadingDialog() {
+    showDialog(
+        // The user CANNOT close this dialog  by pressing outsite it
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return const Dialog(
+            // The background color
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  // The loading indicator
+                  CircularProgressIndicator(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  // Some text
+                  Text('Loading...')
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

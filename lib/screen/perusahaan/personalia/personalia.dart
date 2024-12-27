@@ -1,5 +1,6 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/identitas_diri.dart';
@@ -74,65 +75,72 @@ class _PersonaliaState extends State<Personalia> {
                     child: CircularProgressIndicator(),
                   ),
                 )
-              : ListView.builder(
-                  itemCount: _personalia.length,
-                  itemBuilder: (context, index) {
-                    dynamic personil = _personalia[index];
+              : _personalia.isEmpty
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      child: const BccNoDataInfo())
+                  : ListView.builder(
+                      itemCount: _personalia.length,
+                      itemBuilder: (context, index) {
+                        dynamic personil = _personalia[index];
 
-                    return Card(
-                      child: ListTile(
-                        title: Text(personil['jobseeker_name'],
-                            style: Theme.of(context).textTheme.headlineSmall),
-                        subtitle: Column(
-                          children: [
-                            RowDataInfo(
-                              label: 'Alamat',
-                              info: personil['jobseeker_address'],
-                            ),
-                            RowDataInfo(
-                                label: 'Jenis Kerja',
-                                info: personil['master_employment_type_name']),
-                            RowDataInfo(
-                                label: 'No. HP',
-                                info: personil['jobseeker_phone_number']),
-                            RowDataInfo(
-                                label: 'Email',
-                                info: personil['jobseeker_email']),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                        return Card(
+                          child: ListTile(
+                            title: Text(personil['jobseeker_name'],
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
+                            subtitle: Column(
                               children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => IdentitasDiri(
-                                        isPerusahaan: true,
-                                        pencakerId:
-                                            personil['jobseeker_unique_id'],
+                                RowDataInfo(
+                                  label: 'Alamat',
+                                  info: personil['jobseeker_address'],
+                                ),
+                                RowDataInfo(
+                                    label: 'Jenis Kerja',
+                                    info: personil[
+                                        'master_employment_type_name']),
+                                RowDataInfo(
+                                    label: 'No. HP',
+                                    info: personil['jobseeker_phone_number']),
+                                RowDataInfo(
+                                    label: 'Email',
+                                    info: personil['jobseeker_email']),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) => IdentitasDiri(
+                                            isPerusahaan: true,
+                                            pencakerId:
+                                                personil['jobseeker_unique_id'],
+                                          ),
+                                        ));
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          foregroundColor: Colors.white,
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text('Detail'),
+                                          Icon(Icons.navigate_next)
+                                        ],
                                       ),
-                                    ));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text('Detail'),
-                                      Icon(Icons.navigate_next)
-                                    ],
-                                  ),
-                                )
+                                    )
+                                  ],
+                                ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                          ),
+                        );
+                      },
+                    ),
         ),
         Container(
           padding: const EdgeInsets.only(top: 80),

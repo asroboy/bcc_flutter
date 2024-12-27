@@ -1,5 +1,6 @@
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_perusahaan_call.dart';
+import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/bccwidgets/bcc_text_form_field.dart';
 // import 'package:bcc/bccwidgets/bcc_circle_loading_indicator.dart';
 import 'package:bcc/contants.dart';
@@ -107,94 +108,101 @@ class _CariKandidatState extends State<CariKandidat> {
                       child: CircularProgressIndicator(),
                     ),
                   )
-                : ListView.builder(
-                    itemCount: _daftarPelamar.length,
-                    itemBuilder: (context, index) {
-                      dynamic pelamar = _daftarPelamar[index];
-                      return Card(
-                        child: ListTile(
-                          title: Text('${pelamar['jobseeker_name']}',
-                              style: Theme.of(context).textTheme.headlineSmall),
-                          subtitle: Column(
-                            children: [
-                              RowDataInfo(
-                                label: 'Alamat',
-                                info: pelamar['jobseeker_address'],
-                              ),
-                              RowDataInfo(
-                                  label: 'Pendidkan',
-                                  info: pelamar['jobseeker_last_education']),
-                              RowDataInfo(
-                                  label: 'Email',
-                                  info: pelamar['jobseeker_email']),
-                              RowDataInfo(
-                                  label: 'Lamaran',
-                                  info: pelamar['company_job_name']),
-                              RowDataInfo(
-                                  label: '', info: pelamar['company_name']),
-                              // RowDataInfo(
-                              //     label: 'Status', info: pelamar['status']),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                : _daftarPelamar.isEmpty
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        child: const BccNoDataInfo())
+                    : ListView.builder(
+                        itemCount: _daftarPelamar.length,
+                        itemBuilder: (context, index) {
+                          dynamic pelamar = _daftarPelamar[index];
+                          return Card(
+                            child: ListTile(
+                              title: Text('${pelamar['jobseeker_name']}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall),
+                              subtitle: Column(
                                 children: [
-                                  const Text('Status'),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 5),
-                                    decoration: BoxDecoration(
-                                        color: _getColorStatus(pelamar),
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: Text(
-                                      pelamar['status'],
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                        builder: (context) => IdentitasDiri(
-                                          isPerusahaan: true,
-                                          pencakerId:
-                                              pelamar['jobseeker_unique_id'],
+                                  RowDataInfo(
+                                    label: 'Alamat',
+                                    info: pelamar['jobseeker_address'],
+                                  ),
+                                  RowDataInfo(
+                                      label: 'Pendidkan',
+                                      info:
+                                          pelamar['jobseeker_last_education']),
+                                  RowDataInfo(
+                                      label: 'Email',
+                                      info: pelamar['jobseeker_email']),
+                                  RowDataInfo(
+                                      label: 'Lamaran',
+                                      info: pelamar['company_job_name']),
+                                  RowDataInfo(
+                                      label: '', info: pelamar['company_name']),
+                                  // RowDataInfo(
+                                  //     label: 'Status', info: pelamar['status']),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Status'),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 5),
+                                        decoration: BoxDecoration(
+                                            color: _getColorStatus(pelamar),
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: Text(
+                                          pelamar['status'],
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
-                                      ));
-                                      // Navigator.of(context)
-                                      //     .push(MaterialPageRoute(
-                                      //   builder: (context) =>
-                                      //       const DetailKandidat(),
-                                      // ));
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.white,
-                                        backgroundColor: Theme.of(context)
-                                            .colorScheme
-                                            .primary),
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text('Detail'),
-                                        Icon(Icons.navigate_next)
-                                      ],
-                                    ),
-                                  )
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) => IdentitasDiri(
+                                              isPerusahaan: true,
+                                              pencakerId: pelamar[
+                                                  'jobseeker_unique_id'],
+                                            ),
+                                          ));
+                                          // Navigator.of(context)
+                                          //     .push(MaterialPageRoute(
+                                          //   builder: (context) =>
+                                          //       const DetailKandidat(),
+                                          // ));
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary),
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text('Detail'),
+                                            Icon(Icons.navigate_next)
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                            ),
+                          );
+                        },
+                      ),
           ),
           Container(
             padding: const EdgeInsets.only(top: 80),
