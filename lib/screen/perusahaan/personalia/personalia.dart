@@ -23,9 +23,7 @@ class _PersonaliaState extends State<Personalia> {
 //
   // final ApiCall _apiCall = ApiCall();
   final ApiHelper _apiHelper = ApiHelper();
-
-  List<dynamic> _personalia = [];
-
+  final List<dynamic> _personalia = [];
   bool _isLoading = true;
 
   _ambilDataPersonalia() {
