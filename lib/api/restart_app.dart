@@ -15,7 +15,9 @@ class RestartApp extends StatefulWidget {
     GetStorage().remove(Constants.userType);
     GetStorage().remove(Constants.loginInfo).then(
       (value) {
-        RestartApp.restartApp(context);
+        if (context.mounted) {
+          RestartApp.restartApp(context);
+        }
       },
     );
     context.findAncestorStateOfType<_RestartAppState>()?.restartApp();

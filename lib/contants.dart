@@ -5,7 +5,7 @@ enum UserType { jobseeker, company }
 class Constants {
   static String serverDev = 'http://bogorcareercenter.indoaksesmedia.my.id';
   static String serverProd = 'https://bogorcareercenter.bogorkab.go.id';
-  static String server = serverProd;
+  static String server = serverDev;
 
   static String host = '$server/api/';
   static String pathDataPelatihanProof = '$server/jobseeker/training/proof';

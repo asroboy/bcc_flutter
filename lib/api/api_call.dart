@@ -169,6 +169,15 @@ class ApiCall {
     return ApiHelper(body: body, apiUrl: apiPath).requestDataPost();
   }
 
+  Future<dynamic> simpanProfilPencaker(
+      String idPencaker, String token, dynamic data) {
+    String apiPath =
+        '${Constants.host}${Constants.pathDataPencaker}/$idPencaker';
+    log('path $apiPath');
+    return ApiHelper(body: data, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
+  }
+
   Future<dynamic> ajukanLamaran(dynamic body, String token) {
     String apiPath = Constants.host + Constants.pathAjukanLamaran;
     log('path $apiPath');

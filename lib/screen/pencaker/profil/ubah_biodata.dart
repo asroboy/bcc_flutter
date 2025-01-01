@@ -9,6 +9,7 @@ import 'package:bcc/bccwidgets/bcc_text_form_field_input.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 class UbahBiodata extends StatefulWidget {
@@ -29,11 +30,84 @@ class _UbahBiodataState extends State<UbahBiodata> {
   final TextEditingController _tempatLahirController = TextEditingController();
   final TextEditingController _tanggalLahirController = TextEditingController();
   final TextEditingController _tahunLulusController = TextEditingController();
+  final TextEditingController _headlineController = TextEditingController();
   final TextEditingController _tinggiBadanController = TextEditingController();
   final TextEditingController _beratBadanController = TextEditingController();
   final TextEditingController _noBpjsController = TextEditingController();
   final TextEditingController _noBpjsTenagaKerjaController =
       TextEditingController();
+
+  String? _namaLengkapErrorType;
+  String? _noTelpErrorType;
+  String? _tempatLahirErrorType;
+  String? _tahunLulusErrorType;
+
+  bool _isValidAllInput() {
+    return (_namaLengkapErrorType == null || _namaLengkapErrorType == '') &&
+        (_noTelpErrorType == null || _noTelpErrorType == '') &&
+        (_tahunLulusErrorType == null || _tahunLulusErrorType == '') &&
+        (_tempatLahirErrorType == null || _tempatLahirErrorType == '');
+  }
+
+  void _validasiNamaLengkap(String? value) {
+    if (value == null || value.isEmpty) {
+      setState(() {
+        _namaLengkapErrorType = 'Nama lengkap wajib diisi';
+      });
+    } else if (value.length <= 5) {
+      setState(() {
+        _namaLengkapErrorType = 'Panjang Nama minimal 5 karakter';
+      });
+    } else {
+      setState(() {
+        _namaLengkapErrorType = null;
+      });
+    }
+  }
+
+  void _validasiNomorTelp(String? value) {
+    if (value == null || value.isEmpty) {
+      setState(() {
+        _noTelpErrorType = 'No Telp/HP wajib diisi';
+      });
+    } else if (value.length <= 5) {
+      setState(() {
+        _noTelpErrorType = 'Panjang no telp minimal 5 karakter';
+      });
+    } else {
+      setState(() {
+        _noTelpErrorType = null;
+      });
+    }
+  }
+
+  void _validasiTempatLahir(String? value) {
+    if (value == null || value.isEmpty) {
+      setState(() {
+        _tempatLahirErrorType = 'Tempat lahir wajib diisi';
+      });
+    } else {
+      setState(() {
+        _tempatLahirErrorType = null;
+      });
+    }
+  }
+
+  void _validasiTahunLulus(String? value) {
+    if (value == null || value.isEmpty) {
+      setState(() {
+        _tempatLahirErrorType = 'Tahun lulus wajib diisi';
+      });
+    } else if (value.length != 4) {
+      setState(() {
+        _tempatLahirErrorType = 'Tahun lulus harus 4 digit';
+      });
+    } else {
+      setState(() {
+        _tempatLahirErrorType = null;
+      });
+    }
+  }
 
   String? tanggalLahirString;
   DateTime? tanggalLahir;
@@ -101,7 +175,7 @@ class _UbahBiodataState extends State<UbahBiodata> {
       warganegara = widget.biodataPencaker['nationality'];
       statusPerkawinan = widget.biodataPencaker['marital_status'];
       statusBekerja = widget.biodataPencaker['work_status'];
-      statusBekerja = widget.biodataPencaker['work_status'];
+      _headlineController.text = widget.biodataPencaker['headline'] ?? '';
 
       selectedPendidikanTerakhirString =
           widget.biodataPencaker['master_degree_name'];
@@ -148,6 +222,8 @@ class _UbahBiodataState extends State<UbahBiodata> {
                   ),
                   BccTextFormFieldInput(
                     hint: 'Nama lengkap',
+                    validator: _namaLengkapErrorType,
+                    onChanged: _validasiNamaLengkap,
                     controller: _namaLengkapController,
                     padding: const EdgeInsets.only(top: 15),
                   ),
@@ -159,12 +235,16 @@ class _UbahBiodataState extends State<UbahBiodata> {
                   ),
                   BccTextFormFieldInput(
                     hint: 'Nomor Telpon',
+                    validator: _noTelpErrorType,
+                    onChanged: _validasiNomorTelp,
                     controller: _notelpController,
                     padding: const EdgeInsets.only(top: 15),
                   ),
                   BccTextFormFieldInput(
                     hint: 'Tempat Lahir',
                     controller: _tempatLahirController,
+                    validator: _tempatLahirErrorType,
+                    onChanged: _validasiTempatLahir,
                     padding: const EdgeInsets.only(top: 15),
                   ),
                   SizedBox(
@@ -219,6 +299,12 @@ class _UbahBiodataState extends State<UbahBiodata> {
                         ),
                       ],
                     ),
+                  ),
+                  BccTextFormFieldInput(
+                    hint: 'Tentang Saya',
+                    controller: _headlineController,
+                    textInputType: TextInputType.multiline,
+                    padding: const EdgeInsets.only(top: 15),
                   ),
                   const BccRowLabel(label: 'Jenis Kelamin'),
                   BccDropDownString(
@@ -309,6 +395,8 @@ class _UbahBiodataState extends State<UbahBiodata> {
                   BccTextFormFieldInput(
                     hint: 'Tahun Lulus',
                     controller: _tahunLulusController,
+                    onChanged: _validasiTahunLulus,
+                    validator: _tahunLulusErrorType,
                     padding: const EdgeInsets.only(top: 15),
                   ),
                   BccTextFormFieldInput(
@@ -332,7 +420,9 @@ class _UbahBiodataState extends State<UbahBiodata> {
                     padding: const EdgeInsets.only(top: 15),
                   ),
                   BccButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _simpan();
+                    },
                     padding: const EdgeInsets.only(top: 20),
                     child: const Text('Simpan'),
                   )
@@ -343,5 +433,80 @@ class _UbahBiodataState extends State<UbahBiodata> {
         ],
       ),
     );
+  }
+
+  _simpan() {
+    if (_isValidAllInput() == false) {
+      return;
+    }
+
+    dynamic loginData = GetStorage().read(Constants.loginInfo);
+    // log('data $loginData');
+    String token = loginData['data']['token'];
+    String jobseekerId = loginData['data']['id'];
+    String jobseekerUniqueId = loginData['data']['unique_id'];
+
+    var biodataSimpan = {
+      'id': jobseekerId,
+      'unique_id': jobseekerUniqueId,
+      'username': _usernameController.text,
+      'email': _emailController.text,
+      'name': _namaLengkapController.text,
+      'ktp_number': _ktpController.text,
+      'phone_number': _notelpController.text,
+      'place_of_birth': _tempatLahirController.text,
+      'date_of_birth': tanggalLahirString,
+      'gender': jenisKelamin,
+      'religion': agama,
+      'nationality': warganegara,
+      'marital_status': statusPerkawinan,
+      'work_status': statusBekerja,
+      'last_education': selectedPendidikanTerakhir['id'],
+      'graduation_year': _tahunLulusController.text,
+      'height': _tinggiBadanController.text,
+      'weight': _beratBadanController.text,
+      'bpjs_health_number': _noBpjsController.text,
+      'bpjs_number': _noBpjsTenagaKerjaController.text,
+      'headline': _headlineController.text
+    };
+
+    showDialog(
+        // The user CANNOT close this dialog  by pressing outsite it
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return const Dialog(
+            // The background color
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // The loading indicator
+                  CircularProgressIndicator(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  // Some text
+                  Text('Harap tunggu...')
+                ],
+              ),
+            ),
+          );
+        });
+
+    if (widget.biodataPencaker != null) {
+      _apiCall
+          .simpanProfilPencaker(jobseekerId, token, biodataSimpan)
+          .then((value) {
+        Navigator.of(context).pop();
+        _apiHelper.apiCallResponseHandler(
+            response: value,
+            onSuccess: (response) {
+              Navigator.of(context).pop('OK');
+            });
+      });
+    }
   }
 }

@@ -3,7 +3,7 @@ import 'package:bcc/api/helper.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/pencaker/landing_grid_pencaker.dart';
-import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
+// import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
 import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -144,34 +144,34 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                                     image: getProfileImage(model)))),
                       ),
                     ),
-                    Positioned(
-                      right: MediaQuery.of(context).size.width / 2 - 65,
-                      bottom: 0,
-                      child: Material(
-                        elevation: 4,
-                        color: Colors.white,
-                        type: MaterialType.circle,
-                        child: Container(
-                          width: 43,
-                          height: 43,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(25)),
-                          child: Center(
-                            child: IconButton(
-                              color: Constants.colorBiruGelap,
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      UbahBiodata(biodataPencaker: userInfo),
-                                ));
-                              },
-                              icon: const Icon(Icons.edit),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
+                    // Positioned(
+                    //   right: MediaQuery.of(context).size.width / 2 - 65,
+                    //   bottom: 0,
+                    //   child: Material(
+                    //     elevation: 4,
+                    //     color: Colors.white,
+                    //     type: MaterialType.circle,
+                    //     child: Container(
+                    //       width: 43,
+                    //       height: 43,
+                    //       decoration: BoxDecoration(
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.circular(25)),
+                    //       child: Center(
+                    //         child: IconButton(
+                    //           color: Constants.colorBiruGelap,
+                    //           onPressed: () {
+                    //             Navigator.of(context).push(MaterialPageRoute(
+                    //               builder: (context) =>
+                    //                   UbahBiodata(biodataPencaker: userInfo),
+                    //             ));
+                    //           },
+                    //           icon: const Icon(Icons.camera),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // )
                   ],
                 ),
                 model.isLoading
@@ -189,9 +189,13 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                                 fontSize: 19,
                                 color: Theme.of(context).colorScheme.primary),
                           ),
-                          //  Text(
-                          //     '${userInfo['headline']}',
-                          //   ),
+                          Text(
+                            '${model.profilPencaker['headline'] ?? ''}',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontStyle: FontStyle.italic,
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
                           Text(
                             '${model.profilPencaker['address']}',
                             textAlign: TextAlign.center,

@@ -12,7 +12,7 @@ import 'package:bcc/screen/pencaker/profil/pengalaman_bekerja.dart';
 import 'package:bcc/screen/pencaker/profil/tambah_keterampilan.dart';
 import 'package:bcc/screen/pencaker/profil/tambah_pendidikan.dart';
 import 'package:bcc/screen/pencaker/profil/tambah_sertifikat.dart';
-import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
+// import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -194,36 +194,6 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                             image: getProfileImage()))),
               ),
             ),
-            widget.isPerusahaan == true
-                ? const Center()
-                : Positioned(
-                    right: MediaQuery.of(context).size.width / 2 - 65,
-                    bottom: 0,
-                    child: Material(
-                      elevation: 4,
-                      color: Colors.white,
-                      type: MaterialType.circle,
-                      child: Container(
-                        width: 43,
-                        height: 43,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25)),
-                        child: Center(
-                          child: IconButton(
-                            color: Constants.colorBiruGelap,
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => UbahBiodata(
-                                    biodataPencaker: biodataPencaker),
-                              ));
-                            },
-                            icon: const Icon(Icons.edit),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
           ],
         ),
         Container(
@@ -240,13 +210,17 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                     fontSize: 18,
                     color: Theme.of(context).colorScheme.primary),
               ),
-              // Text(
-              //   '${userInfo['headline']}',
-              // ),
-              // Text(
-              //   '${userInfo['address']}',
-              //   textAlign: TextAlign.center,
-              // ),
+              Text(
+                '${userInfo['headline'] ?? ''}',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontStyle: FontStyle.italic,
+                    color: Theme.of(context).colorScheme.primary),
+              ),
+              Text(
+                '${userInfo['address']}',
+                textAlign: TextAlign.center,
+              ),
               Container(
                 margin: const EdgeInsets.only(bottom: 0, top: 10),
                 height: 0.5,

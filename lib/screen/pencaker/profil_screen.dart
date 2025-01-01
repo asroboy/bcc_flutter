@@ -1,10 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 
+import 'package:bcc/bccwidgets/loading_indicator.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path/path.dart' as p;
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_normal_button.dart';
+// import 'package:bcc/bccwidgets/display_picture_screen.dart';
+import 'package:bcc/bccwidgets/take_picture_screen.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/landing_tab.dart';
 import 'package:bcc/screen/pencaker/profil/bcc_subheader_label.dart';
@@ -15,8 +23,13 @@ import 'package:bcc/screen/pencaker/profil/tambah_sertifikat.dart';
 import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:bcc/state_management/user_login_model.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart';
+// import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:math' as math;
 import 'package:provider/provider.dart';
 
 class ProfilPencakerScreen extends StatefulWidget {
@@ -72,12 +85,25 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
   final List<dynamic> _dataSertifikat = [];
   final List<dynamic> _dataSkill = [];
 
+  late CameraDescription cameraDescription;
+
   @override
   void initState() {
     super.initState();
     isLoading = true;
     userInfo = loginInfo['data'];
     _fetchBiodataRinciPencaker();
+    availableCameras().then((cameras) {
+      final camera = cameras
+          .where((camera) => camera.lensDirection == CameraLensDirection.front)
+          .toList()
+          .first;
+      setState(() {
+        cameraDescription = camera;
+      });
+    }).catchError((err) {
+      log('Terjadi kendala ambil kamera $err');
+    });
   }
 
   getProfileImage() {
@@ -167,12 +193,17 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                       child: IconButton(
                         color: Constants.colorBiruGelap,
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                UbahBiodata(biodataPencaker: biodataPencaker),
-                          ));
+                          showAlertDialogWithAction2(
+                              'Silahkan pilih untuk mengambil gambar dari Kamera atau Galeri.',
+                              context, () {
+                            Navigator.of(context).pop();
+                            _ambilFile();
+                          }, () {
+                            Navigator.of(context).pop();
+                            _ambilGambarCamera();
+                          }, 'Gallery', 'Kamera');
                         },
-                        icon: const Icon(Icons.edit),
+                        icon: const Icon(Icons.camera_alt_outlined),
                       ),
                     ),
                   ),
@@ -190,6 +221,26 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                       fontSize: 18,
                       color: Theme.of(context).colorScheme.primary),
                 ),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                        builder: (context) =>
+                            UbahBiodata(biodataPencaker: biodataPencaker),
+                      ))
+                          .then(
+                        (value) {
+                          if (value == 'OK') {
+                            setState(() {
+                              isLoading = true;
+                              userInfo = loginInfo['data'];
+                              _fetchBiodataRinciPencaker();
+                            });
+                          }
+                        },
+                      );
+                    },
+                    child: const Text('Ubah Biodata')),
                 // Text(
                 //   '${userInfo['headline']}',
                 // ),
@@ -746,5 +797,152 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
       isLoading = true;
     });
     _fetchBiodataRinciPencaker();
+  }
+
+  String? _pathFile;
+
+  _ambilFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: [
+        'jpg',
+      ],
+    );
+
+    if (result != null) {
+      String? path = result.files.single.path;
+      // String? name = result.files.single.name;
+
+      if (path != null) {
+        // File file = File(path);
+        // String baseFileName = p.basename(file.path);
+        setState(() {
+          _pathFile = path;
+          // _fileName = name;
+        });
+
+        LoadingIndicatorDialog dialog = LoadingIndicatorDialog();
+        dialog.show(context);
+
+        Future<StreamedResponse> f = uploadFile(_pathFile!);
+
+        f.then((value) {
+          Future<String> streamResponse = value.stream.bytesToString();
+          streamResponse.then((value) {
+            var data = jsonDecode(value);
+            log('result updaload $data');
+
+            String urlFoto = data['url'];
+
+            setState(() {
+              // loginData['loginInfo']['foto'] = urlFoto;
+              // GetStorage().write(Constants.LOGIN_INFO, loginData);
+              // loginData = GetStorage().read(Constants.LOGIN_INFO);
+            });
+          });
+
+          dialog.dismiss();
+        });
+      } else {}
+    } else {}
+  }
+
+  _ambilGambarCamera() async {
+    log('Button Pressed');
+    final String? imagePath =
+        await Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => TakePhoto(
+                  // Pass the appropriate camera to the TakePictureScreen widget.
+                  camera: cameraDescription,
+                )));
+
+    log('imagepath: $imagePath');
+
+    if (imagePath != null) {
+      LoadingIndicatorDialog dialog = LoadingIndicatorDialog();
+      dialog.show(context);
+      String newPath = '';
+      if (imagePath.endsWith('.jpg')) {
+        newPath = imagePath.replaceAll('.jpg', '_compressed.jpg');
+      }
+      if (imagePath.endsWith('.jpeg')) {
+        newPath = imagePath.replaceAll('.jpeg', '_compressed.jpeg');
+      }
+      compressImageAndGetFile(File(imagePath), newPath).then((fileResult) {
+        log('path comressed image ${fileResult.path}');
+
+        Future<StreamedResponse> f = uploadFile(fileResult.path);
+
+        f.then((value) {
+          Future<String> streamResponse = value.stream.bytesToString();
+          streamResponse.then((value) {
+            var data = jsonDecode(value);
+            log('result updaload $data');
+
+            String urlFoto = data['url'];
+
+            setState(() {
+              // loginData['loginInfo']['foto'] = urlFoto;
+              // GetStorage().write(Constants.LOGIN_INFO, loginData);
+              // loginData = GetStorage().read(Constants.LOGIN_INFO);
+            });
+          });
+
+          dialog.dismiss();
+        });
+      });
+    }
+  }
+
+  // 2. compress file and get file.
+  Future<File> compressImageAndGetFile(File file, String targetPath) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 10,
+      rotate: 0,
+    );
+
+    String fSizeOri = await getFileSize(file.absolute.path, 2);
+    log('size original file $fSizeOri');
+    File resultFile = File(result!.path);
+    String fSize = await getFileSize(result.path, 2);
+    log('size compressed file $fSize');
+    return resultFile;
+  }
+
+  getFileSize(String filepath, int decimals) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (math.log(bytes) / math.log(1024)).floor();
+    return '${(bytes / math.pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+  }
+
+  Future<StreamedResponse> uploadFile(String pathFile) async {
+    File file = File(pathFile);
+    String baseFileName = p.basename(file.path);
+
+    ApiHelper apiHelper =
+        ApiHelper(apiUrl: _apiHelper.link().replaceAll('Api', 'DoUpload'));
+    MultipartRequest multipartRequest = apiHelper.initMultipartReqest();
+
+    // log('file name $baseFileName');
+    // log('jenis  ${Constants.jenisPertemuanFile}');
+    // // log('id  ${widget.pertemuan['id']}');
+    // log('token  ${loginData['loginInfo']['token']}');
+    // log('class  ${ApiHelper.classPertemuanFileContent}');
+
+    // multipartRequest.fields['nama'] = baseFileName;
+    // multipartRequest.fields['jenis'] = '';
+    // multipartRequest.fields['id'] = '0';
+    // multipartRequest.fields['fotoProfile'] = 'true';
+    // multipartRequest.fields['ref'] = '0';
+    // multipartRequest.fields['token'] = _apiHelper.token();
+    // multipartRequest.fields['clazz'] = ApiHelper.classFileLampiranLain;
+    // multipartRequest.files.add(await MultipartFile.fromPath('file', pathFile));
+
+    return apiHelper.sendMultipartRequest(multipartRequest);
   }
 }
