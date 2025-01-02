@@ -850,9 +850,9 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
             var data = jsonDecode(value);
             log('result updaload $data');
 
-            String urlFoto = data['url'];
+            // String urlFoto = data['url'];
 
-            log('url foto $urlFoto');
+            // log('url foto $urlFoto');
 
             setState(() {
               isLoading = true;
