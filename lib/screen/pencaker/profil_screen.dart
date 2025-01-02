@@ -107,11 +107,12 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
   }
 
   getProfileImage() {
-    return ((userInfo['photo'] == null ||
-            userInfo['photo'] == '' ||
+    return ((isLoading ||
+            biodataPencaker['photo'] == null ||
+            biodataPencaker['photo'] == '' ||
             isErrorImageProfile)
         ? const AssetImage('assets/images/male.png')
-        : NetworkImage(userInfo['photo']));
+        : NetworkImage(biodataPencaker['photo']));
   }
 
   @override
@@ -193,15 +194,32 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                       child: IconButton(
                         color: Constants.colorBiruGelap,
                         onPressed: () {
-                          showAlertDialogWithAction2(
-                              'Silahkan pilih untuk mengambil gambar dari Kamera atau Galeri.',
-                              context, () {
-                            Navigator.of(context).pop();
-                            _ambilFile();
-                          }, () {
-                            Navigator.of(context).pop();
-                            _ambilGambarCamera();
-                          }, 'Gallery', 'Kamera');
+                          showAlertDialogWithTitleAndMultipleActions(
+                              'Ambil Gambar Profil',
+                              const Text(
+                                  'Silahkan pilih untuk mengambil gambar dari Kamera atau Galeri.'),
+                              context,
+                              [
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    _ambilFile();
+                                  },
+                                  label: const Text('Galeri'),
+                                  icon: const Icon(Icons.image_rounded),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey),
+                                ),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    _ambilGambarCamera();
+                                  },
+                                  label: const Text('Kamera'),
+                                  icon: const Icon(Icons.camera_alt_outlined),
+                                  style: ElevatedButton.styleFrom(),
+                                ),
+                              ]);
                         },
                         icon: const Icon(Icons.camera_alt_outlined),
                       ),
@@ -834,10 +852,12 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
 
             String urlFoto = data['url'];
 
+            log('url foto $urlFoto');
+
             setState(() {
-              // loginData['loginInfo']['foto'] = urlFoto;
-              // GetStorage().write(Constants.LOGIN_INFO, loginData);
-              // loginData = GetStorage().read(Constants.LOGIN_INFO);
+              isLoading = true;
+              userInfo = loginInfo['data'];
+              _fetchBiodataRinciPencaker();
             });
           });
 
@@ -879,12 +899,14 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
             var data = jsonDecode(value);
             log('result updaload $data');
 
-            String urlFoto = data['url'];
+            // String urlFoto = data['url'];
+
+            // log('url foto $urlFoto');
 
             setState(() {
-              // loginData['loginInfo']['foto'] = urlFoto;
-              // GetStorage().write(Constants.LOGIN_INFO, loginData);
-              // loginData = GetStorage().read(Constants.LOGIN_INFO);
+              isLoading = true;
+              userInfo = loginInfo['data'];
+              _fetchBiodataRinciPencaker();
             });
           });
 
@@ -921,14 +943,21 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
   }
 
   Future<StreamedResponse> uploadFile(String pathFile) async {
+    String token = loginInfo['data']['token'];
+    String jobseekerId = loginInfo['data']['unique_id'];
     File file = File(pathFile);
     String baseFileName = p.basename(file.path);
 
-    ApiHelper apiHelper =
-        ApiHelper(apiUrl: _apiHelper.link().replaceAll('Api', 'DoUpload'));
-    MultipartRequest multipartRequest = apiHelper.initMultipartReqest();
+    // ApiHelper apiHelper =
+    //     ApiHelper(apiUrl: _apiHelper.link().replaceAll('Api', 'DoUpload'));
+    String apiPath =
+        '${Constants.host}${Constants.pathDataPencaker}/$jobseekerId';
 
-    // log('file name $baseFileName');
+    log('path url $apiPath');
+    MultipartRequest multipartRequest =
+        _apiHelper.initMultipartReqest(url: apiPath, method: 'POST');
+
+    log('file name $baseFileName');
     // log('jenis  ${Constants.jenisPertemuanFile}');
     // // log('id  ${widget.pertemuan['id']}');
     // log('token  ${loginData['loginInfo']['token']}');
@@ -941,8 +970,12 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
     // multipartRequest.fields['ref'] = '0';
     // multipartRequest.fields['token'] = _apiHelper.token();
     // multipartRequest.fields['clazz'] = ApiHelper.classFileLampiranLain;
-    // multipartRequest.files.add(await MultipartFile.fromPath('file', pathFile));
+    multipartRequest.files.add(await MultipartFile.fromPath('photo', pathFile));
+    Map<String, String> headers = {
+      "Authorization": token,
+    };
+    multipartRequest.headers.addAll(headers);
 
-    return apiHelper.sendMultipartRequest(multipartRequest);
+    return _apiHelper.sendMultipartRequest(multipartRequest);
   }
 }

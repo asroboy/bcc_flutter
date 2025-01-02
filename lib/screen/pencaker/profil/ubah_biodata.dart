@@ -498,7 +498,7 @@ class _UbahBiodataState extends State<UbahBiodata> {
 
     if (widget.biodataPencaker != null) {
       _apiCall
-          .simpanProfilPencaker(jobseekerId, token, biodataSimpan)
+          .simpanProfilPencaker(jobseekerUniqueId, token, biodataSimpan)
           .then((value) {
         Navigator.of(context).pop();
         _apiHelper.apiCallResponseHandler(

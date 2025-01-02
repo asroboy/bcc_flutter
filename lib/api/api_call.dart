@@ -175,7 +175,7 @@ class ApiCall {
         '${Constants.host}${Constants.pathDataPencaker}/$idPencaker';
     log('path $apiPath');
     return ApiHelper(body: data, apiUrl: apiPath)
-        .requestAuthenticatedDataPut(token);
+        .requestAuthenticatedDataPost(token);
   }
 
   Future<dynamic> ajukanLamaran(dynamic body, String token) {

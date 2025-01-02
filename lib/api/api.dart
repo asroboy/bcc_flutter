@@ -292,14 +292,15 @@ class ApiHelper {
     return data;
   }
 
-  MultipartRequest initMultipartReqest() {
-    if (apiUrl!.contains('http://')) {
-      apiUrl = apiUrl!.replaceAll('http://', 'https://');
+  MultipartRequest initMultipartReqest({String? url, String? method}) {
+    if (url == null) {
+      if (apiUrl!.contains('http://')) {
+        apiUrl = apiUrl!.replaceAll('http://', 'https://');
+      }
     }
-
     //   LoadingIndicatorDialog().show(context);
-    var request =
-        MultipartRequest('POST', Uri.parse(apiUrl ?? apiUrlGlobalLogin));
+    var request = MultipartRequest(
+        method ?? 'POST', Uri.parse(url ?? apiUrl ?? apiUrlGlobalLogin));
 
     return request;
   }
