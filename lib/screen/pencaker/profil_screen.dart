@@ -130,9 +130,15 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
           actions: [
             IconButton(
                 onPressed: () {
-                  _logout();
+                  showAlertDialogWithAction2(
+                      'Apakah kamu yakin ingin keluar?', context, () {
+                    Navigator.of(context).pop();
+                  }, () {
+                    Navigator.of(context).pop();
+                    _logout();
+                  }, 'Batal', 'OK');
                 },
-                icon: const Icon(Icons.lock))
+                icon: const Icon(Icons.logout))
           ],
         ),
         body: ListView(children: [
@@ -948,7 +954,9 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                                               Navigator.of(context)
                                                   .push(MaterialPageRoute(
                                             builder: (context) =>
-                                                const TambahSertifikat(),
+                                                TambahSertifikat(
+                                              sertifikatEdit: lisensi,
+                                            ),
                                           ));
 
                                           tambahSert.then((value) {
@@ -1069,7 +1077,7 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                               },
                               child: const Row(
                                 children: [
-                                  Icon(Icons.lock),
+                                  Icon(Icons.logout),
                                   Padding(padding: EdgeInsets.only(right: 5)),
                                   Text('Keluar')
                                 ],

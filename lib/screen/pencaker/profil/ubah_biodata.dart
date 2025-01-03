@@ -500,7 +500,9 @@ class _UbahBiodataState extends State<UbahBiodata> {
       _apiCall
           .simpanProfilPencaker(jobseekerUniqueId, token, biodataSimpan)
           .then((value) {
-        Navigator.of(context).pop();
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
         _apiHelper.apiCallResponseHandler(
             response: value,
             onSuccess: (response) {

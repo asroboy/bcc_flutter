@@ -121,16 +121,4 @@ class LandingGridPencaker extends StatelessWidget {
       ],
     );
   }
-
-  bool _checkEmailSudahDiverifikasi(BuildContext context) {
-    bool verified = userInfo['verified_email'] == '1';
-    if (!verified) {
-      {
-        showAlertDialogWithTitle('Email belum diverifikasi',
-            Constants.infoEmailNotVerified2, context);
-      }
-    }
-
-    return verified;
-  }
 }

@@ -30,7 +30,7 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
   final TextEditingController _namaPenerbit = TextEditingController();
 
   final ApiCall _apiCall = ApiCall();
-  final ApiHelper _apiHelper = ApiHelper();
+  late ApiHelper _apiHelper;
 
   String? kredensialMasihAktif;
   String? bulanMulai;
@@ -49,6 +49,25 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
     'November',
     'Desember',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _apiHelper = ApiHelper(buildContext: context);
+    if (widget.sertifikatEdit != null) {
+      _namaSertifikat.text = widget.sertifikatEdit['name'];
+      _namaPenerbit.text = widget.sertifikatEdit['issuing_organization'];
+      kredensialMasihAktif =
+          (widget.sertifikatEdit['is_not_expire'] == 1) ? 'Ya' : 'Tidak';
+      bulanMulai = widget.sertifikatEdit['start_month'];
+      _tahunMulaiController.text = widget.sertifikatEdit['start_year'];
+      bulanSampai = widget.sertifikatEdit['end_month'];
+      _tahunSampaiController.text = widget.sertifikatEdit['end_year'];
+      _idCredentialController.text = widget.sertifikatEdit['credential_id'];
+      _urlCredentialController.text = widget.sertifikatEdit['credential_url'];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,25 +223,30 @@ class _TambahSertifikatState extends State<TambahSertifikat> {
                           );
                         });
 
-                    _apiCall
-                        .simpanSertifikatPencaker(dataSertifkat, token)
-                        .then((value) {
-                      if (!mounted) return;
-                      Navigator.of(context).pop();
-
-                      _apiHelper.apiCallResponseHandler(
-                          response: value,
-                          context: context,
-                          onSuccess: (response) {
-                            Navigator.of(context).pop(response);
-                            // Navigator.pushAndRemoveUntil(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => const RegisterComplete()),
-                            //   (Route<dynamic> route) => false,
-                            // );
-                          });
-                    });
+                    if (widget.sertifikatEdit != null) {
+                      _apiCall
+                          .updateSertifikatPencaker(
+                              dataSertifkat, token, widget.sertifikatEdit['id'])
+                          .then((value) {
+                        Navigator.of(context).pop();
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            onSuccess: (response) {
+                              Navigator.of(context).pop(response);
+                            });
+                      });
+                    } else {
+                      _apiCall
+                          .simpanSertifikatPencaker(dataSertifkat, token)
+                          .then((value) {
+                        Navigator.of(context).pop();
+                        _apiHelper.apiCallResponseHandler(
+                            response: value,
+                            onSuccess: (response) {
+                              Navigator.of(context).pop(response);
+                            });
+                      });
+                    }
                   },
                   padding: const EdgeInsets.only(top: 20),
                   child: const Text('Simpan'),

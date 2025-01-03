@@ -7,11 +7,13 @@ import 'package:bcc/bccwidgets/bcc_line_break.dart';
 import 'package:bcc/bccwidgets/bcc_row_info2.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/login_screen.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 // import 'package:flutter_html/flutter_html.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:provider/provider.dart';
 // import 'package:webviewx/webviewx.dart';
 
 class LowonganDetail extends StatefulWidget {
@@ -29,11 +31,16 @@ class _LowonganDetailState extends State<LowonganDetail> {
   final ApiHelper _apiHelper = ApiHelper();
 
   int idPencaker = 0;
+  dynamic profilePencaker;
 
   @override
   void initState() {
     if (loginInfo != null) {
       idPencaker = int.parse(loginInfo['data']['id']);
+      UserLoginModel model =
+          Provider.of<UserLoginModel>(context, listen: false);
+
+      profilePencaker = model.profilePencaker;
     }
 
     // _isLoadingLowongan = true;
@@ -229,20 +236,39 @@ class _LowonganDetailState extends State<LowonganDetail> {
         ));
       }, 'OK');
     } else {
-      String token = loginInfo['data']['token'];
-      dynamic body = {'jobseeker_id': idPencaker, 'company_job_id': jobId};
-      Future<dynamic> reqLowonganPopuler = _apiCall.ajukanLamaran(body, token);
-      reqLowonganPopuler.then((value) {
-        // log('result $value');
-        if (mounted) {
-          _apiHelper.apiCallResponseHandler(
-              response: value,
-              context: context,
-              onSuccess: (response) {
-                showAlertDialog('Lamaran Kamu sudah diajukan', context);
-              });
-        }
-      });
+      bool akunLengkap = _isAkunLengkap(profilePencaker);
+      log('akunLengkap $akunLengkap');
+      if (!akunLengkap) {
+        showAlertDialogWithAction(
+            'Silahkan lengkapi biodata Kamu:\n1. Photo profil, \n2. CV/Riwayat Hidup, \n3. KTP dan \n4. Ijazah Terakhir \nuntuk mengajukan lamaran',
+            context, () {
+          Navigator.of(context).pop();
+        }, 'OK');
+        return;
+      } else {
+        String token = loginInfo['data']['token'];
+        dynamic body = {'jobseeker_id': idPencaker, 'company_job_id': jobId};
+        Future<dynamic> reqLowonganPopuler =
+            _apiCall.ajukanLamaran(body, token);
+        reqLowonganPopuler.then((value) {
+          // log('result $value');
+          if (mounted) {
+            _apiHelper.apiCallResponseHandler(
+                response: value,
+                context: context,
+                onSuccess: (response) {
+                  showAlertDialog('Lamaran Kamu sudah diajukan', context);
+                });
+          }
+        });
+      }
     }
+  }
+
+  bool _isAkunLengkap(dynamic profilPencaker) {
+    return profilPencaker['photo'] != null &&
+        profilPencaker['ktp_file'] != null &&
+        profilPencaker['ijazah_file'] != null &&
+        profilPencaker['cv_file'] != null;
   }
 }

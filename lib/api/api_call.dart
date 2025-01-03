@@ -174,8 +174,9 @@ class ApiCall {
     String apiPath =
         '${Constants.host}${Constants.pathDataPencaker}/$idPencaker';
     log('path $apiPath');
+    log('token $token');
     return ApiHelper(body: data, apiUrl: apiPath)
-        .requestAuthenticatedDataPost(token);
+        .requestAuthenticatedDataPut(token);
   }
 
   Future<dynamic> ajukanLamaran(dynamic body, String token) {
@@ -219,6 +220,14 @@ class ApiCall {
     log('path $apiPath');
     return ApiHelper(body: body, apiUrl: apiPath)
         .requestAuthenticatedDataPost(token);
+  }
+
+  Future<dynamic> updateSertifikatPencaker(
+      dynamic body, String token, String id) {
+    String apiPath = '${Constants.host}${Constants.pathSertifikatPencker}/$id';
+    log('path $apiPath');
+    return ApiHelper(body: body, apiUrl: apiPath)
+        .requestAuthenticatedDataPut(token);
   }
 
   Future<dynamic> simpanSkillPencaker(dynamic body, String token) {

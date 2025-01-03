@@ -158,11 +158,12 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
       bulanMulai = widget.riwayatPendidikanEdit['start_month'];
       bulanSampai = widget.riwayatPendidikanEdit['end_month'];
       _tahunMulaiController = TextEditingController(
-          text: widget.riwayatPendidikanEdit['start_year']);
-      _tahunSampaiController =
-          TextEditingController(text: widget.riwayatPendidikanEdit['end_year']);
+          text: widget.riwayatPendidikanEdit['start_year'] ?? '');
+      _tahunSampaiController = TextEditingController(
+          text: widget.riwayatPendidikanEdit['end_year'] ?? '');
 
-      _descriptionController.text = widget.riwayatPendidikanEdit['description'];
+      _descriptionController.text =
+          widget.riwayatPendidikanEdit['description'] ?? '';
     }
     super.initState();
   }
