@@ -10,8 +10,10 @@ import 'package:bcc/screen/pencaker/riwayat/riwayat_lamaran.dart';
 import 'package:flutter/material.dart';
 
 class LandingGridPencaker extends StatelessWidget {
-  const LandingGridPencaker({super.key, required this.userInfo});
+  const LandingGridPencaker(
+      {super.key, required this.userInfo, required this.isAkunLengkap});
   final dynamic userInfo;
+  final bool isAkunLengkap;
 
   @override
   Widget build(BuildContext context) {
@@ -40,30 +42,45 @@ class LandingGridPencaker extends StatelessWidget {
             iconData: Icons.work_outline,
             label: "Lowongan Pekerjaan",
             onTap: () {
-              if (_checkEmailSudahDiverifikasi(context)) {
+              if (isAkunLengkap) {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const LowonganPageWithAppBar(),
                 ));
+              } else {
+                showAlertDialogWithTitle(
+                    'Lengkapi data diri',
+                    'Lengkapi data diri terlebih dahulu untuk mengakses menu ini',
+                    context);
               }
             }),
         BccBigMenuButton(
             iconData: Icons.work_history_outlined,
             label: "Riwayat Lamaran",
             onTap: () {
-              if (_checkEmailSudahDiverifikasi(context)) {
+              if (isAkunLengkap) {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const RiwayatLamaran(),
                 ));
+              } else {
+                showAlertDialogWithTitle(
+                    'Lengkapi data diri',
+                    'Lengkapi data diri terlebih dahulu untuk mengakses menu ini',
+                    context);
               }
             }),
         BccBigMenuButton(
           iconData: Icons.bookmark_outline,
           label: "Pekerjaan Disimpan",
           onTap: () {
-            if (_checkEmailSudahDiverifikasi(context)) {
+            if (isAkunLengkap) {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const ListPekerjaanDisimpan(),
               ));
+            } else {
+              showAlertDialogWithTitle(
+                  'Lengkapi data diri',
+                  'Lengkapi data diri terlebih dahulu untuk mengakses menu ini',
+                  context);
             }
           },
         ),
@@ -71,12 +88,17 @@ class LandingGridPencaker extends StatelessWidget {
           iconData: Icons.confirmation_num_outlined,
           label: "Antrian Online",
           onTap: () {
-            if (_checkEmailSudahDiverifikasi(context)) {
+            if (isAkunLengkap) {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const AntrianOnline(
                   userType: UserType.jobseeker,
                 ),
               ));
+            } else {
+              showAlertDialogWithTitle(
+                  'Lengkapi data diri',
+                  'Lengkapi data diri terlebih dahulu untuk untuk mengakses menu ini',
+                  context);
             }
           },
         ),
@@ -84,10 +106,15 @@ class LandingGridPencaker extends StatelessWidget {
           iconData: Icons.business_center_outlined,
           label: "Balai Latihan Kerja",
           onTap: () {
-            if (_checkEmailSudahDiverifikasi(context)) {
+            if (isAkunLengkap) {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const BalaiLatihanKerja(),
               ));
+            } else {
+              showAlertDialogWithTitle(
+                  'Lengkapi data diri',
+                  'Lengkapi data diri terlebih dahulu untuk mengakses menu ini',
+                  context);
             }
           },
         ),

@@ -144,84 +144,178 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                                     image: getProfileImage(model)))),
                       ),
                     ),
-                    // Positioned(
-                    //   right: MediaQuery.of(context).size.width / 2 - 65,
-                    //   bottom: 0,
-                    //   child: Material(
-                    //     elevation: 4,
-                    //     color: Colors.white,
-                    //     type: MaterialType.circle,
-                    //     child: Container(
-                    //       width: 43,
-                    //       height: 43,
-                    //       decoration: BoxDecoration(
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.circular(25)),
-                    //       child: Center(
-                    //         child: IconButton(
-                    //           color: Constants.colorBiruGelap,
-                    //           onPressed: () {
-                    //             Navigator.of(context).push(MaterialPageRoute(
-                    //               builder: (context) =>
-                    //                   UbahBiodata(biodataPencaker: userInfo),
-                    //             ));
-                    //           },
-                    //           icon: const Icon(Icons.camera),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
                   ],
                 ),
                 model.isLoading
                     ? Padding(
                         padding: EdgeInsets.only(
                             top: MediaQuery.of(context).size.height * 0.3),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       )
                     : Container(
                         margin: const EdgeInsets.all(15),
                         child: Column(children: [
                           Text(
-                            '${model.profilPencaker['name']}',
+                            model.profilPencaker == null
+                                ? ''
+                                : '${model.profilPencaker['name'] ?? ''}',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 19,
                                 color: Theme.of(context).colorScheme.primary),
                           ),
                           Text(
-                            '${model.profilPencaker['headline'] ?? ''}',
+                            model.profilPencaker == null
+                                ? ''
+                                : '${model.profilPencaker['headline'] ?? ''}',
                             style: TextStyle(
                                 fontSize: 15,
                                 fontStyle: FontStyle.italic,
                                 color: Theme.of(context).colorScheme.primary),
                           ),
                           Text(
-                            '${model.profilPencaker['address']},  ${model.profilPencaker['master_village_name']}, ${model.profilPencaker['master_district_name']}, ${model.profilPencaker['master_city_name']}, ${model.profilPencaker['master_province_name']}',
+                            model.profilPencaker == null
+                                ? ''
+                                : '${model.profilPencaker['address']},  ${model.profilPencaker['master_village_name']}, ${model.profilPencaker['master_district_name']}, ${model.profilPencaker['master_city_name']}, ${model.profilPencaker['master_province_name']}',
                             textAlign: TextAlign.center,
                           ),
-                          model.profilPencaker['verified_email'] == '1'
+                          model.profilPencaker == null
                               ? const Center()
-                              : Text(
-                                  Constants.infoEmailNotVerified,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Color.fromARGB(255, 255, 60, 0)),
-                                ),
+                              : model.profilPencaker['verified_email'] == '1'
+                                  ? const Center()
+                                  : Card(
+                                      color: Colors.red[100],
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                          Constants.infoEmailNotVerified,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 136, 15, 6)),
+                                        ),
+                                      ),
+                                    ),
+                          model.profilPencaker == null
+                              ? const Center()
+                              : model.profilPencaker['photo'] != null &&
+                                      model.profilPencaker['ktp_file'] !=
+                                          null &&
+                                      model.profilPencaker['ijazah_file'] !=
+                                          null
+                                  ? const Center()
+                                  : Card(
+                                      color: Colors.orange[100],
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(
+                                          10,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              Constants.infoFileBelumDiupload,
+                                              style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 121, 76, 9)),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                    model.profilPencaker[
+                                                                'photo'] ==
+                                                            null
+                                                        ? Icons.close
+                                                        : Icons.check,
+                                                    color: model.profilPencaker[
+                                                                'photo'] ==
+                                                            null
+                                                        ? Colors.red
+                                                        : Colors.green),
+                                                const Text(
+                                                  '1. Foto Profil',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 121, 76, 9)),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                    model.profilPencaker[
+                                                                'ktp_file'] ==
+                                                            null
+                                                        ? Icons.close
+                                                        : Icons.check,
+                                                    color: model.profilPencaker[
+                                                                'ktp_file'] ==
+                                                            null
+                                                        ? Colors.red
+                                                        : Colors.green),
+                                                const Text(
+                                                  '2. KTP',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 121, 76, 9)),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                    model.profilPencaker[
+                                                                'ijazah_file'] ==
+                                                            null
+                                                        ? Icons.close
+                                                        : Icons.check,
+                                                    color: model.profilPencaker[
+                                                                'ijazah_file'] ==
+                                                            null
+                                                        ? Colors.red
+                                                        : Colors.green),
+                                                const Text(
+                                                  '3. Ijazah Terakhir',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 121, 76, 9)),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              Constants.infoFileBelumDiupload2,
+                                              style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 121, 76, 9)),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                           Container(
                             margin: const EdgeInsets.only(bottom: 10, top: 10),
                             height: 0.5,
                             color: Colors.white,
                           ),
                         ])),
-                model.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                model.isLoading || model.profilPencaker == null
+                    ? const Center()
                     : LandingGridPencaker(
                         userInfo: userInfo,
+                        isAkunLengkap: _isAkunLengkap(model.profilPencaker),
                       ),
               ]),
             ));
+  }
+
+  bool _isAkunLengkap(dynamic profilPencaker) {
+    return profilPencaker['photo'] != null &&
+        profilPencaker['ktp_file'] != null &&
+        profilPencaker['ijazah_file'] != null &&
+        profilPencaker['verified_email'] == '1';
   }
 }

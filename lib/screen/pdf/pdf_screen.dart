@@ -38,9 +38,9 @@ class _PdfScreenState extends State<PdfScreen> with WidgetsBindingObserver {
         preventLinkNavigation:
             false, // if set to true the link is handled in flutter
         backgroundColor: Colors.black,
-        onRender: (_pages) {
+        onRender: (pages) {
           setState(() {
-            pages = _pages;
+            pages = pages;
             isReady = true;
           });
         },

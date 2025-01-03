@@ -6,7 +6,9 @@ import 'package:bcc/screen/landing/lowongan/lowongan_list_screen.dart';
 import 'package:bcc/screen/landing/perusahaan/perusahaan_list_screen.dart';
 import 'package:bcc/screen/pencaker/beranda_pencaker.dart';
 import 'package:bcc/screen/pencaker/profil_screen.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DashboardTabPencaker extends StatefulWidget {
   const DashboardTabPencaker({super.key});
@@ -35,44 +37,45 @@ class _DashboardTabPencakerState extends State<DashboardTabPencaker> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 5,
-      child: Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-          // backgroundColor: Colors.transparent,
-          // elevation: 0,
-          useLegacyColorScheme: false,
-          type: BottomNavigationBarType.shifting,
-          selectedItemColor: Constants.colorBiruGelap,
-          unselectedItemColor: const Color.fromARGB(255, 144, 144, 144),
-          currentIndex: _selectedIndex, //New
-          onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_filled),
-              label: 'Beranda',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.work),
-              label: 'Lowongan',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_work),
-              label: 'Perusahaan',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Pesan',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profil',
-            ),
-          ],
-        ),
-        body: _pages[_selectedIndex],
-      ),
-    );
+    return Consumer(
+        builder: (context, UserLoginModel model, _) => DefaultTabController(
+              length: 5,
+              child: Scaffold(
+                bottomNavigationBar: BottomNavigationBar(
+                  landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
+                  // backgroundColor: Colors.transparent,
+                  // elevation: 0,
+                  useLegacyColorScheme: false,
+                  type: BottomNavigationBarType.shifting,
+                  selectedItemColor: Constants.colorBiruGelap,
+                  unselectedItemColor: const Color.fromARGB(255, 144, 144, 144),
+                  currentIndex: _selectedIndex, //New
+                  onTap: _onItemTapped,
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home_filled),
+                      label: 'Beranda',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.work),
+                      label: 'Lowongan',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home_work),
+                      label: 'Perusahaan',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.chat),
+                      label: 'Pesan',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: 'Profil',
+                    ),
+                  ],
+                ),
+                body: _pages[_selectedIndex],
+              ),
+            ));
   }
 }

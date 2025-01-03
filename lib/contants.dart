@@ -84,4 +84,8 @@ class Constants {
       'Email Kamu belum diverifikasi, silahkan verifikasi email Kamu untuk menggunakan semua fitur';
   static String infoEmailNotVerified2 =
       'silahkan verifikasi email Kamu untuk menggunakan semua fitur';
+  static String infoFileBelumDiupload =
+      'Isi biodata kamu dengan lengkap agar perusahaan memprioritaskanmu.';
+  static String infoFileBelumDiupload2 =
+      ' Menu akan berfungsi setelah kamu melengkapi biodata.';
 }

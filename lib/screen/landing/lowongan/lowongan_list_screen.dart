@@ -7,8 +7,10 @@ import 'package:bcc/bccwidgets/bcc_no_data_info.dart';
 import 'package:bcc/contants.dart';
 import 'package:bcc/screen/landing/cari_jobs.dart';
 import 'package:bcc/screen/landing/lowongan/lowongan_detail.dart';
+import 'package:bcc/state_management/user_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:provider/provider.dart';
 
 class LowonganListScreen extends StatefulWidget {
   const LowonganListScreen({super.key});
@@ -97,6 +99,135 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return loginInfo != null
+        ? Consumer(
+            builder: (context, UserLoginModel model, _) =>
+                _isAkunLengkap(model.profilPencaker)
+                    ? getScaffold()
+                    : getScaffoldFiturOff(model))
+        : getScaffold();
+  }
+
+  Widget getScaffoldFiturOff(UserLoginModel model) {
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 235, 231, 231),
+      appBar: AppBar(
+        backgroundColor: Constants.colorBiruGelap,
+        elevation: 0,
+        toolbarHeight: 0,
+      ),
+      body: ListView(
+        children: [
+          Stack(
+            children: [
+              Container(
+                height: 120,
+                decoration: BoxDecoration(
+                    color: Constants.colorBiruGelap,
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+              ),
+              Container(
+                height: 120,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/bg_batik_detil.png'),
+                      fit: BoxFit.cover),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
+                child: Column(children: [
+                  CariJobs(controller: _searchTextController, onPressed: () {}),
+                  const Padding(padding: EdgeInsets.only(top: 20)),
+                ]),
+              )
+            ],
+          ),
+          Card(
+            margin: const EdgeInsets.all(15),
+            color: Colors.orange[100],
+            child: Padding(
+              padding: const EdgeInsets.all(
+                10,
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    Constants.infoFileBelumDiupload,
+                    style:
+                        const TextStyle(color: Color.fromARGB(255, 121, 76, 9)),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                          model.profilPencaker['photo'] == null
+                              ? Icons.close
+                              : Icons.check,
+                          color: model.profilPencaker['photo'] == null
+                              ? Colors.red
+                              : Colors.green),
+                      const Text(
+                        '1. Foto Profil',
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 121, 76, 9)),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                          model.profilPencaker['ktp_file'] == null
+                              ? Icons.close
+                              : Icons.check,
+                          color: model.profilPencaker['ktp_file'] == null
+                              ? Colors.red
+                              : Colors.green),
+                      const Text(
+                        '2. KTP',
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 121, 76, 9)),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                          model.profilPencaker['ijazah_file'] == null
+                              ? Icons.close
+                              : Icons.check,
+                          color: model.profilPencaker['ijazah_file'] == null
+                              ? Colors.red
+                              : Colors.green),
+                      const Text(
+                        '3. Ijazah Terakhir',
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 121, 76, 9)),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    Constants.infoFileBelumDiupload2,
+                    style:
+                        const TextStyle(color: Color.fromARGB(255, 121, 76, 9)),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getScaffold() {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 235, 231, 231),
       appBar: AppBar(
@@ -258,5 +389,12 @@ class _LowonganListScreenState extends State<LowonganListScreen> {
         ],
       ),
     );
+  }
+
+  bool _isAkunLengkap(dynamic profilPencaker) {
+    return profilPencaker['photo'] != null &&
+        profilPencaker['ktp_file'] != null &&
+        profilPencaker['ijazah_file'] != null &&
+        profilPencaker['verified_email'] == '1';
   }
 }
