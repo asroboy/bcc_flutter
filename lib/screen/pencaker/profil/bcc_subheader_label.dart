@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 
 class BccSubheaderLabel extends StatelessWidget {
   const BccSubheaderLabel(
-      {super.key, required this.label, this.showButton, this.onPressed});
+      {super.key,
+      required this.label,
+      this.showButton,
+      this.onPressed,
+      this.icon});
 
   final String label;
   final bool? showButton;
   final Function()? onPressed;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +32,20 @@ class BccSubheaderLabel extends StatelessWidget {
             ? ElevatedButton(
                 onPressed: onPressed,
                 style: ButtonStyle(
-                    shape: const MaterialStatePropertyAll(CircleBorder()),
-                    elevation: const MaterialStatePropertyAll(0),
-                    iconColor: MaterialStatePropertyAll(
+                    shape: const WidgetStatePropertyAll(CircleBorder()),
+                    elevation: const WidgetStatePropertyAll(0),
+                    iconColor: WidgetStatePropertyAll(
                         Theme.of(context).colorScheme.primary),
-                    backgroundColor:
-                        MaterialStateProperty.resolveWith((states) {
-                      if (states.contains(MaterialState.pressed)) {
+                    backgroundColor: WidgetStateProperty.resolveWith((states) {
+                      if (states.contains(WidgetState.pressed)) {
                         return const Color.fromARGB(255, 89, 133, 208);
                       }
                       return Colors.white;
                     })),
-                child: const Icon(Icons.add),
+                child: Icon(
+                  icon ?? Icons.add,
+                  size: 16,
+                ),
               )
             : const Center()
       ],

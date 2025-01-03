@@ -197,7 +197,7 @@ class _BerandaPencakerState extends State<BerandaPencaker> {
                                 color: Theme.of(context).colorScheme.primary),
                           ),
                           Text(
-                            '${model.profilPencaker['address']}',
+                            '${model.profilPencaker['address']},  ${model.profilPencaker['master_village_name']}, ${model.profilPencaker['master_district_name']}, ${model.profilPencaker['master_city_name']}, ${model.profilPencaker['master_province_name']}',
                             textAlign: TextAlign.center,
                           ),
                           model.profilPencaker['verified_email'] == '1'

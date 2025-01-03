@@ -3,14 +3,19 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:bcc/bccwidgets/display_picture_screen.dart';
 import 'package:bcc/bccwidgets/loading_indicator.dart';
+import 'package:bcc/screen/pdf/pdf_screen.dart';
+import 'package:bcc/screen/pencaker/profil/biodata_lengap.dart';
+import 'package:bcc/screen/pencaker/profil/ubah_dokumen_saya.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as p;
 import 'package:bcc/api/api.dart';
 import 'package:bcc/api/api_call.dart';
 import 'package:bcc/api/helper.dart';
 import 'package:bcc/bccwidgets/bcc_line_break.dart';
-import 'package:bcc/bccwidgets/bcc_normal_button.dart';
+// import 'package:bcc/bccwidgets/bcc_normal_button.dart';
 // import 'package:bcc/bccwidgets/display_picture_screen.dart';
 import 'package:bcc/bccwidgets/take_picture_screen.dart';
 import 'package:bcc/contants.dart';
@@ -29,6 +34,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';
 
@@ -120,7 +126,7 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
     return Consumer(
       builder: (context, UserLoginModel model, _) => Scaffold(
         appBar: AppBar(
-          title: const Text('Identitas Diri'),
+          title: const Text('Profil Saya'),
           actions: [
             IconButton(
                 onPressed: () {
@@ -239,33 +245,12 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                       fontSize: 18,
                       color: Theme.of(context).colorScheme.primary),
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(
-                        builder: (context) =>
-                            UbahBiodata(biodataPencaker: biodataPencaker),
-                      ))
-                          .then(
-                        (value) {
-                          if (value == 'OK') {
-                            setState(() {
-                              isLoading = true;
-                              userInfo = loginInfo['data'];
-                              _fetchBiodataRinciPencaker();
-                            });
-                          }
-                        },
-                      );
-                    },
-                    child: const Text('Ubah Biodata')),
-                // Text(
-                //   '${userInfo['headline']}',
-                // ),
-                // Text(
-                //   '${userInfo['address']}',
-                //   textAlign: TextAlign.center,
-                // ),
+                isLoading
+                    ? const Center()
+                    : Text(
+                        '${biodataPencaker['headline'] ?? ''}',
+                        style: const TextStyle(fontWeight: FontWeight.normal),
+                      ),
                 Container(
                   margin: const EdgeInsets.only(bottom: 0, top: 10),
                   height: 0.5,
@@ -280,69 +265,394 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                   ),
                 )
               : Padding(
-                  padding: const EdgeInsets.only(left: 25, right: 25, top: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const BccSubheaderLabel(label: 'BIODATA DIRI'),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.timer_outlined,
-                            size: 18,
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 10)),
-                          Text(
-                              'Terdaftar sejak ${loginInfo['data']['created_at']}')
-                        ],
+                      BccSubheaderLabel(
+                        label: 'BIODATA DIRI',
+                        showButton: true,
+                        icon: Icons.edit,
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(
+                            builder: (context) =>
+                                UbahBiodata(biodataPencaker: biodataPencaker),
+                          ))
+                              .then(
+                            (value) {
+                              if (value == 'OK') {
+                                setState(() {
+                                  isLoading = true;
+                                  userInfo = loginInfo['data'];
+                                  _fetchBiodataRinciPencaker();
+                                });
+                              }
+                            },
+                          );
+                        },
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 5)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.pin_drop_outlined,
-                            size: 18,
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 10)),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: Text('${loginInfo['data']['address']}'),
-                          )
-                        ],
+                      ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        leading: const Icon(Icons.timer_outlined),
+                        title: const Text(
+                          'Terdaftar sejak',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text('${loginInfo['data']['created_at']}'),
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 5)),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.alternate_email_outlined,
-                            size: 18,
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 10)),
-                          Text(
-                              '${loginInfo['data']['email']}  ${loginInfo['data']['verified_email'] == '1' ? '(Terverifikasi)' : '(Belum terverifikasi)'}')
-                        ],
+                      ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        leading: const Icon(Icons.pin_drop_outlined),
+                        title: const Text(
+                          'Alamat',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                            '${biodataPencaker['address']},  ${biodataPencaker['master_village_name']}, ${biodataPencaker['master_district_name']}, ${biodataPencaker['master_city_name']}, ${biodataPencaker['master_province_name']}'),
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 5)),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.male_outlined,
-                            size: 18,
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 10)),
-                          Text('${loginInfo['data']['gender']}')
-                        ],
+                      ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        leading: const Icon(Icons.alternate_email_outlined),
+                        title: const Text(
+                          'Email',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                            '${biodataPencaker['email']}  ${biodataPencaker['verified_email'] == '1' ? '(Terverifikasi)' : '(Belum terverifikasi)'}'),
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 5)),
-                      const BccSubheaderLabel(
-                        label: 'Tentang Saya',
+                      ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        leading: const Icon(Icons.male_outlined),
+                        title: const Text(
+                          'Jenis Kelamin',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                            '${biodataPencaker == null ? '' : biodataPencaker['gender']}'),
                       ),
-                      Text(
-                        '${biodataPencaker == null ? '' : biodataPencaker['headline']}',
-                        textAlign: TextAlign.justify,
+                      ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        leading: const Icon(Icons.info_outline),
+                        dense: true,
+                        title: const Text(
+                          'Tentang Saya',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                            '${biodataPencaker == null ? '' : biodataPencaker['headline']}'),
+                      ),
+                      BccSubheaderLabel(
+                        label: 'DOKUMEN SAYA',
+                        showButton: true,
+                        icon: Icons.edit,
+                        onPressed: () {
+                          Future<dynamic> ubahDokumenSaya =
+                              Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => UbahDokumenSaya(
+                              biodataPencaker: biodataPencaker,
+                            ),
+                          ));
+
+                          ubahDokumenSaya.then((value) {
+                            if (value != null) {
+                              _reloadData();
+                            }
+                          });
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.description_outlined),
+                        title: const Text(
+                          'CV (Riwayat Hidup)',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          biodataPencaker['cv_file'] != null
+                              ? 'Klik untuk melihat CV'
+                              : 'Belum upload CV',
+                          style: TextStyle(
+                              color: biodataPencaker['cv_file'] != null
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        trailing: biodataPencaker['cv_file'] != null
+                            ? const Icon(Icons.navigate_next)
+                            : null,
+                        onTap: biodataPencaker['cv_file'] != null
+                            ? () {
+                                String url = biodataPencaker['cv_file'];
+                                log('url ${biodataPencaker['cv_file']}');
+
+                                String fileName = getFileNameFromUrl(url);
+                                createFileOfPdfUrl(url, fileName).then((f) {
+                                  String path = f.path;
+                                  Navigator.push(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PdfScreen(
+                                        path: path,
+                                        title: 'CV (Riwayat Hidup)',
+                                      ),
+                                    ),
+                                  );
+                                });
+                              }
+                            : null,
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.description_outlined),
+                        title: const Text(
+                          'Scan/Foto KTP',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          biodataPencaker['ktp_file'] != null
+                              ? 'Klik untuk melihat KTP'
+                              : 'Belum upload KTP',
+                          style: TextStyle(
+                              color: biodataPencaker['ktp_file'] != null
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        trailing: biodataPencaker['ktp_file'] != null
+                            ? const Icon(Icons.navigate_next)
+                            : null,
+                        onTap: biodataPencaker['ktp_file'] != null
+                            ? () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    imageUrl: biodataPencaker['ktp_file'],
+                                    title: 'KTP Saya',
+                                  ),
+                                ));
+                              }
+                            : null,
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.description_outlined),
+                        title: const Text(
+                          'Scan/Foto Ijazah Terakhir',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          biodataPencaker['ijazah_file'] != null
+                              ? 'Klik untuk melihat Ijazah'
+                              : 'Belum upload Ijazah',
+                          style: TextStyle(
+                              color: biodataPencaker['ijazah_file'] != null
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        trailing: biodataPencaker['ijazah_file'] != null
+                            ? const Icon(Icons.navigate_next)
+                            : null,
+                        onTap: biodataPencaker['ijazah_file'] != null
+                            ? () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    imageUrl: biodataPencaker['ijazah_file'],
+                                    title: 'Ijazah Saya',
+                                  ),
+                                ));
+                              }
+                            : null,
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.description_outlined),
+                        title: const Text(
+                          'Scan/Foto N P W P',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          biodataPencaker['npwp_file'] != null
+                              ? 'Klik untuk melihat NPWP'
+                              : 'Belum upload NPWP',
+                          style: TextStyle(
+                              color: biodataPencaker['npwp_file'] != null
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        trailing: biodataPencaker['npwp_file'] != null
+                            ? const Icon(Icons.navigate_next)
+                            : null,
+                        onTap: biodataPencaker['npwp_file'] != null
+                            ? () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    imageUrl: biodataPencaker['npwp_file'],
+                                    title: 'NPWP',
+                                  ),
+                                ));
+                              }
+                            : null,
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.description_outlined),
+                        title: const Text(
+                          'Sertifikat Vaksin 1 - 3',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          biodataPencaker['vaksin_file'] != null
+                              ? 'Klik untuk melihat Vaksin'
+                              : 'Belum upload Vaksin',
+                          style: TextStyle(
+                              color: biodataPencaker['vaksin_file'] != null
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        trailing: biodataPencaker['vaksin_file'] != null
+                            ? const Icon(Icons.navigate_next)
+                            : null,
+                        onTap: biodataPencaker['vaksin_file'] != null
+                            ? () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    imageUrl: biodataPencaker['vaksin_file'],
+                                    title: 'Sertifikat Vaksin',
+                                  ),
+                                ));
+                              }
+                            : null,
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.description_outlined),
+                        title: const Text(
+                          'Scan/Foto Akta Kelahiran',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          biodataPencaker['akta_file'] != null
+                              ? 'Klik untuk melihat Akta Kelahiran'
+                              : 'Belum upload Akta Kelahiran',
+                          style: TextStyle(
+                              color: biodataPencaker['akta_file'] != null
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        trailing: biodataPencaker['akta_file'] != null
+                            ? const Icon(Icons.navigate_next)
+                            : null,
+                        onTap: biodataPencaker['akta_file'] != null
+                            ? () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    imageUrl: biodataPencaker['akta_file'],
+                                    title: 'Akta Kelahiran Saya',
+                                  ),
+                                ));
+                              }
+                            : null,
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.description_outlined),
+                        title: const Text(
+                          'Scan/Foto SKCK',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          biodataPencaker['skck_file'] != null
+                              ? 'Klik untuk melihat SKCK'
+                              : 'Belum upload SKCK',
+                          style: TextStyle(
+                              color: biodataPencaker['skck_file'] != null
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        trailing: biodataPencaker['skck_file'] != null
+                            ? const Icon(Icons.navigate_next)
+                            : null,
+                        onTap: biodataPencaker['skck_file'] != null
+                            ? () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    imageUrl: biodataPencaker['skck_file'],
+                                    title: 'SKCK',
+                                  ),
+                                ));
+                              }
+                            : null,
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.description_outlined),
+                        title: const Text(
+                          'Domisili (Jika KTP diluar Kab. Bogor)',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          biodataPencaker['domisili_file'] != null
+                              ? 'Klik untuk melihat Domisili'
+                              : 'Belum upload Domisili',
+                          style: TextStyle(
+                              color: biodataPencaker['domisili_file'] != null
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 16.0),
+                        dense: true,
+                        trailing: biodataPencaker['domisili_file'] != null
+                            ? const Icon(Icons.navigate_next)
+                            : null,
+                        onTap: biodataPencaker['domisili_file'] != null
+                            ? () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    imageUrl: biodataPencaker['domisili_file'],
+                                    title: 'Domisili',
+                                  ),
+                                ));
+                              }
+                            : null,
+                      ),
+                      ListTile(
+                        subtitle: const Text(
+                            'Klik di sini untuk melihat biodata lengkap Kamu.'),
+                        title: Text(
+                          'Biodata Lengkap',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        trailing: const Icon(Icons.navigate_next),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => BiodataLengkap(
+                                biodataPencaker: biodataPencaker),
+                          ));
+                        },
                       ),
                       BccSubheaderLabel(
                         label: 'Riwayat Pendidikan',
@@ -739,37 +1049,31 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
                           );
                         },
                       ),
-                      const BccLineSparator(
-                        margin: EdgeInsets.only(bottom: 10, top: 20),
-                      ),
-                      // const BccSubheaderLabel(
-                      //   label: 'Tentang BCC',
-                      //   showButton: false,
-                      // ),
-                      // const BccLineSparator(
-                      //   margin: EdgeInsets.only(bottom: 20, top: 10),
-                      // ),
+                      const Padding(padding: EdgeInsets.only(top: 25)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          BccNormalButton(
-                            size: const Size(120, 40),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [Icon(Icons.lock), Text('Keluar')],
-                            ),
-                            onPressed: () {
-                              showAlertDialogWithAction2(
-                                  'Apakah kamu yakin ingin keluar?', context,
-                                  () {
-                                Navigator.of(context).pop();
-                              }, () {
-                                Navigator.of(context).pop();
-                                _logout();
-                              }, 'Batal', 'OK');
-                            },
-                          ),
+                          ElevatedButton(
+                              style: const ButtonStyle(
+                                  backgroundColor:
+                                      WidgetStatePropertyAll(Colors.red)),
+                              onPressed: () {
+                                showAlertDialogWithAction2(
+                                    'Apakah kamu yakin ingin keluar?', context,
+                                    () {
+                                  Navigator.of(context).pop();
+                                }, () {
+                                  Navigator.of(context).pop();
+                                  _logout();
+                                }, 'Batal', 'OK');
+                              },
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.lock),
+                                  Padding(padding: EdgeInsets.only(right: 5)),
+                                  Text('Keluar')
+                                ],
+                              ))
                         ],
                       ),
                       const Padding(padding: EdgeInsets.only(bottom: 50))
@@ -977,5 +1281,36 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
     multipartRequest.headers.addAll(headers);
 
     return _apiHelper.sendMultipartRequest(multipartRequest);
+  }
+
+  Future<File> createFileOfPdfUrl(String url, String fileName) async {
+    Completer<File> completer = Completer();
+    log("Start download file from internet!");
+    try {
+      // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
+      // final url = "https://pdfkit.org/docs/guide.pdf";
+      // final url = url;
+      final filename = fileName;
+      var request = await HttpClient().getUrl(Uri.parse(url));
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      var dir = await getApplicationDocumentsDirectory();
+      log("Download files");
+      log("${dir.path}/$filename");
+      File file = File("${dir.path}/$filename");
+
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
+  String getFileNameFromUrl(String url) {
+    Uri uri = Uri.parse(url);
+    String fileName = uri.pathSegments.last.split("/").last;
+    return fileName;
   }
 }

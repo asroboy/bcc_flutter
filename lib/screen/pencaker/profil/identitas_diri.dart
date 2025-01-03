@@ -210,17 +210,15 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                     fontSize: 18,
                     color: Theme.of(context).colorScheme.primary),
               ),
-              Text(
-                '${userInfo['headline'] ?? ''}',
-                style: TextStyle(
-                    fontSize: 15,
-                    fontStyle: FontStyle.italic,
-                    color: Theme.of(context).colorScheme.primary),
-              ),
-              Text(
-                '${userInfo['address']}',
-                textAlign: TextAlign.center,
-              ),
+              isLoading
+                  ? const Center()
+                  : Text(
+                      '${biodataPencaker['headline'] ?? ''}',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
               Container(
                 margin: const EdgeInsets.only(bottom: 0, top: 10),
                 height: 0.5,
@@ -251,11 +249,9 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                           size: 18,
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
-                        Text(widget.isPerusahaan == true
-                            ? (biodataPencaker == null
-                                ? ''
-                                : 'Terdaftar sejak ${biodataPencaker['created_at']}')
-                            : 'Terdaftar sejak ${loginInfo['data']['created_at']}')
+                        Text((biodataPencaker == null
+                            ? ''
+                            : 'Terdaftar sejak ${biodataPencaker['created_at']}'))
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
@@ -270,11 +266,9 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                         const Padding(padding: EdgeInsets.only(right: 10)),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
-                          child: Text(widget.isPerusahaan == true
-                              ? (biodataPencaker == null
-                                  ? ''
-                                  : biodataPencaker['address'])
-                              : '${loginInfo['data']['address']}'),
+                          child: Text((biodataPencaker == null
+                              ? ''
+                              : '${biodataPencaker['address']},  ${biodataPencaker['master_village_name']}, ${biodataPencaker['master_district_name']}, ${biodataPencaker['master_city_name']}, ${biodataPencaker['master_province_name']}')),
                         )
                       ],
                     ),
@@ -286,11 +280,9 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                           size: 18,
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
-                        Text(widget.isPerusahaan == true
-                            ? (biodataPencaker == null
-                                ? ''
-                                : ('${biodataPencaker['email']} ${biodataPencaker['verified_email'] == '1' ? '(Terverifikasi)' : '(Belum terverifikasi)'}'))
-                            : '${loginInfo['data']['email']}  ${loginInfo['data']['verified_email'] == '1' ? '(Terverifikasi)' : '(Belum terverifikasi)'}')
+                        Text((biodataPencaker == null
+                            ? ''
+                            : ('${biodataPencaker['email']} ${biodataPencaker['verified_email'] == '1' ? '(Terverifikasi)' : '(Belum terverifikasi)'}')))
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
@@ -301,9 +293,7 @@ class _IdentitasDiriState extends State<IdentitasDiri> {
                           size: 18,
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
-                        Text(widget.isPerusahaan == true
-                            ? biodataPencaker['gender']
-                            : '${loginInfo['data']['gender']}')
+                        Text(biodataPencaker['gender'])
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
