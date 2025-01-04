@@ -65,7 +65,7 @@ class _TakePhotoState extends State<TakePhoto> {
             return Container(
               alignment: Alignment.topCenter,
               decoration: const BoxDecoration(color: Colors.black),
-              // height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height,
               child: CameraPreview(_controller),
             );
           } else {

@@ -37,9 +37,10 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
   dynamic selectedPendidikanTerakhir;
   String? selectedPendidikanTerakhirString;
 
-  _fetchPendidikanTerakhir() {
-    Future<dynamic> req =
-        _apiCall.getDataPendukung(Constants.pathPendidikanTerakhir);
+  _fetchPendidikanTerakhir(String filter) {
+    String url = Constants.pathPendidikanTerakhir +
+        (filter == '' ? '' : '?name=$filter');
+    Future<dynamic> req = _apiCall.getDataPendukung(url);
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
@@ -68,9 +69,10 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
   dynamic selectedSekolahObj;
   String? selectedSekolahString;
 
-  _fetchDataJurusanhByName() {
-    Future<dynamic> req =
-        _apiCall.getDataPendukung(Constants.pathJurusanSekolah);
+  _fetchDataJurusanhByName(String name) {
+    String url =
+        Constants.pathJurusanSekolah + (name == '' ? '' : '?name=$name');
+    Future<dynamic> req = _apiCall.getDataPendukung(url);
     req.then((value) {
       _apiHelper.apiCallResponseHandler(
           response: value,
@@ -95,7 +97,7 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
       _apiHelper.apiCallResponseHandler(
           response: value,
           onSuccess: (response) {
-            // log('response $response');
+            log('response $response');
             setState(() {
               _sekolah.addAll(response['data']);
 
@@ -150,9 +152,9 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
   @override
   void initState() {
     _apiHelper = ApiHelper(buildContext: context);
-    _fetchPendidikanTerakhir();
+    _fetchPendidikanTerakhir('');
     _fetchDataSekolah('');
-    _fetchDataJurusanhByName();
+    _fetchDataJurusanhByName('');
 
     if (widget.riwayatPendidikanEdit != null) {
       bulanMulai = widget.riwayatPendidikanEdit['start_month'];
@@ -194,6 +196,7 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                     hint: "Sekolah/Perguruan Tinggi *",
                     selectedItem: selectedSekolahObj,
                     itemAsString: (dynamic u) => u['name'],
+                    getData: _fetchDataSekolah,
                     onChange: (data) {
                       log('selected data $data');
                       setState(() {
@@ -208,6 +211,7 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                     hint: "Tingkat Pendidikan *",
                     selectedItem: selectedPendidikanTerakhir,
                     itemAsString: (dynamic u) => u['name'],
+                    getData: _fetchPendidikanTerakhir,
                     onChange: (data) {
                       log('data $data');
                       setState(() {
@@ -222,6 +226,7 @@ class _TambahPendidikanState extends State<TambahPendidikan> {
                     hint: "Jurusan *",
                     selectedItem: selectedJurusanObj,
                     itemAsString: (dynamic u) => u['name'],
+                    getData: _fetchDataJurusanhByName,
                     onChange: (data) {
                       log('data $data');
                       setState(() {
