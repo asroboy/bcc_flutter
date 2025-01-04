@@ -28,7 +28,6 @@ import 'package:bcc/screen/pencaker/profil/tambah_sertifikat.dart';
 import 'package:bcc/screen/pencaker/profil/ubah_biodata.dart';
 import 'package:bcc/screen/perusahaan/kadidat_pelamar_kerja/row_data_info.dart';
 import 'package:bcc/state_management/user_login_model.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart';
@@ -91,25 +90,12 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
   final List<dynamic> _dataSertifikat = [];
   final List<dynamic> _dataSkill = [];
 
-  late CameraDescription cameraDescription;
-
   @override
   void initState() {
     super.initState();
     isLoading = true;
     userInfo = loginInfo['data'];
     _fetchBiodataRinciPencaker();
-    availableCameras().then((cameras) {
-      final camera = cameras
-          .where((camera) => camera.lensDirection == CameraLensDirection.front)
-          .toList()
-          .first;
-      setState(() {
-        cameraDescription = camera;
-      });
-    }).catchError((err) {
-      log('Terjadi kendala ambil kamera $err');
-    });
   }
 
   getProfileImage() {
@@ -1181,12 +1167,8 @@ class _ProfilPencakerScreenState extends State<ProfilPencakerScreen> {
 
   _ambilGambarCamera() async {
     log('Button Pressed');
-    final String? imagePath =
-        await Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => TakePhoto(
-                  // Pass the appropriate camera to the TakePictureScreen widget.
-                  camera: cameraDescription,
-                )));
+    final String? imagePath = await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => const TakePhoto()));
 
     log('imagepath: $imagePath');
 

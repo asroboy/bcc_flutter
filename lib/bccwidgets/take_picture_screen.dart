@@ -3,8 +3,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class TakePhoto extends StatefulWidget {
-  final CameraDescription? camera;
-  const TakePhoto({Key? key, this.camera}) : super(key: key);
+  // final CameraDescription? camera;
+  const TakePhoto({Key? key}) : super(key: key);
 
   @override
   State<TakePhoto> createState() => _TakePhotoState();
@@ -13,19 +13,36 @@ class TakePhoto extends StatefulWidget {
 class _TakePhotoState extends State<TakePhoto> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+
+  late CameraDescription cameraDescription;
+
+  bool isInit = true;
+
   @override
   void initState() {
     super.initState();
 
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera as CameraDescription,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
+    availableCameras().then((cameras) {
+      final camera = cameras
+          .where((camera) => camera.lensDirection == CameraLensDirection.front)
+          .toList()
+          .first;
+      setState(() {
+        cameraDescription = camera;
+        _controller = CameraController(
+          // Get a specific camera from the list of available cameras.
+          camera,
+          // Define the resolution to use.
+          ResolutionPreset.medium,
+        );
 
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
+        // Next, initialize the controller. This returns a Future.
+        _initializeControllerFuture = _controller.initialize();
+        isInit = false;
+      });
+    }).catchError((err) {
+      log('Terjadi kendala ambil kamera $err');
+    });
   }
 
   Future<XFile?> takePicture() async {
@@ -51,29 +68,39 @@ class _TakePhotoState extends State<TakePhoto> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.red,
-        onPressed: () async {
-          final file = await takePicture();
-          Navigator.of(context).pop(file?.path);
+        onPressed: () {
+          takePicture().then(
+            (file) => _exit(file),
+          );
         },
         child: const Icon(Icons.camera_alt),
       ),
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return Container(
-              alignment: Alignment.topCenter,
-              decoration: const BoxDecoration(color: Colors.black),
-              height: MediaQuery.of(context).size.height,
-              child: CameraPreview(_controller),
-            );
-          } else {
-            // Otherwise, display a loading indicator.
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+      body: isInit
+          ? const Center(child: CircularProgressIndicator())
+          : FutureBuilder<void>(
+              future: _initializeControllerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // If the Future is complete, display the preview.
+                  return
+                      // Container(
+                      //   alignment: Alignment.topCenter,
+                      //   decoration: const BoxDecoration(color: Colors.black),
+                      //   height: MediaQuery.of(context).size.height,
+                      // child:
+
+                      CameraPreview(_controller);
+                  // );
+                } else {
+                  // Otherwise, display a loading indicator.
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
     );
+  }
+
+  _exit(XFile? file) {
+    Navigator.of(context).pop(file?.path);
   }
 }
