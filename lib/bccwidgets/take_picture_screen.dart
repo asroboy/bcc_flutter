@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:bcc/api/helper.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
@@ -41,6 +42,7 @@ class _TakePhotoState extends State<TakePhoto> {
         isInit = false;
       });
     }).catchError((err) {
+      _showAlert(err);
       log('Terjadi kendala ambil kamera $err');
     });
   }
@@ -57,6 +59,10 @@ class _TakePhotoState extends State<TakePhoto> {
       log('Error $e');
       return null;
     }
+  }
+
+  _showAlert(err) {
+    showAlertDialog('Terjadi kendala ambil kamera $err', context);
   }
 
   @override
@@ -82,15 +88,11 @@ class _TakePhotoState extends State<TakePhoto> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   // If the Future is complete, display the preview.
-                  return
-                      // Container(
-                      //   alignment: Alignment.topCenter,
-                      //   decoration: const BoxDecoration(color: Colors.black),
-                      //   height: MediaQuery.of(context).size.height,
-                      // child:
-
-                      CameraPreview(_controller);
-                  // );
+                  return Container(
+                      alignment: Alignment.topCenter,
+                      decoration: const BoxDecoration(color: Colors.black),
+                      height: MediaQuery.of(context).size.height,
+                      child: CameraPreview(_controller));
                 } else {
                   // Otherwise, display a loading indicator.
                   return const Center(child: CircularProgressIndicator());
